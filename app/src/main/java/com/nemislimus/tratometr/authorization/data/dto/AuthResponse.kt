@@ -9,4 +9,4 @@ data class AuthResponse(
     val refreshToken: String,
     @SerializedName("user_id")
     val userId: Long
-)
+): Response()
