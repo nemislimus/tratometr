@@ -1,4 +1,4 @@
-package com.nemislimus.tratometr.authorization.domain.models
+package com.nemislimus.tratometr.authorization.data.dto
 
 data class LoginRequest(
     val email: String,
