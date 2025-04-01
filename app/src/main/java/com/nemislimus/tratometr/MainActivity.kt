@@ -1,6 +1,7 @@
 package com.nemislimus.tratometr
 
 import android.os.Bundle
+import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.lifecycleScope
 import com.nemislimus.tratometr.authorization.data.RetrofitNetworkClient
@@ -8,6 +9,7 @@ import com.nemislimus.tratometr.authorization.data.dto.AuthResponse
 import com.nemislimus.tratometr.authorization.data.dto.CheckTokenRequest
 import com.nemislimus.tratometr.authorization.data.dto.CheckTokenResponse
 import com.nemislimus.tratometr.authorization.data.dto.LoginRequest
+import com.nemislimus.tratometr.authorization.data.dto.RecoveryRequest
 import com.nemislimus.tratometr.authorization.data.dto.RefreshTokenRequest
 import com.nemislimus.tratometr.authorization.data.dto.RefreshTokenResponse
 import com.nemislimus.tratometr.authorization.data.dto.RegistrationRequest
@@ -30,13 +32,13 @@ class MainActivity : AppCompatActivity() {
         var accessToken = ""
         var refreshToken = ""
 
-        val registrationRequest = RegistrationRequest("forothen@gmail.com", "12345678")
-        val loginRequest = LoginRequest("forothen@gmail.com", "12345678")
+        val registrationRequest = RegistrationRequest("david20506@rambler.ru", "12345678")
+        val loginRequest = LoginRequest("david20506@rambler.ru", "12345678")
 
         lifecycleScope.launch {
             val response = networkClient.doRequest(loginRequest) as AuthResponse
 
-            delay(2000)
+            delay(1000)
             accessToken = response.accessToken
             refreshToken = response.refreshToken
             binding.resultAuth.text = response.resultCode.toString()
@@ -45,7 +47,7 @@ class MainActivity : AppCompatActivity() {
             accessToken = response.accessToken
             refreshToken = response.refreshToken
 
-            delay(2000)
+            delay(1000)
             val refreshResponse =
                 networkClient.doRequest(RefreshTokenRequest(refreshToken)) as RefreshTokenResponse
             binding.resulRefresh.text = refreshResponse.resultCode.toString()
@@ -54,12 +56,15 @@ class MainActivity : AppCompatActivity() {
             accessToken = refreshResponse.accessToken
             refreshToken = refreshResponse.refreshToken
 
-            delay(2000)
+            delay(1000)
             val checkResponse =
                 networkClient.doRequest(CheckTokenRequest(accessToken)) as CheckTokenResponse
             binding.resultCheck.text = checkResponse.resultCode.toString()
             binding.refValue.text = checkResponse.isValid.toString()
 
+            delay(1000)
+            val recoveryResponse = networkClient.doRequest(RecoveryRequest("somemail@gmail.com"))
+            binding.recovery.text = recoveryResponse.resultCode.toString()
             delay(1000)
             cancel()
         }
