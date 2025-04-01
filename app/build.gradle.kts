@@ -7,6 +7,10 @@ android {
     namespace = "com.nemislimus.tratometr"
     compileSdk = 35
 
+    buildFeatures {
+        viewBinding = true
+    }
+
     defaultConfig {
         applicationId = "com.nemislimus.tratometr"
         minSdk = 21
