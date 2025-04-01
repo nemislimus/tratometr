@@ -1,6 +1,5 @@
 package com.nemislimus.tratometr.authorization.data
 
-import android.util.Log
 import com.nemislimus.tratometr.authorization.data.dto.AuthResponse
 import com.nemislimus.tratometr.authorization.data.dto.CheckTokenRequest
 import com.nemislimus.tratometr.authorization.data.dto.CheckTokenResponse
@@ -71,7 +70,6 @@ class RetrofitNetworkClient : NetworkClient {
         return try {
             val response = service.login(dto)
             if (response.isSuccessful) {
-                Log.d("Рефреш токен", response.body()!!.refreshToken.toString())
                 response.body()!!.apply { resultCode = response.code() }
             } else {
                 AuthResponse(empty, empty, 0).apply { resultCode = response.code() }
@@ -89,7 +87,6 @@ class RetrofitNetworkClient : NetworkClient {
             if (response.isSuccessful) {
                 response.body()?.apply {
                     resultCode = response.code()
-                    Log.d("Check token", "Успешно")
                 }
                     ?: CheckTokenResponse(false).apply { resultCode = 404 }
             } else {
@@ -109,7 +106,6 @@ class RetrofitNetworkClient : NetworkClient {
                 RefreshTokenResponse(empty, empty).apply { resultCode = response.code() }
             }
         } catch (e: Exception) {
-            Log.d("Refresh", e.toString())
             RefreshTokenResponse(empty, empty).apply { resultCode = 1 }
         }
     }
@@ -118,7 +114,6 @@ class RetrofitNetworkClient : NetworkClient {
         return try {
             val response = service.recoverPassword(dto.email)
             if (response.isSuccessful) {
-                Log.d("Восстановление пароля", "Успешно")
                 Response().apply { resultCode = response.code() }
             } else {
                 Response().apply { resultCode = response.code() }
@@ -126,6 +121,5 @@ class RetrofitNetworkClient : NetworkClient {
         } catch (e: Exception) {
             Response().apply { resultCode = 1 }
         }
-
     }
 }
