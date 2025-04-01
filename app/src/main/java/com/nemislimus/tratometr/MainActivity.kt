@@ -39,7 +39,7 @@ class MainActivity : AppCompatActivity() {
 
             delay(2000)
             val checkResponse = networkClient.doRequest(CheckTokenRequest(token)) as CheckTokenResponse
-            message.text = checkResponse.resultCode.toString()
+            message.text = "${checkResponse.isValid} ${checkResponse.resultCode}"
         }
     }
 }
