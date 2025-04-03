@@ -23,6 +23,7 @@ roomCompiler = "2.6.1"
 constraintlayout = "2.2.1"
 kotlinxCoroutinesAndroid = "1.10.1"
 lifecycleViewmodelKtx = "2.8.7"
+kotlinSafeargs = "2.8.9"
 
 [libraries]
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
@@ -51,4 +52,5 @@ kotlinx-coroutines-android = { group = "org.jetbrains.kotlinx", name = "kotlinx-
 android-application = { id = "com.android.application", version.ref = "agp" }
 jetbrains-kotlin-android = { id = "org.jetbrains.kotlin.android", version.ref = "kotlin" }
 kotlin-kapt = { id = "org.jetbrains.kotlin.kapt", version.ref = "kotlinKapt" }
+kotlin-safeargs = { id = "androidx.navigation.safeargs.kotlin", version.ref = "kotlinSafeargs" }
 
