@@ -4,6 +4,9 @@ import com.nemislimus.tratometr.authorization.data.dto.AuthResponse
 import com.nemislimus.tratometr.authorization.data.dto.CheckTokenRequest
 import com.nemislimus.tratometr.authorization.data.dto.CheckTokenResponse
 import com.nemislimus.tratometr.authorization.data.dto.LoginRequest
+import com.nemislimus.tratometr.authorization.data.dto.RecoveryRequest
+import com.nemislimus.tratometr.authorization.data.dto.RefreshTokenRequest
+import com.nemislimus.tratometr.authorization.data.dto.RefreshTokenResponse
 import com.nemislimus.tratometr.authorization.data.dto.RegistrationRequest
 import com.nemislimus.tratometr.authorization.data.dto.Response
 import com.nemislimus.tratometr.authorization.data.network.ApiService
@@ -32,12 +35,16 @@ class RetrofitNetworkClient : NetworkClient {
                 return doLoginRequest(dto)
             }
 
-            /*is RefreshTokenRequest -> {
-
-            }*/
+            is RefreshTokenRequest -> {
+                return doRefreshTokenRequest(dto)
+            }
 
             is CheckTokenRequest -> {
                 return doCheckTokenRequest(dto)
+            }
+
+            is RecoveryRequest -> {
+                return doRecoveryRequest(dto)
             }
 
             else -> {
@@ -74,14 +81,45 @@ class RetrofitNetworkClient : NetworkClient {
 
     private suspend fun doCheckTokenRequest(dto: CheckTokenRequest): CheckTokenResponse {
         return try {
-            val response = service.checkToken(dto)
+            val authHeader = "Bearer ${dto.accessToken}"
+            val response = service.checkToken(authHeader)
+
             if (response.isSuccessful) {
-                response.body()!!.apply { resultCode = response.code() }
+                response.body()?.apply {
+                    resultCode = response.code()
+                }
+                    ?: CheckTokenResponse(false).apply { resultCode = 404 }
             } else {
                 CheckTokenResponse(false).apply { resultCode = response.code() }
             }
         } catch (e: Exception) {
             CheckTokenResponse(false).apply { resultCode = 1 }
+        }
+    }
+
+    private suspend fun doRefreshTokenRequest(dto: RefreshTokenRequest): RefreshTokenResponse {
+        return try {
+            val response = service.refreshToken(dto)
+            if (response.isSuccessful) {
+                response.body()!!.apply { resultCode = response.code() }
+            } else {
+                RefreshTokenResponse(empty, empty).apply { resultCode = response.code() }
+            }
+        } catch (e: Exception) {
+            RefreshTokenResponse(empty, empty).apply { resultCode = 1 }
+        }
+    }
+
+    private suspend fun doRecoveryRequest(dto: RecoveryRequest): Response {
+        return try {
+            val response = service.recoverPassword(dto.email)
+            if (response.isSuccessful) {
+                Response().apply { resultCode = response.code() }
+            } else {
+                Response().apply { resultCode = response.code() }
+            }
+        } catch (e: Exception) {
+            Response().apply { resultCode = 1 }
         }
     }
 }
