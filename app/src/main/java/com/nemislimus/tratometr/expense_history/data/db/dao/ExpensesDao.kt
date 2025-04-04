@@ -1,6 +1,7 @@
 package com.nemislimus.tratometr.expense_history.data.db.dao
 
 import android.content.ContentValues
+import com.nemislimus.tratometr.App
 import com.nemislimus.tratometr.case.db.DBHelper
 import com.nemislimus.tratometr.expense_history.data.db.entity.ExpenseEntity
 
