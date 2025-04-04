@@ -1,17 +1,13 @@
 package com.nemislimus.tratometr.expense_history.data.db.dao
 
 import android.content.ContentValues
-import com.nemislimus.tratometr.App
 import com.nemislimus.tratometr.case.db.DBHelper
 import com.nemislimus.tratometr.expense_history.data.db.entity.ExpenseEntity
+import javax.inject.Inject
 
-class ExpensesDao(
-
+class ExpensesDao @Inject constructor(
+    private val databaseHelper: DBHelper,
 ){
-
-    // ЗАМЕНИТЬ НА ПАРАМЕТРЫ ПРИ СОЗДАНИИ DI ********************************************
-    private val dbh = DBHelper(App.appContext)
-    //***********************************************************************************
 
     // Выборка строк-расходов за период и по категории
     /*  Образец запроса
@@ -21,7 +17,7 @@ class ExpensesDao(
         ORDER BY EXPENSES.DATE;
     */
     fun getExpenses(startDate: Long?, endDate: Long?, category: String?): List<ExpenseEntity> {
-        val db = dbh.readableDatabase
+        val db = databaseHelper.readableDatabase
         val expenses = mutableListOf<ExpenseEntity>()
         // Начинаем строить базовый запрос
         val queryBuilder = StringBuilder("SELECT EXPENSES.[_id], EXPENSES.DATE, EXPENSES.AMOUNT, EXPENSES.CATEGORY, EXPENSES.NOTE, CATEGORIES.ICON_RES_ID ")
@@ -65,7 +61,7 @@ class ExpensesDao(
 
     // Добавление новой строки-расхода, возвращает id записи или -1 в случае ошибки
     fun addExpense(expense: ExpenseEntity): Long {
-        val db = dbh.writableDatabase
+        val db = databaseHelper.writableDatabase
         val contentValues = ContentValues().apply {
             put("DATE", expense.date)
             put("AMOUNT", expense.amount)
@@ -79,7 +75,7 @@ class ExpensesDao(
 
     // Обновление строки-расхода
     fun updateExpense(expense: ExpenseEntity) {
-        val db = dbh .writableDatabase
+        val db = databaseHelper .writableDatabase
         val contentValues = ContentValues().apply {
             put("DATE", expense.date)
             put("AMOUNT", expense.amount)
@@ -93,7 +89,7 @@ class ExpensesDao(
 
     // Удаление строки-расхода по id
     fun deleteExpense(expenseId: Long) {
-        val db = dbh.writableDatabase
+        val db = databaseHelper.writableDatabase
         val whereArgs = arrayOf(expenseId.toString())
         db.delete("EXPENSES", "_id = ?", whereArgs)
         db.close()

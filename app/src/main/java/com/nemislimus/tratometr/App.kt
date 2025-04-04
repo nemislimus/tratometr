@@ -17,11 +17,6 @@ class App: Application() {
             .setContextToComponent(this)
             .build()
 
-        appContext = this@App
-    }
-
-    companion object {
-        lateinit var appContext: Context
     }
 }
 
