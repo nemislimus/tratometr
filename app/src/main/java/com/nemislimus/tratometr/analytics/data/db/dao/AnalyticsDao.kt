@@ -1,17 +1,14 @@
 package com.nemislimus.tratometr.analytics.data.db.dao
 
-import com.nemislimus.tratometr.App
-import com.nemislimus.tratometr.case.db.DBHelper
-import com.nemislimus.tratometr.case.db.entity.CategoryEntity
+import com.nemislimus.tratometr.expenses.data.database.DBHelper
+import com.nemislimus.tratometr.expenses.data.database.entities.CategoryEntity
+import javax.inject.Inject
 
-class AnalyticsDao(
 
+class AnalyticsDao @Inject constructor(
+    private val databaseHelper: DBHelper
 ) {
-
-    // ЗАМЕНИТЬ НА ПАРАМЕТРЫ ПРИ СОЗДАНИИ DI ********************************************
-    private val dbh = DBHelper(App.appContext)
-    //***********************************************************************************
-
+// ################   ЗАПРОСЫ ДЛЯ ОКНА АНАЛИТИКА   #########################################################################################
     // Список категорий с иконками и фильтром(период, категория)
     /*  Образец запроса
         SELECT EXPENSES.CATEGORY, CATEGORIES.ICON_RES_ID
@@ -20,7 +17,7 @@ class AnalyticsDao(
         ORDER BY EXPENSES.CATEGORY;
     */
     fun getExpenseListFilter(startDate: Long?, endDate: Long?, category: String?): List<CategoryEntity> {
-        val db = dbh.readableDatabase
+        val db = databaseHelper.readableDatabase
         val categories = mutableListOf<CategoryEntity>()
         // Начинаем строить базовый запрос
         val queryBuilder =
@@ -66,7 +63,7 @@ class AnalyticsDao(
         WHERE (((EXPENSES.Date)>=500 And (EXPENSES.Date)<1555) AND ((EXPENSES.CATEGORY)="Еда"));
     */
     fun getExpenseAmountsListByCategoryFilter(startDate: Long?, endDate: Long?, category: String?): List<Long> {
-        val db = dbh.readableDatabase
+        val db = databaseHelper.readableDatabase
         val amounts = mutableListOf<Long>()
         // Начинаем строить базовый запрос
         val queryBuilder =
