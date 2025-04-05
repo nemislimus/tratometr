@@ -20,7 +20,8 @@ class App: Application() {
     }
 }
 
-// Для удобного получения компонента сделаем экстеншн:
+/** Поле расширения для удобного получения доступа к appComponent
+  */
 @Suppress("RecursivePropertyAccessor")
 val Context.appComponent: AppComponent
     get() = when(this) {
