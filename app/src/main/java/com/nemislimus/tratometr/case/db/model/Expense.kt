@@ -1,4 +1,4 @@
-package com.nemislimus.tratometr.expense_history.domain.model
+package com.nemislimus.tratometr.case.db.model
 
 import java.math.BigDecimal
 

@@ -1,4 +1,4 @@
-package com.nemislimus.tratometr.expense_history.data.db.entity
+package com.nemislimus.tratometr.case.db.entity
 
 data class ExpenseEntity(
     val id: Long,
