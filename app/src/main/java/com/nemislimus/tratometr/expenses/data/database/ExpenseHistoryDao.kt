@@ -107,7 +107,6 @@ class ExpenseHistoryDao @Inject constructor(
     }
 
     // Обновление расхода
-// Обновление строки-расхода
     fun updateExpense(expense: ExpenseEntity) {
         val db = databaseHelper .writableDatabase
         val contentValues = ContentValues().apply {
@@ -151,7 +150,6 @@ class ExpenseHistoryDao @Inject constructor(
         queryBuilder.append(" ORDER BY EXPENSES.CATEGORY;")
         // Выполняем запрос
         val cursor = db.rawQuery(queryBuilder.toString(), args.toTypedArray())
-
         if (cursor.moveToFirst()) {
             do {
                 val categoryName = cursor.getString(0)
@@ -166,6 +164,36 @@ class ExpenseHistoryDao @Inject constructor(
 
 // ################   ЗАПРОСЫ ДЛЯ ОКНА СОЗДАНИЕ КАТЕГОРИИ   #####################################################################################
 
+    // Список всех категорий
+    /*  Образец запроса
+        SELECT CATEGORIES.CATEGORY_NAME FROM CATEGORIES;
+    */
+    fun getAllCategoriesList(): List<String> {
+        val db = databaseHelper.readableDatabase
+        val categories = mutableListOf<String>()
+        val args = mutableListOf<String>()
+        val query = "SELECT CATEGORIES.CATEGORY_NAME FROM CATEGORIES;"
+        val cursor = db.rawQuery(query, args.toTypedArray())
+        if (cursor.moveToFirst()) {
+            do {
+                val categoryName = cursor.getString(0)
 
+                categories.add(categoryName)
+            } while (cursor.moveToNext())
+        }
+        cursor.close()
+        db.close()
+        return categories
+    }
 
+    // Добавление новой категорий
+    fun addNewCategory(category: CategoryEntity) {
+        val db = databaseHelper.writableDatabase
+        val contentValues = ContentValues().apply {
+            put("CATEGORY_NAME", category.name)
+            put("ICON_RES_ID", category.iconResId)
+        }
+        db.insert("CATEGORIES", null, contentValues)
+        db.close()
+    }
 }
