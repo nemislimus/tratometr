@@ -42,4 +42,12 @@ class DBConverter {
             category.iconResId
         )
     }
+
+    fun map(amount: Long): BigDecimal {
+        return BigDecimal.valueOf(amount)
+    }
+
+    fun map(amount: BigDecimal): Long {
+        return amount.longValueExact()
+    }
 }

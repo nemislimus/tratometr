@@ -1,13 +1,12 @@
 package com.nemislimus.tratometr.expenses.data.database
 
-import com.nemislimus.tratometr.common.App
 import com.nemislimus.tratometr.expenses.data.database.entities.ExpenseEntity
 import javax.inject.Inject
 
 class ExpenseHistoryDao @Inject constructor(
     private val databaseHelper: DBHelper
 ) {
-
+// ################   ЗАПРОСЫ ДЛЯ ОКНА ИСТОРИЯ РАСХОДОВ   #########################################################################################
     // Выборка строк-расходов за период и по категории
     /*  Образец запроса
         SELECT EXPENSES.[_id], EXPENSES.DATE, EXPENSES.AMOUNT, EXPENSES.NOTE, EXPENSES.CATEGORY, CATEGORIES.ICON_RES_ID
@@ -66,4 +65,14 @@ class ExpenseHistoryDao @Inject constructor(
         db.delete("EXPENSES", "_id = ?", whereArgs)
         db.close()
     }
+
+// ################   ЗАПРОСЫ ДЛЯ ОКНА ДОБАВЛЕНИЕ/РЕДАКТИРОВАНИЕ РАСХОДА   ######################################################################
+
+
+// ################   ЗАПРОСЫ ДЛЯ ОКНА ВЫБОР КАТЕГОРИИ   ########################################################################################
+
+// ################   ЗАПРОСЫ ДЛЯ ОКНА СОЗДАНИЕ КАТЕГОРИИ   #####################################################################################
+
+
+
 }
