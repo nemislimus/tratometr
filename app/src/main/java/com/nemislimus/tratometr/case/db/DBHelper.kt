@@ -12,16 +12,16 @@ class DBHelper (context: Context) :
         db.execSQL(
             "CREATE TABLE EXPENSES ("
                     + "_id INTEGER PRIMARY KEY AUTOINCREMENT,"
-                    + "DATE INTEGER NOT NULL,"           // Дата в милисекундах
-                    + "AMOUNT INTEGER NOT NULL,"         // Сумма в копейках
-                    + "CATEGORY TEXT NOT NULL,"       // Категория
-                    + "NOTE TEXT);"                      // Примечание
+                    + "DATE INTEGER NOT NULL,"          // Дата в милисекундах
+                    + "AMOUNT INTEGER NOT NULL,"        // Сумма в копейках
+                    + "CATEGORY TEXT NOT NULL,"         // Категория
+                    + "NOTE TEXT);"                     // Примечание
         )
 
         // Создание таб. CATEGORIES
         db.execSQL(
             "CREATE TABLE CATEGORIES ("
-                    + "CATEGORY TEXT PRIMARY KEY,"      // Название категории как первичный ключ
+                    + "NAME TEXT PRIMARY KEY,"          // Название категории как первичный ключ
                     + "ICON_RES_ID INTEGER);"           // id иконки
         )
     }
