@@ -1,10 +1,12 @@
-package com.nemislimus.tratometr.expense_history.data.db
+package com.nemislimus.tratometr.case.db
 
-import com.nemislimus.tratometr.expense_history.data.db.entity.ExpenseEntity
-import com.nemislimus.tratometr.expense_history.domain.model.Expense
+import com.nemislimus.tratometr.case.db.entity.CategoryEntity
+import com.nemislimus.tratometr.case.db.entity.ExpenseEntity
+import com.nemislimus.tratometr.case.db.model.Category
+import com.nemislimus.tratometr.case.db.model.Expense
 import java.math.BigDecimal
 
-class ExpenseDbConvertor {
+class DbConvertor {
     fun map(expense: Expense): ExpenseEntity {
         return ExpenseEntity (
             expense.id,
@@ -24,6 +26,20 @@ class ExpenseDbConvertor {
             expense.category,
             expense.iconResId,
             expense.note
+        )
+    }
+
+    fun map(category: Category): CategoryEntity {
+        return CategoryEntity (
+            category.name,
+            category.iconResId
+        )
+    }
+
+    fun map(category: CategoryEntity): Category {
+        return Category (
+            category.name,
+            category.iconResId
         )
     }
 }
