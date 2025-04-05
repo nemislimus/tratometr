@@ -1,5 +1,7 @@
 package com.nemislimus.tratometr.expenses.data.database
 
+import android.content.ContentValues
+import com.nemislimus.tratometr.expenses.data.database.entities.CategoryEntity
 import com.nemislimus.tratometr.expenses.data.database.entities.ExpenseEntity
 import javax.inject.Inject
 
@@ -67,7 +69,57 @@ class ExpenseHistoryDao @Inject constructor(
     }
 
 // ################   ЗАПРОСЫ ДЛЯ ОКНА ДОБАВЛЕНИЕ/РЕДАКТИРОВАНИЕ РАСХОДА   ######################################################################
+    //Список всех категорий с иконками (по алфавиту)
+    /* Образец запроса
+    SELECT CATEGORIES.CATEGORY_NAME, CATEGORIES.ICON_RES_ID FROM CATEGORIES ORDER BY CATEGORIES.CATEGORY_NAME;
+     */
+    fun getAllCategoriesListWithIcons(): List<CategoryEntity> {
+        val db = databaseHelper.readableDatabase
+        val query = "SELECT CATEGORIES.CATEGORY_NAME, CATEGORIES.ICON_RES_ID FROM CATEGORIES ORDER BY CATEGORIES.CATEGORY_NAME;"
+        val categories = mutableListOf<CategoryEntity>()
+        val args = mutableListOf<String>()
+        val cursor = db.rawQuery(query, args.toTypedArray())
 
+        if (cursor.moveToFirst()) {
+            do {
+             val categoryName = cursor.getString(0)
+             val iconResId = cursor.getInt(1)
+             categories.add(CategoryEntity(categoryName, iconResId))
+            } while (cursor.moveToNext())
+        }
+        cursor.close()
+        db.close()
+        return categories
+
+    }
+
+    // Добавление нового расхода
+    fun addNewExpense(expense: ExpenseEntity) {
+        val db = databaseHelper.writableDatabase
+        val contentValues = ContentValues().apply {
+            put("DATE", expense.date)
+            put("AMOUNT", expense.amount)
+            put("CATEGORY", expense.category)
+            put("NOTE", expense.description)
+        }
+        db.insert("EXPENSES", null, contentValues)
+        db.close()
+    }
+
+    // Обновление расхода
+// Обновление строки-расхода
+    fun updateExpense(expense: ExpenseEntity) {
+        val db = databaseHelper .writableDatabase
+        val contentValues = ContentValues().apply {
+            put("DATE", expense.date)
+            put("AMOUNT", expense.amount)
+            put("CATEGORY", expense.category)
+            put("NOTE", expense.description)
+        }
+        val whereArgs = arrayOf(expense.id.toString())
+        db.update("EXPENSES", contentValues, "_id = ?", whereArgs)
+        db.close()
+    }
 
 // ################   ЗАПРОСЫ ДЛЯ ОКНА ВЫБОР КАТЕГОРИИ   ########################################################################################
 
