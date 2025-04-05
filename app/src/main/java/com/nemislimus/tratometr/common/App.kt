@@ -1,4 +1,4 @@
-package com.nemislimus.tratometr
+package com.nemislimus.tratometr.common
 
 import android.app.Application
 import android.content.Context

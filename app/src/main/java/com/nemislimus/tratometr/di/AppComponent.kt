@@ -1,6 +1,7 @@
 package com.nemislimus.tratometr.di
 
 import android.content.Context
+import com.nemislimus.tratometr.common.MainActivity
 import dagger.BindsInstance
 import dagger.Component
 import javax.inject.Singleton

@@ -1,7 +1,7 @@
 package com.nemislimus.tratometr.di
 
 import android.content.Context
-import com.nemislimus.tratometr.case.db.DBHelper
+import com.nemislimus.tratometr.expenses.data.database.DBHelper
 import dagger.Module
 import dagger.Provides
 import javax.inject.Singleton

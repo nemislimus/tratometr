@@ -1,4 +1,4 @@
-package com.nemislimus.tratometr.case.db
+package com.nemislimus.tratometr.expenses.data.database
 
 import android.content.Context
 import android.database.sqlite.SQLiteDatabase
