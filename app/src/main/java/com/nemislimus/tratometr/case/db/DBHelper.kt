@@ -4,13 +4,8 @@ import android.content.Context
 import android.database.sqlite.SQLiteDatabase
 import android.database.sqlite.SQLiteOpenHelper
 
-internal class DBHelper (context: Context?) :
+class DBHelper (context: Context) :
     SQLiteOpenHelper(context, DB_NAME, null, DB_VERSION) {
-
-    companion object {
-        private val DB_NAME = "DBExpenses"
-        private val DB_VERSION = 1
-    }
 
     override fun onCreate(db: SQLiteDatabase) {
         // Создание таб. EXPENSES
@@ -22,6 +17,7 @@ internal class DBHelper (context: Context?) :
                     + "CATEGORY TEXT NOT NULL,"         // Категория
                     + "NOTE TEXT);"                     // Примечание
         )
+
         // Создание таб. CATEGORIES
         db.execSQL(
             "CREATE TABLE CATEGORIES ("
@@ -31,5 +27,10 @@ internal class DBHelper (context: Context?) :
     }
 
     // Обновление/миграция БД
-    override fun onUpgrade(db: SQLiteDatabase, oldVersion: Int, newVersion: Int) {}
+    override fun onUpgrade(db: SQLiteDatabase, oldVersion: Int, newVersion: Int) { }
+
+    companion object {
+        private const val DB_NAME = "DBExpenses"
+        private const val DB_VERSION = 1
+    }
 }
