@@ -1,16 +1,12 @@
-package com.nemislimus.tratometr.expense_history.data.db.dao
+package com.nemislimus.tratometr.expenses.data.database
 
-import com.nemislimus.tratometr.App
-import com.nemislimus.tratometr.case.db.DBHelper
-import com.nemislimus.tratometr.case.db.entity.ExpenseEntity
+import com.nemislimus.tratometr.common.App
+import com.nemislimus.tratometr.expenses.data.database.entities.ExpenseEntity
+import javax.inject.Inject
 
-class ExpenseHistoryDao (
-
+class ExpenseHistoryDao @Inject constructor(
+    private val databaseHelper: DBHelper
 ) {
-
-    // ЗАМЕНИТЬ НА ПАРАМЕТРЫ ПРИ СОЗДАНИИ DI ********************************************
-    private val dbh = DBHelper(App.appContext)
-    //***********************************************************************************
 
     // Выборка строк-расходов за период и по категории
     /*  Образец запроса
@@ -20,7 +16,7 @@ class ExpenseHistoryDao (
         ORDER BY EXPENSES.DATE;
     */
     fun getExpenseListFilter(startDate: Long?, endDate: Long?, category: String?): List<ExpenseEntity> {
-        val db = dbh.readableDatabase
+        val db = databaseHelper.readableDatabase
         val expenses = mutableListOf<ExpenseEntity>()
         // Начинаем строить базовый запрос
         val queryBuilder =
@@ -65,7 +61,7 @@ class ExpenseHistoryDao (
 
     // Удаление строки-расхода по id
     fun deleteExpense(expenseId: Long) {
-        val db = dbh.writableDatabase
+        val db = databaseHelper.writableDatabase
         val whereArgs = arrayOf(expenseId.toString())
         db.delete("EXPENSES", "_id = ?", whereArgs)
         db.close()
