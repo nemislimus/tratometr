@@ -25,7 +25,7 @@ internal class DBHelper (context: Context?) :
         // Создание таб. CATEGORIES
         db.execSQL(
             "CREATE TABLE CATEGORIES ("
-                    + "NAME TEXT PRIMARY KEY,"          // Название категории как первичный ключ
+                    + "CATEGORY_NAME TEXT PRIMARY KEY," // Название категории - первичный ключ
                     + "ICON_RES_ID INTEGER);"           // id иконки
         )
     }
