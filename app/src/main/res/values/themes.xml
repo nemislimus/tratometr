@@ -6,4 +6,49 @@
     </style>
 
     <style name="Theme.Tratometr" parent="Base.Theme.Tratometr" />
+
+
+    <style name="AppTextH1">
+        <item name="android:fontFamily">@font/manrope_weight600_semibold</item>
+        <item name="android:textSize">@dimen/text_size_20</item>
+        <item name="android:textAllCaps">false</item>
+        <item name="android:letterSpacing">-0.02</item>
+    </style>
+
+    <style name="AppTextH2">
+        <item name="android:fontFamily">@font/manrope_weight600_semibold</item>
+        <item name="android:textSize">@dimen/text_size_16</item>
+        <item name="android:textAllCaps">false</item>
+        <item name="android:letterSpacing">0</item>
+    </style>
+
+    <style name="AppTextPrimary">
+        <item name="android:fontFamily">@font/manrope_weight400_regular</item>
+        <item name="android:textSize">@dimen/text_size_16</item>
+        <item name="android:textAllCaps">false</item>
+        <item name="android:letterSpacing">0</item>
+    </style>
+
+    <style name="AppTextButton">
+        <item name="android:fontFamily">@font/manrope_weight600_semibold</item>
+        <item name="android:textSize">@dimen/text_size_16</item>
+        <item name="android:textAllCaps">false</item>
+        <item name="android:letterSpacing">0</item>
+    </style>
+
+    <style name="AppTextSecondary">
+        <item name="android:fontFamily">@font/manrope_weight400_regular</item>
+        <item name="android:textSize">@dimen/text_size_14</item>
+        <item name="android:textAllCaps">false</item>
+        <item name="android:letterSpacing">0</item>
+    </style>
+
+    <style name="AppTextBigNumber">
+        <item name="android:fontFamily">@font/manrope_weight700_bold</item>
+        <item name="android:textSize">@dimen/text_size_36</item>
+        <item name="android:textAllCaps">false</item>
+        <item name="android:letterSpacing">-0.04</item>
+    </style>
+
+
 </resources>
