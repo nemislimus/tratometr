@@ -1,8 +1,29 @@
 <resources xmlns:tools="http://schemas.android.com/tools">
+
+    <attr name="appBackgroundColor" format="color"/>
+    <attr name="appTextPrimary" format="color"/>
+    <attr name="appTextSecondary" format="color"/>
+    <attr name="appDividers" format="color"/>
+    <attr name="appCardBackground" format="color"/>
+    <attr name="appCardText" format="color"/>
+    <attr name="appNotActiveColor" format="color"/>
+    <attr name="appErrorColor" format="color"/>
+    <attr name="appAccentColor" format="color"/>
+
     <!-- Base application theme. -->
     <style name="Base.Theme.Tratometr" parent="Theme.Material3.DayNight.NoActionBar">
-        <!-- Customize your light theme here. -->
-        <!-- <item name="colorPrimary">@color/my_light_primary</item> -->
+        <item name="android:windowLightStatusBar">true</item>
+        <item name="android:statusBarColor">@color/background</item>
+        <item name="android:navigationBarColor">@color/background</item>
+        <item name="appBackgroundColor">@color/background</item>
+        <item name="appTextPrimary">@color/text_primary</item>
+        <item name="appTextSecondary">@color/text_secondary</item>
+        <item name="appDividers">@color/dividers</item>
+        <item name="appCardBackground">@color/cards</item>
+        <item name="appCardText">@color/dark_cards</item>
+        <item name="appNotActiveColor">@color/not_active</item>
+        <item name="appErrorColor">@color/error</item>
+        <item name="appAccentColor">@color/accented</item>
     </style>
 
     <style name="Theme.Tratometr" parent="Base.Theme.Tratometr" />
