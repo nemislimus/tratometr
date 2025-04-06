@@ -22,7 +22,7 @@ class DBHelper (context: Context) :
         db.execSQL(
             "CREATE TABLE CATEGORIES ("
                     + "CATEGORY_NAME TEXT PRIMARY KEY," // Название категории - первичный ключ
-                    + "ICON_RES_ID INTEGER);"           // id иконки
+                    + "ICON_RES_ID INTEGER NOT NULL);"           // id иконки
         )
     }
 

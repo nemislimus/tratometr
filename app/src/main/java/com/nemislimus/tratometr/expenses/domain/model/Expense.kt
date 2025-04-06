@@ -1,5 +1,6 @@
 package com.nemislimus.tratometr.expenses.domain.model
 
+import androidx.annotation.DrawableRes
 import java.math.BigDecimal
 
 data class Expense(
@@ -7,6 +8,6 @@ data class Expense(
     val date: Long,
     val amount: BigDecimal,
     val category: String,
-    val iconResId: Int,
+    @DrawableRes val iconResId: Int,
     val description: String?
 )
