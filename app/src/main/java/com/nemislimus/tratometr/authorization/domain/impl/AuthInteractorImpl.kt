@@ -12,4 +12,16 @@ class AuthInteractorImpl(private val repository: AuthRepository) : AuthInteracto
     override suspend fun login(email: String, password: String): Tokens {
         return repository.login(email, password)
     }
+
+    override suspend fun refresh(token: String): Tokens {
+        return repository.refresh(token)
+    }
+
+    override suspend fun check(token: String): Boolean {
+        return repository.check(token)
+    }
+
+    override suspend fun recovery(email: String) {
+        repository.recovery(email)
+    }
 }

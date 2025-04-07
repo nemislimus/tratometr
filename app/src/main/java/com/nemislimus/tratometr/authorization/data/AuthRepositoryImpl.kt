@@ -1,7 +1,13 @@
 package com.nemislimus.tratometr.authorization.data
 
+import android.util.Log
 import com.nemislimus.tratometr.authorization.data.dto.AuthRequest
 import com.nemislimus.tratometr.authorization.data.dto.AuthResponse
+import com.nemislimus.tratometr.authorization.data.dto.CheckTokenRequest
+import com.nemislimus.tratometr.authorization.data.dto.CheckTokenResponse
+import com.nemislimus.tratometr.authorization.data.dto.RecoveryRequest
+import com.nemislimus.tratometr.authorization.data.dto.RefreshTokenRequest
+import com.nemislimus.tratometr.authorization.data.dto.RefreshTokenResponse
 import com.nemislimus.tratometr.authorization.data.network.NetworkClient
 import com.nemislimus.tratometr.authorization.domain.AuthRepository
 import com.nemislimus.tratometr.authorization.domain.models.Tokens
@@ -59,6 +65,52 @@ class AuthRepositoryImpl(
 
             else -> {
                 Tokens(null, null, "Неизвестная ошибка")
+            }
+        }
+    }
+
+    override suspend fun refresh(token: String): Tokens {
+        val response = client.doRefreshTokenRequest(RefreshTokenRequest(token))
+
+        return when (response.resultCode) {
+            -1 -> {
+                Tokens(null, null, "Проверьте подключение к интернету")
+            }
+
+            200 -> with(response as RefreshTokenResponse) {
+                Tokens(accessToken, refreshToken, "Токены успешно обновлены")
+            }
+
+            else -> {
+                Tokens(null, null, "Неизвестная ошибка")
+            }
+        }
+    }
+
+    override suspend fun check(token: String): Boolean {
+        val response = client.doCheckTokenRequest(CheckTokenRequest(token))
+
+        return when (response.resultCode) {
+            200 -> with(response as CheckTokenResponse) {
+                isValid
+            }
+
+            else -> {
+                false
+            }
+        }
+    }
+
+    override suspend fun recovery(email: String) {
+        val response = client.doRecoveryRequest(RecoveryRequest(email))
+
+        when (response.resultCode) {
+            200 -> {
+                Log.d("Восстановление пароля", "Восстановлен")
+            }
+
+            else -> {
+                Log.d("Восстановление пароля", "Что-то пошло не так")
             }
         }
     }

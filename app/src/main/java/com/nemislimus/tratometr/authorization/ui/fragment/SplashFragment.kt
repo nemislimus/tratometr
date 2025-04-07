@@ -11,7 +11,7 @@ class SplashFragment : BindingFragment<FragmentSplashBinding>() {
         inflater: LayoutInflater,
         container: ViewGroup?
     ): FragmentSplashBinding {
-        return FragmentSplashBinding.inflate(inflater,container,false)
+        return FragmentSplashBinding.inflate(inflater, container, false)
     }
 
 }

@@ -26,37 +26,6 @@ class RetrofitNetworkClient(private val context: Context) : NetworkClient {
 
     val service: ApiService = retrofit.create(ApiService::class.java)
 
-    /*override suspend fun doRequest(dto: Any): Response {
-        if (!isConnected()) {
-            return Response().apply { resultCode = -1 }
-        }
-        when (dto) {
-            is RegistrationRequest -> {
-                return doRegistrationRequest(dto)
-            }
-
-            is LoginRequest -> {
-                return doLoginRequest(dto)
-            }
-
-            is RefreshTokenRequest -> {
-                return doRefreshTokenRequest(dto)
-            }
-
-            is CheckTokenRequest -> {
-                return doCheckTokenRequest(dto)
-            }
-
-            is RecoveryRequest -> {
-                return doRecoveryRequest(dto)
-            }
-
-            else -> {
-                return Response().apply { resultCode = 100500 }
-            }
-        }
-    }*/
-
     override suspend fun doAuthRequest(dto: AuthRequest): AuthResponse {
         return try {
             val response = when (dto) {
@@ -76,23 +45,7 @@ class RetrofitNetworkClient(private val context: Context) : NetworkClient {
         }
     }
 
-    /*suspend fun doLoginRequest(dto: LoginRequest): AuthResponse {
-        return try {
-            val response = service.login(dto)
-            if (!isConnected()) {
-                Response().apply { resultCode = -1 }
-            }
-            if (response.isSuccessful) {
-                response.body()!!.apply { resultCode = response.code() }
-            } else {
-                AuthResponse(empty, empty, 0).apply { resultCode = response.code() }
-            }
-        } catch (e: Exception) {
-            AuthResponse(empty, empty, 0).apply { resultCode = 500 }
-        }
-    }*/
-
-    suspend fun doCheckTokenRequest(dto: CheckTokenRequest): CheckTokenResponse {
+    override suspend fun doCheckTokenRequest(dto: CheckTokenRequest): CheckTokenResponse {
         return try {
             val authHeader = "Bearer ${dto.accessToken}"
             val response = service.checkToken(authHeader)
@@ -113,7 +66,7 @@ class RetrofitNetworkClient(private val context: Context) : NetworkClient {
         }
     }
 
-    suspend fun doRefreshTokenRequest(dto: RefreshTokenRequest): RefreshTokenResponse {
+    override suspend fun doRefreshTokenRequest(dto: RefreshTokenRequest): RefreshTokenResponse {
         return try {
             val response = service.refreshToken(dto)
             if (!isConnected()) {
@@ -129,7 +82,7 @@ class RetrofitNetworkClient(private val context: Context) : NetworkClient {
         }
     }
 
-    suspend fun doRecoveryRequest(dto: RecoveryRequest): Response {
+    override suspend fun doRecoveryRequest(dto: RecoveryRequest): Response {
         return try {
             val response = service.recoverPassword(dto.email)
             if (!isConnected()) {
@@ -145,7 +98,7 @@ class RetrofitNetworkClient(private val context: Context) : NetworkClient {
         }
     }
 
-    override fun isConnected(): Boolean {
+    private fun isConnected(): Boolean {
         val connectivityManager =
             context.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
         return connectivityManager.isActiveNetworkMetered
