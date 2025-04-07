@@ -1,6 +1,7 @@
 package com.nemislimus.tratometr.di
 
 import android.content.Context
+import com.nemislimus.tratometr.expenses.data.database.DBConverter
 import com.nemislimus.tratometr.expenses.data.database.DBHelper
 import dagger.Module
 import dagger.Provides
@@ -16,8 +17,10 @@ class DataModule {
         return DBHelper(context)
     }
 
+    @Singleton
+    @Provides
+    fun provideDataBaseConverter(): DBConverter = DBConverter()
 
     // NETWORK SECTION
-
 
 }
