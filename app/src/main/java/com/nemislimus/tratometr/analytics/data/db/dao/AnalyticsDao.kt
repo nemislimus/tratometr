@@ -16,7 +16,7 @@ class AnalyticsDao @Inject constructor(
         WHERE (((EXPENSES.Date)>=500 And (EXPENSES.Date)<1555) AND ((EXPENSES.CATEGORY)="Еда"))
         ORDER BY EXPENSES.CATEGORY;
     */
-    fun getExpenseListFilter(startDate: Long?, endDate: Long?, category: String?): List<CategoryEntity> {
+    fun getCategoriesListWithIconsFiltr(startDate: Long?, endDate: Long?, category: String?): List<CategoryEntity> {
         val db = databaseHelper.readableDatabase
         val categories = mutableListOf<CategoryEntity>()
         // Начинаем строить базовый запрос
