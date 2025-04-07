@@ -1,6 +1,8 @@
 package com.nemislimus.tratometr.expenses.data.database.entities
 
+import androidx.annotation.DrawableRes
+
 data class CategoryEntity(
     val name: String,
-    val iconResId: Int
+    @DrawableRes val iconResId: Int
 )
