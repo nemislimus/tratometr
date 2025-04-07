@@ -12,7 +12,6 @@
 
     <!-- Base application theme. -->
     <style name="Base.Theme.Tratometr" parent="Theme.Material3.DayNight.NoActionBar">
-        <item name="android:windowLightStatusBar">true</item>
         <item name="android:statusBarColor">@color/background</item>
         <item name="android:navigationBarColor">@color/background</item>
         <item name="appBackgroundColor">@color/background</item>
