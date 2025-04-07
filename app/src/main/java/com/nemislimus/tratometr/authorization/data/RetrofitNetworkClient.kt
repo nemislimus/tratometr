@@ -2,14 +2,13 @@ package com.nemislimus.tratometr.authorization.data
 
 import android.content.Context
 import android.net.ConnectivityManager
+import com.nemislimus.tratometr.authorization.data.dto.AuthRequest
 import com.nemislimus.tratometr.authorization.data.dto.AuthResponse
 import com.nemislimus.tratometr.authorization.data.dto.CheckTokenRequest
 import com.nemislimus.tratometr.authorization.data.dto.CheckTokenResponse
-import com.nemislimus.tratometr.authorization.data.dto.LoginRequest
 import com.nemislimus.tratometr.authorization.data.dto.RecoveryRequest
 import com.nemislimus.tratometr.authorization.data.dto.RefreshTokenRequest
 import com.nemislimus.tratometr.authorization.data.dto.RefreshTokenResponse
-import com.nemislimus.tratometr.authorization.data.dto.RegistrationRequest
 import com.nemislimus.tratometr.authorization.data.dto.Response
 import com.nemislimus.tratometr.authorization.data.network.ApiService
 import com.nemislimus.tratometr.authorization.data.network.NetworkClient
@@ -27,7 +26,7 @@ class RetrofitNetworkClient(private val context: Context) : NetworkClient {
 
     val service: ApiService = retrofit.create(ApiService::class.java)
 
-    override suspend fun doRequest(dto: Any): Response {
+    /*override suspend fun doRequest(dto: Any): Response {
         if (!isConnected()) {
             return Response().apply { resultCode = -1 }
         }
@@ -56,38 +55,50 @@ class RetrofitNetworkClient(private val context: Context) : NetworkClient {
                 return Response().apply { resultCode = 100500 }
             }
         }
-    }
+    }*/
 
-    private suspend fun doRegistrationRequest(dto: RegistrationRequest): AuthResponse {
+    override suspend fun doAuthRequest(dto: AuthRequest): AuthResponse {
         return try {
-            val response = service.register(dto)
+            val response = when (dto) {
+                is AuthRequest.RegistrationRequest -> service.register(dto)
+                is AuthRequest.LoginRequest -> service.login(dto)
+            }
+            if (!isConnected()) {
+                Response().apply { resultCode = -1 }
+            }
             if (response.isSuccessful) {
                 response.body()!!.apply { resultCode = response.code() }
             } else {
                 AuthResponse(empty, empty, 0).apply { resultCode = response.code() }
             }
         } catch (e: Exception) {
-            AuthResponse(empty, empty, 0).apply { resultCode = 1 }
+            AuthResponse(empty, empty, 0).apply { resultCode = 500 }
         }
     }
 
-    private suspend fun doLoginRequest(dto: LoginRequest): AuthResponse {
+    /*suspend fun doLoginRequest(dto: LoginRequest): AuthResponse {
         return try {
             val response = service.login(dto)
+            if (!isConnected()) {
+                Response().apply { resultCode = -1 }
+            }
             if (response.isSuccessful) {
                 response.body()!!.apply { resultCode = response.code() }
             } else {
                 AuthResponse(empty, empty, 0).apply { resultCode = response.code() }
             }
         } catch (e: Exception) {
-            AuthResponse(empty, empty, 0).apply { resultCode = 1 }
+            AuthResponse(empty, empty, 0).apply { resultCode = 500 }
         }
-    }
+    }*/
 
-    private suspend fun doCheckTokenRequest(dto: CheckTokenRequest): CheckTokenResponse {
+    suspend fun doCheckTokenRequest(dto: CheckTokenRequest): CheckTokenResponse {
         return try {
             val authHeader = "Bearer ${dto.accessToken}"
             val response = service.checkToken(authHeader)
+            if (!isConnected()) {
+                Response().apply { resultCode = -1 }
+            }
 
             if (response.isSuccessful) {
                 response.body()?.apply {
@@ -98,37 +109,43 @@ class RetrofitNetworkClient(private val context: Context) : NetworkClient {
                 CheckTokenResponse(false).apply { resultCode = response.code() }
             }
         } catch (e: Exception) {
-            CheckTokenResponse(false).apply { resultCode = 1 }
+            CheckTokenResponse(false).apply { resultCode = 500 }
         }
     }
 
-    private suspend fun doRefreshTokenRequest(dto: RefreshTokenRequest): RefreshTokenResponse {
+    suspend fun doRefreshTokenRequest(dto: RefreshTokenRequest): RefreshTokenResponse {
         return try {
             val response = service.refreshToken(dto)
+            if (!isConnected()) {
+                Response().apply { resultCode = -1 }
+            }
             if (response.isSuccessful) {
                 response.body()!!.apply { resultCode = response.code() }
             } else {
                 RefreshTokenResponse(empty, empty).apply { resultCode = response.code() }
             }
         } catch (e: Exception) {
-            RefreshTokenResponse(empty, empty).apply { resultCode = 1 }
+            RefreshTokenResponse(empty, empty).apply { resultCode = 500 }
         }
     }
 
-    private suspend fun doRecoveryRequest(dto: RecoveryRequest): Response {
+    suspend fun doRecoveryRequest(dto: RecoveryRequest): Response {
         return try {
             val response = service.recoverPassword(dto.email)
+            if (!isConnected()) {
+                Response().apply { resultCode = -1 }
+            }
             if (response.isSuccessful) {
                 Response().apply { resultCode = response.code() }
             } else {
                 Response().apply { resultCode = response.code() }
             }
         } catch (e: Exception) {
-            Response().apply { resultCode = 1 }
+            Response().apply { resultCode = 500 }
         }
     }
 
-    private fun isConnected(): Boolean {
+    override fun isConnected(): Boolean {
         val connectivityManager =
             context.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
         return connectivityManager.isActiveNetworkMetered
