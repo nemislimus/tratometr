@@ -20,8 +20,8 @@ class AuthRepositoryImpl(
             201 -> {
                 with(response as AuthResponse) {
                     Tokens(
-                        response.accessToken,
-                        response.refreshToken,
+                        accessToken,
+                        refreshToken,
                         "Аккаунт успешно зарегистрирован"
                     )
                 }
@@ -33,6 +33,28 @@ class AuthRepositoryImpl(
 
             409 -> {
                 Tokens(null, null, "Пользователь с таким e-mail уже существует")
+            }
+
+            else -> {
+                Tokens(null, null, "Неизвестная ошибка")
+            }
+        }
+    }
+
+    override suspend fun login(email: String, password: String): Tokens {
+        val response = client.doAuthRequest(AuthRequest.LoginRequest(email, password))
+
+        return when (response.resultCode) {
+            -1 -> {
+                Tokens(null, null, "Проверьте подключение к интернету")
+            }
+
+            200 -> with(response as AuthResponse) {
+                Tokens(accessToken, refreshToken, "Успешный вход")
+            }
+
+            400 -> {
+                Tokens(null, null, "Некорректный e-mail или пароль менее 7 символов")
             }
 
             else -> {
