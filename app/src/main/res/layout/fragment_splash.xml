@@ -5,11 +5,13 @@
     android:id="@+id/main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="?attr/appBackgroundColor"
     tools:context=".authorization.ui.fragment.SplashFragment">
 
     <TextView
         android:layout_width="0dp"
         android:layout_height="wrap_content"
+        android:textColor="?attr/appTextPrimary"
         android:textAlignment="center"
         android:text="СТАРТОВЫЙ ЭКРАН С ЛОГОТИПОМ"
         android:textSize="24dp"
