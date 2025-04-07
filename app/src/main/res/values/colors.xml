@@ -5,6 +5,7 @@
     <color name="category_ic">#FFFFFF</color>
     <color name="button_text">#FFFFFF</color>
     <color name="category_ic_background">#ABBAEF</color>
+    <color name="dark_category_ic_background">#6978AC</color>
 
     <color name="background">#F2F2F7</color>
     <color name="text_primary">#202022</color>

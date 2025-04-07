@@ -14,5 +14,6 @@
         <item name="appNotActiveColor">@color/not_active</item>
         <item name="appErrorColor">@color/error</item>
         <item name="appAccentColor">@color/accented</item>
+        <item name="appCategoryIconBackground">@color/category_ic_background</item>
     </style>
 </resources>
