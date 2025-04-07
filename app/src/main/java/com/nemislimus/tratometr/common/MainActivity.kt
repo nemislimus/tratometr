@@ -18,5 +18,15 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
+
+        val client = RetrofitNetworkClient(this)
+        val repository = AuthRepositoryImpl(client)
+        val interactor = AuthInteractorImpl(repository)
+
+        lifecycleScope.launch {
+            var tokens = interactor.login("forothen@gmail.com", "12345678")
+            //tokens = interactor.refresh(tokens.refreshToken!!)
+            Log.d("Токен", tokens.message)
+        }
     }
 }
