@@ -13,5 +13,10 @@
         <item name="appErrorColor">@color/dark_error</item>
         <item name="appAccentColor">@color/dark_accented</item>
         <item name="appCategoryIconBackground">@color/dark_category_ic_background</item>
+
+
+        <!-- Цвета для TimePicker и DatePicker -->
+        <item name="colorPrimary">@color/dark_accented</item>
+        <item name="colorPrimaryContainer">@color/dark_category_ic_background</item>
     </style>
 </resources>
