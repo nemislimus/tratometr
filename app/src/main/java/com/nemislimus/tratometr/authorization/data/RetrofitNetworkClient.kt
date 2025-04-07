@@ -1,5 +1,7 @@
 package com.nemislimus.tratometr.authorization.data
 
+import android.content.Context
+import android.net.ConnectivityManager
 import com.nemislimus.tratometr.authorization.data.dto.AuthResponse
 import com.nemislimus.tratometr.authorization.data.dto.CheckTokenRequest
 import com.nemislimus.tratometr.authorization.data.dto.CheckTokenResponse
@@ -14,7 +16,7 @@ import com.nemislimus.tratometr.authorization.data.network.NetworkClient
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 
-class RetrofitNetworkClient : NetworkClient {
+class RetrofitNetworkClient(private val context: Context) : NetworkClient {
     private val empty = ""
     private val baseUrl = "http://130.193.44.66:8080/"
 
@@ -26,6 +28,9 @@ class RetrofitNetworkClient : NetworkClient {
     val service: ApiService = retrofit.create(ApiService::class.java)
 
     override suspend fun doRequest(dto: Any): Response {
+        if (!isConnected()) {
+            return Response().apply { resultCode = -1 }
+        }
         when (dto) {
             is RegistrationRequest -> {
                 return doRegistrationRequest(dto)
@@ -121,5 +126,11 @@ class RetrofitNetworkClient : NetworkClient {
         } catch (e: Exception) {
             Response().apply { resultCode = 1 }
         }
+    }
+
+    private fun isConnected(): Boolean {
+        val connectivityManager =
+            context.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
+        return connectivityManager.isActiveNetworkMetered
     }
 }
