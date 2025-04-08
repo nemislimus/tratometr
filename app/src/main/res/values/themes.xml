@@ -76,5 +76,10 @@
         <item name="android:letterSpacing">-0.04</item>
     </style>
 
+    <style name="AppEditTextPrimary" parent="AppTextPrimary">
+        <item name="android:textColorHint">?attr/appTextSecondary</item>
+        <item name="android:textCursorDrawable">@drawable/blue_cursor</item>
+    </style>
+
 
 </resources>
