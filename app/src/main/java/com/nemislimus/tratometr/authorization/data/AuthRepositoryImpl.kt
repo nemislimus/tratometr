@@ -1,6 +1,5 @@
 package com.nemislimus.tratometr.authorization.data
 
-import android.util.Log
 import com.nemislimus.tratometr.authorization.data.dto.AuthRequest
 import com.nemislimus.tratometr.authorization.data.dto.AuthResponse
 import com.nemislimus.tratometr.authorization.data.dto.CheckTokenRequest
@@ -17,31 +16,37 @@ class AuthRepositoryImpl(
     private val client: NetworkClient
 ) : AuthRepository {
     companion object {
-        const val ERROR_NETWORK = "Проверьте подключение к интернету"
-        const val ERROR_INVALID_CREDENTIALS = "Некорректный e-mail или пароль менее 7 символов"
-        const val ERROR_EMAIL_EXISTS = "Пользователь с таким e-mail уже существует"
-        const val ERROR_UNKNOWN = "Неизвестная ошибка"
+        private const val ERROR_NETWORK = "Проверьте подключение к интернету"
+        private const val ERROR_INVALID_CREDENTIALS = "Некорректный e-mail или пароль менее 7 символов"
+        private const val ERROR_EMAIL_EXISTS = "Пользователь с таким e-mail уже существует"
+        private const val ERROR_UNKNOWN = "Неизвестная ошибка"
+
+        private const val SUCCESS_CODE = 200
+        private const val CREATED_CODE = 201
+        private const val BAD_REQUEST_CODE = 400
+        private const val CONFLICT_CODE = 409
+        private const val NETWORK_ERROR_CODE = -1
     }
 
     override suspend fun register(email: String, password: String): Resource<Tokens> {
         val response = client.doAuthRequest(AuthRequest.RegistrationRequest(email, password))
 
         return when (response.resultCode) {
-            -1 -> {
+            NETWORK_ERROR_CODE -> {
                 Resource.Error<Tokens>(ERROR_NETWORK)
             }
 
-            201 -> {
+            CREATED_CODE -> {
                 with(response as AuthResponse) {
                     Resource.Success<Tokens>(Tokens(accessToken, refreshToken))
                 }
             }
 
-            400 -> {
+            BAD_REQUEST_CODE -> {
                 Resource.Error<Tokens>(ERROR_INVALID_CREDENTIALS)
             }
 
-            409 -> {
+            CONFLICT_CODE -> {
                 Resource.Error<Tokens>(ERROR_EMAIL_EXISTS)
             }
 
@@ -55,15 +60,15 @@ class AuthRepositoryImpl(
         val response = client.doAuthRequest(AuthRequest.LoginRequest(email, password))
 
         return when (response.resultCode) {
-            -1 -> {
+            NETWORK_ERROR_CODE -> {
                 Resource.Error<Tokens>(ERROR_NETWORK)
             }
 
-            200 -> with(response as AuthResponse) {
+            SUCCESS_CODE -> with(response as AuthResponse) {
                 Resource.Success<Tokens>(Tokens(accessToken, refreshToken))
             }
 
-            400 -> {
+            BAD_REQUEST_CODE -> {
                 Resource.Error<Tokens>(ERROR_INVALID_CREDENTIALS)
             }
 
@@ -77,11 +82,11 @@ class AuthRepositoryImpl(
         val response = client.doRefreshTokenRequest(RefreshTokenRequest(token))
 
         return when (response.resultCode) {
-            -1 -> {
+            NETWORK_ERROR_CODE -> {
                 Resource.Error<Tokens>(ERROR_NETWORK)
             }
 
-            200 -> with(response as RefreshTokenResponse) {
+            SUCCESS_CODE -> with(response as RefreshTokenResponse) {
                 Resource.Success<Tokens>(Tokens(accessToken, refreshToken))
             }
 
@@ -95,7 +100,7 @@ class AuthRepositoryImpl(
         val response = client.doCheckTokenRequest(CheckTokenRequest(token))
 
         return when (response.resultCode) {
-            200 -> with(response as CheckTokenResponse) {
+            SUCCESS_CODE -> with(response as CheckTokenResponse) {
                 Resource.Success<Boolean>(isValid)
             }
 
@@ -109,7 +114,7 @@ class AuthRepositoryImpl(
         val response = client.doRecoveryRequest(RecoveryRequest(email))
 
         return when (response.resultCode) {
-            200 -> {
+            SUCCESS_CODE -> {
                 Resource.Success<Boolean>(true)
             }
 
