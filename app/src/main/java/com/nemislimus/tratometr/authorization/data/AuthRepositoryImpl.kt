@@ -10,107 +10,111 @@ import com.nemislimus.tratometr.authorization.data.dto.RefreshTokenRequest
 import com.nemislimus.tratometr.authorization.data.dto.RefreshTokenResponse
 import com.nemislimus.tratometr.authorization.data.network.NetworkClient
 import com.nemislimus.tratometr.authorization.domain.AuthRepository
+import com.nemislimus.tratometr.authorization.domain.models.Resource
 import com.nemislimus.tratometr.authorization.domain.models.Tokens
 
 class AuthRepositoryImpl(
     private val client: NetworkClient
 ) : AuthRepository {
-    override suspend fun register(email: String, password: String): Tokens {
+    companion object {
+        const val ERROR_NETWORK = "Проверьте подключение к интернету"
+        const val ERROR_INVALID_CREDENTIALS = "Некорректный e-mail или пароль менее 7 символов"
+        const val ERROR_EMAIL_EXISTS = "Пользователь с таким e-mail уже существует"
+        const val ERROR_UNKNOWN = "Неизвестная ошибка"
+    }
+
+    override suspend fun register(email: String, password: String): Resource<Tokens> {
         val response = client.doAuthRequest(AuthRequest.RegistrationRequest(email, password))
 
         return when (response.resultCode) {
             -1 -> {
-                Tokens(null, null, "Проверьте подключение к интернету")
+                Resource.Error<Tokens>(ERROR_NETWORK)
             }
 
             201 -> {
                 with(response as AuthResponse) {
-                    Tokens(
-                        accessToken,
-                        refreshToken,
-                        "Аккаунт успешно зарегистрирован"
-                    )
+                    Resource.Success<Tokens>(Tokens(accessToken, refreshToken))
                 }
             }
 
             400 -> {
-                Tokens(null, null, "Некорректный e-mail или пароль менее 7 символов")
+                Resource.Error<Tokens>(ERROR_INVALID_CREDENTIALS)
             }
 
             409 -> {
-                Tokens(null, null, "Пользователь с таким e-mail уже существует")
+                Resource.Error<Tokens>(ERROR_EMAIL_EXISTS)
             }
 
             else -> {
-                Tokens(null, null, "Неизвестная ошибка")
+                Resource.Error<Tokens>(ERROR_UNKNOWN)
             }
         }
     }
 
-    override suspend fun login(email: String, password: String): Tokens {
+    override suspend fun login(email: String, password: String): Resource<Tokens> {
         val response = client.doAuthRequest(AuthRequest.LoginRequest(email, password))
 
         return when (response.resultCode) {
             -1 -> {
-                Tokens(null, null, "Проверьте подключение к интернету")
+                Resource.Error<Tokens>(ERROR_NETWORK)
             }
 
             200 -> with(response as AuthResponse) {
-                Tokens(accessToken, refreshToken, "Успешный вход")
+                Resource.Success<Tokens>(Tokens(accessToken, refreshToken))
             }
 
             400 -> {
-                Tokens(null, null, "Некорректный e-mail или пароль менее 7 символов")
+                Resource.Error<Tokens>(ERROR_INVALID_CREDENTIALS)
             }
 
             else -> {
-                Tokens(null, null, "Неизвестная ошибка")
+                Resource.Error<Tokens>(ERROR_UNKNOWN)
             }
         }
     }
 
-    override suspend fun refresh(token: String): Tokens {
+    override suspend fun refresh(token: String): Resource<Tokens> {
         val response = client.doRefreshTokenRequest(RefreshTokenRequest(token))
 
         return when (response.resultCode) {
             -1 -> {
-                Tokens(null, null, "Проверьте подключение к интернету")
+                Resource.Error<Tokens>(ERROR_NETWORK)
             }
 
             200 -> with(response as RefreshTokenResponse) {
-                Tokens(accessToken, refreshToken, "Токены успешно обновлены")
+                Resource.Success<Tokens>(Tokens(accessToken, refreshToken))
             }
 
             else -> {
-                Tokens(null, null, "Неизвестная ошибка")
+                Resource.Error<Tokens>(ERROR_UNKNOWN)
             }
         }
     }
 
-    override suspend fun check(token: String): Boolean {
+    override suspend fun check(token: String): Resource<Boolean> {
         val response = client.doCheckTokenRequest(CheckTokenRequest(token))
 
         return when (response.resultCode) {
             200 -> with(response as CheckTokenResponse) {
-                isValid
+                Resource.Success<Boolean>(isValid)
             }
 
             else -> {
-                false
+                Resource.Error<Boolean>(ERROR_UNKNOWN, false)
             }
         }
     }
 
-    override suspend fun recovery(email: String) {
+    override suspend fun recovery(email: String): Resource<Boolean> {
         val response = client.doRecoveryRequest(RecoveryRequest(email))
 
-        when (response.resultCode) {
+        return when (response.resultCode) {
             200 -> {
-                Log.d("Восстановление пароля", "Восстановлен")
+                Resource.Success<Boolean>(true)
             }
 
             else -> {
-                Log.d("Восстановление пароля", "Что-то пошло не так")
+                Resource.Error<Boolean>(ERROR_UNKNOWN, false)
             }
         }
     }
