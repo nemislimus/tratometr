@@ -14,4 +14,10 @@ class SplashFragment : BindingFragment<FragmentSplashBinding>() {
         return FragmentSplashBinding.inflate(inflater,container,false)
     }
 
+    override fun onResume() {
+        super.onResume()
+
+
+    }
+
 }
