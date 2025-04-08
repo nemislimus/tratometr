@@ -9,16 +9,7 @@ import java.util.Locale
 class DateRangeHelper {
     companion object {
         // Возвращает строку период типа "01.03 - 25.04.25"
-        fun convertDatesInRange (startDate: Long?, endDate: Long?): String {
-            return when {
-                startDate != null && endDate == null -> DateFormat.format("d.MM.yy", startDate).toString() + " - "
-                startDate == null && endDate != null -> " - " + DateFormat.format("d.MM.yy", endDate - 1L).toString()
-                startDate != null && endDate != null -> combiningDates(startDate, endDate)
-                else -> ""
-            }
-        }
-        // Возвращает строку период типа "01.03 - 25.04.25", если  startDate и endDate точно не null
-        private fun combiningDates(startDate: Long, endDate: Long): String {
+        fun convertDatesInRange(startDate: Long, endDate: Long): String {
             val startDateStr = DateFormat.format("d.MM.yy", startDate).toString()
             val endDateStr = DateFormat.format("d.MM.yy", endDate - 1L).toString()
             if (startDateStr == endDateStr) return endDateStr
