@@ -61,6 +61,7 @@ dependencies {
     implementation(libs.fragment.ktx)
     implementation(libs.navigation.fragment.ktx)
     implementation(libs.navigation.ui.ktx)
+    implementation(libs.lottie)
     // UI-layer end
 
     // DI
