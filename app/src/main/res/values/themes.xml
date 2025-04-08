@@ -1,9 +1,80 @@
 <resources xmlns:tools="http://schemas.android.com/tools">
+
+    <attr name="appBackgroundColor" format="color"/>
+    <attr name="appTextPrimary" format="color"/>
+    <attr name="appTextSecondary" format="color"/>
+    <attr name="appDividers" format="color"/>
+    <attr name="appCardBackground" format="color"/>
+    <attr name="appCardText" format="color"/>
+    <attr name="appNotActiveColor" format="color"/>
+    <attr name="appErrorColor" format="color"/>
+    <attr name="appAccentColor" format="color"/>
+    <attr name="appCategoryIconBackground" format="color"/>
+
     <!-- Base application theme. -->
     <style name="Base.Theme.Tratometr" parent="Theme.Material3.DayNight.NoActionBar">
-        <!-- Customize your light theme here. -->
-        <!-- <item name="colorPrimary">@color/my_light_primary</item> -->
+        <item name="android:statusBarColor">@color/background</item>
+        <item name="android:navigationBarColor">@color/background</item>
+        <item name="appBackgroundColor">@color/background</item>
+        <item name="appTextPrimary">@color/text_primary</item>
+        <item name="appTextSecondary">@color/text_secondary</item>
+        <item name="appDividers">@color/dividers</item>
+        <item name="appCardBackground">@color/cards</item>
+        <item name="appCardText">@color/dark_cards</item>
+        <item name="appNotActiveColor">@color/not_active</item>
+        <item name="appErrorColor">@color/error</item>
+        <item name="appAccentColor">@color/accented</item>
+        <item name="appCategoryIconBackground">@color/category_ic_background</item>
+
+        <!-- Цвета для TimePicker и DatePicker -->
+        <item name="colorPrimary">@color/accented</item>
+        <item name="colorPrimaryContainer">@color/category_ic_background</item>
     </style>
 
     <style name="Theme.Tratometr" parent="Base.Theme.Tratometr" />
+
+
+    <style name="AppTextH1">
+        <item name="android:fontFamily">@font/manrope_weight600_semibold</item>
+        <item name="android:textSize">@dimen/text_size_20</item>
+        <item name="android:textAllCaps">false</item>
+        <item name="android:letterSpacing">-0.02</item>
+    </style>
+
+    <style name="AppTextH2">
+        <item name="android:fontFamily">@font/manrope_weight600_semibold</item>
+        <item name="android:textSize">@dimen/text_size_16</item>
+        <item name="android:textAllCaps">false</item>
+        <item name="android:letterSpacing">0</item>
+    </style>
+
+    <style name="AppTextPrimary">
+        <item name="android:fontFamily">@font/manrope_weight400_regular</item>
+        <item name="android:textSize">@dimen/text_size_16</item>
+        <item name="android:textAllCaps">false</item>
+        <item name="android:letterSpacing">0</item>
+    </style>
+
+    <style name="AppTextButton">
+        <item name="android:fontFamily">@font/manrope_weight600_semibold</item>
+        <item name="android:textSize">@dimen/text_size_16</item>
+        <item name="android:textAllCaps">false</item>
+        <item name="android:letterSpacing">0</item>
+    </style>
+
+    <style name="AppTextSecondary">
+        <item name="android:fontFamily">@font/manrope_weight400_regular</item>
+        <item name="android:textSize">@dimen/text_size_14</item>
+        <item name="android:textAllCaps">false</item>
+        <item name="android:letterSpacing">0</item>
+    </style>
+
+    <style name="AppTextBigNumber">
+        <item name="android:fontFamily">@font/manrope_weight700_bold</item>
+        <item name="android:textSize">@dimen/text_size_36</item>
+        <item name="android:textAllCaps">false</item>
+        <item name="android:letterSpacing">-0.04</item>
+    </style>
+
+
 </resources>
