@@ -16,11 +16,17 @@ import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 
 class RetrofitNetworkClient(private val context: Context) : NetworkClient {
-    private val empty = ""
-    private val baseUrl = "http://130.193.44.66:8080/"
+
+    companion object {
+        private const val EMPTY = ""
+        private const val BASE_URL = "http://130.193.44.66:8080/"
+        private const val NETWORK_ERROR_CODE = -1
+        private const val SERVER_ERROR_CODE = 500
+        private const val NOT_FOUND_CODE = 404
+    }
 
     private val retrofit = Retrofit.Builder()
-        .baseUrl(baseUrl)
+        .baseUrl(BASE_URL)
         .addConverterFactory(GsonConverterFactory.create())
         .build()
 
@@ -28,7 +34,7 @@ class RetrofitNetworkClient(private val context: Context) : NetworkClient {
 
     override suspend fun doAuthRequest(dto: AuthRequest): AuthResponse {
         if (!isConnected()) {
-            return AuthResponse(empty, empty, 0).apply { resultCode = -1 }
+            return AuthResponse(EMPTY, EMPTY, 0).apply { resultCode = NETWORK_ERROR_CODE }
         }
 
         return try {
@@ -39,16 +45,16 @@ class RetrofitNetworkClient(private val context: Context) : NetworkClient {
             if (response.isSuccessful) {
                 response.body()!!.apply { resultCode = response.code() }
             } else {
-                AuthResponse(empty, empty, 0).apply { resultCode = response.code() }
+                AuthResponse(EMPTY, EMPTY, 0).apply { resultCode = response.code() }
             }
         } catch (e: Exception) {
-            AuthResponse(empty, empty, 0).apply { resultCode = 500 }
+            AuthResponse(EMPTY, EMPTY, 0).apply { resultCode = SERVER_ERROR_CODE }
         }
     }
 
     override suspend fun doCheckTokenRequest(dto: CheckTokenRequest): CheckTokenResponse {
         if (!isConnected()) {
-            return CheckTokenResponse(false).apply { resultCode = -1 }
+            return CheckTokenResponse(false).apply { resultCode = NETWORK_ERROR_CODE }
         }
 
         return try {
@@ -59,18 +65,18 @@ class RetrofitNetworkClient(private val context: Context) : NetworkClient {
                 response.body()?.apply {
                     resultCode = response.code()
                 }
-                    ?: CheckTokenResponse(false).apply { resultCode = 404 }
+                    ?: CheckTokenResponse(false).apply { resultCode = NOT_FOUND_CODE }
             } else {
                 CheckTokenResponse(false).apply { resultCode = response.code() }
             }
         } catch (e: Exception) {
-            CheckTokenResponse(false).apply { resultCode = 500 }
+            CheckTokenResponse(false).apply { resultCode = SERVER_ERROR_CODE }
         }
     }
 
     override suspend fun doRefreshTokenRequest(dto: RefreshTokenRequest): RefreshTokenResponse {
         if (!isConnected()) {
-            return RefreshTokenResponse(empty, empty).apply { resultCode = -1 }
+            return RefreshTokenResponse(EMPTY, EMPTY).apply { resultCode = NETWORK_ERROR_CODE }
         }
 
         return try {
@@ -79,16 +85,16 @@ class RetrofitNetworkClient(private val context: Context) : NetworkClient {
             if (response.isSuccessful) {
                 response.body()!!.apply { resultCode = response.code() }
             } else {
-                RefreshTokenResponse(empty, empty).apply { resultCode = response.code() }
+                RefreshTokenResponse(EMPTY, EMPTY).apply { resultCode = response.code() }
             }
         } catch (e: Exception) {
-            RefreshTokenResponse(empty, empty).apply { resultCode = 500 }
+            RefreshTokenResponse(EMPTY, EMPTY).apply { resultCode = SERVER_ERROR_CODE }
         }
     }
 
     override suspend fun doRecoveryRequest(dto: RecoveryRequest): Response {
         if (!isConnected()) {
-            return Response().apply { resultCode = -1 }
+            return Response().apply { resultCode = NETWORK_ERROR_CODE }
         }
 
         return try {
@@ -100,7 +106,7 @@ class RetrofitNetworkClient(private val context: Context) : NetworkClient {
                 Response().apply { resultCode = response.code() }
             }
         } catch (e: Exception) {
-            Response().apply { resultCode = 500 }
+            Response().apply { resultCode = SERVER_ERROR_CODE }
         }
     }
 
