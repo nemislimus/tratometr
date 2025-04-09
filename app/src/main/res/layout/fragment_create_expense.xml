@@ -6,6 +6,9 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
+
+    android:background="?attr/appBackgroundColor"
+
     tools:context=".expenses.ui.fragment.CreateExpenseFragment">
 
     <TextView
@@ -28,6 +31,7 @@
             style="@style/AppEditTextPrimary"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:dropDownHeight="wrap_content"
             android:layout_marginHorizontal="@dimen/size_16dp"
             android:paddingStart="16dp"
             android:paddingEnd="@dimen/size_16dp"
@@ -84,7 +88,7 @@
         android:id="@+id/et_description"
         style="@style/AppEditTextPrimary"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="120dp"
         android:background="@drawable/card_background_selector"
         android:layout_marginHorizontal="@dimen/size_16dp"
         android:layout_marginTop="@dimen/size_12dp"
@@ -103,7 +107,7 @@
         android:layout_weight="1"/>
 
     <TextView
-        android:id="@+id/btn_save"
+        android:id="@+id/btn_action"
         style="@style/AppTextH2"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"

@@ -8,15 +8,19 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.fragment.app.FragmentTransaction.TRANSIT_FRAGMENT_OPEN
 import androidx.lifecycle.ViewModelProvider
+import androidx.navigation.fragment.findNavController
 import com.airbnb.lottie.LottieDrawable
 import com.nemislimus.tratometr.R
 import com.nemislimus.tratometr.authorization.ui.viewmodel.SplashViewModel
 import com.nemislimus.tratometr.authorization.ui.viewmodel.SplashViewModel.Companion.ANIM_END_POINT
 import com.nemislimus.tratometr.authorization.ui.viewmodel.SplashViewModel.Companion.ANIM_START_LOOP_POINT
 import com.nemislimus.tratometr.authorization.ui.viewmodel.SplashViewModel.Companion.ANIM_START_POINT
+import com.nemislimus.tratometr.common.MainActivity
 import com.nemislimus.tratometr.common.util.BindingFragment
 import com.nemislimus.tratometr.databinding.FragmentSplashBinding
+import com.nemislimus.tratometr.expenses.ui.fragment.CreateExpenseFragment
 
 class SplashFragment : BindingFragment<FragmentSplashBinding>() {
 
@@ -45,6 +49,14 @@ class SplashFragment : BindingFragment<FragmentSplashBinding>() {
                 showLoopLogoAnimation()
             }
         })
+        //***********************************************************************************************************
+        val fragmentManager = (requireActivity() as MainActivity).fragmentManager
+        binding.btn.setOnClickListener {
+            fragmentManager.beginTransaction().setTransition(TRANSIT_FRAGMENT_OPEN)
+                .add(R.id.mainFragmentContainer, CreateExpenseFragment())
+                .addToBackStack("MainMenuFragment").commit()
+        }
+        //***********************************************************************************************************
     }
 
     override fun onResume() {

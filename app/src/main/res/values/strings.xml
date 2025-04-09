@@ -6,4 +6,5 @@
     <string name="description">Примечание</string>
     <string name="btn_add">Добавить</string>
     <string name="btn_save">Сохранить</string>
+    <string name="add_category">\n<font color='#8f8f91'>добавить категорию</font></string>
 </resources>
