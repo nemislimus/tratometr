@@ -1,6 +1,7 @@
 package com.nemislimus.tratometr.di
 
 import android.content.Context
+import com.nemislimus.tratometr.authorization.ui.fragment.SplashFragment
 import dagger.BindsInstance
 import dagger.Component
 import javax.inject.Singleton
@@ -8,6 +9,7 @@ import javax.inject.Singleton
 @Singleton
 @Component(modules = [DataModule::class, DomainModule::class, PresentationModule::class])
 interface AppComponent {
+    fun inject(fragment: SplashFragment)
 
     @Component.Builder
     interface Builder {
