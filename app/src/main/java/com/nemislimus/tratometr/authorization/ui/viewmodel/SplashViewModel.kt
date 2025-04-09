@@ -5,10 +5,11 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import com.nemislimus.tratometr.authorization.domain.AuthInteractor
+import javax.inject.Inject
 
 class SplashViewModel(
 //    private val settingsRepo: SettingsRepository,
-    private val authInteractor: AuthInteractor?, // пока nullable, чтобы прописать в фрагмент
+    private val authInteractor: AuthInteractor, // пока nullable, чтобы прописать в фрагмент
     private val isDarkMode: () -> Boolean,
 ) : ViewModel() {
 
@@ -22,7 +23,7 @@ class SplashViewModel(
     }
 
 
-    class Factory(
+    class Factory @Inject constructor(
 //        private val settingsRepo: SettingsRepository,
         private val authInteractor: AuthInteractor,
         private val isDarkMode: () -> Boolean

@@ -11,12 +11,14 @@ import android.view.ViewGroup
 import androidx.lifecycle.ViewModelProvider
 import com.airbnb.lottie.LottieDrawable
 import com.nemislimus.tratometr.R
+import com.nemislimus.tratometr.authorization.domain.impl.AuthInteractorImpl
 import com.nemislimus.tratometr.authorization.ui.viewmodel.SplashViewModel
 import com.nemislimus.tratometr.authorization.ui.viewmodel.SplashViewModel.Companion.ANIM_END_POINT
 import com.nemislimus.tratometr.authorization.ui.viewmodel.SplashViewModel.Companion.ANIM_START_LOOP_POINT
 import com.nemislimus.tratometr.authorization.ui.viewmodel.SplashViewModel.Companion.ANIM_START_POINT
 import com.nemislimus.tratometr.common.util.BindingFragment
 import com.nemislimus.tratometr.databinding.FragmentSplashBinding
+import javax.inject.Inject
 
 class SplashFragment : BindingFragment<FragmentSplashBinding>() {
 
@@ -32,7 +34,7 @@ class SplashFragment : BindingFragment<FragmentSplashBinding>() {
 
     override fun onAttach(context: Context) {
         super.onAttach(context)
-        vmFactory = SplashViewModel.Factory(null){ isDarkModeChecking() }
+        vmFactory = SplashViewModel.Factory(){ isDarkModeChecking() }
         viewModel = ViewModelProvider(requireActivity(), vmFactory)[SplashViewModel::class]
     }
 
