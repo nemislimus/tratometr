@@ -5,6 +5,7 @@ import android.animation.AnimatorListenerAdapter
 import android.content.Context
 import android.content.res.Configuration
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -15,12 +16,15 @@ import com.nemislimus.tratometr.authorization.ui.viewmodel.SplashViewModel
 import com.nemislimus.tratometr.authorization.ui.viewmodel.SplashViewModel.Companion.ANIM_END_POINT
 import com.nemislimus.tratometr.authorization.ui.viewmodel.SplashViewModel.Companion.ANIM_START_LOOP_POINT
 import com.nemislimus.tratometr.authorization.ui.viewmodel.SplashViewModel.Companion.ANIM_START_POINT
+import com.nemislimus.tratometr.common.appComponent
 import com.nemislimus.tratometr.common.util.BindingFragment
 import com.nemislimus.tratometr.databinding.FragmentSplashBinding
+import javax.inject.Inject
 
 class SplashFragment : BindingFragment<FragmentSplashBinding>() {
 
-    private lateinit var vmFactory: SplashViewModel.Factory
+    @Inject
+    lateinit var vmFactory: SplashViewModel.Factory
     private lateinit var viewModel: SplashViewModel
 
     override fun createBinding(
@@ -31,8 +35,8 @@ class SplashFragment : BindingFragment<FragmentSplashBinding>() {
     }
 
     override fun onAttach(context: Context) {
+        requireActivity().appComponent.inject(this)
         super.onAttach(context)
-        vmFactory = SplashViewModel.Factory(null){ isDarkModeChecking() }
         viewModel = ViewModelProvider(requireActivity(), vmFactory)[SplashViewModel::class]
     }
 
@@ -49,7 +53,7 @@ class SplashFragment : BindingFragment<FragmentSplashBinding>() {
 
     override fun onResume() {
         super.onResume()
-        viewModel.isDarkMode().observe(viewLifecycleOwner) {isDarkMode ->
+        viewModel.isDarkMode().observe(viewLifecycleOwner) { isDarkMode ->
             showStartLogoAnimation(isDarkMode)
         }
     }

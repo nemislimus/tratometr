@@ -11,7 +11,7 @@ class AuthorizationFragment : BindingFragment<FragmentAuthorizationBinding>() {
         inflater: LayoutInflater,
         container: ViewGroup?
     ): FragmentAuthorizationBinding {
-        return FragmentAuthorizationBinding.inflate(inflater,container,false)
+        return FragmentAuthorizationBinding.inflate(inflater, container, false)
     }
 
 }
