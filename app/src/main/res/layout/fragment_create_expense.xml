@@ -114,6 +114,6 @@
         android:text="@string/btn_add"
         android:textColor="@color/button_text"
         android:paddingVertical="@dimen/size_12dp"
-        android:enabled="true"/>
+        android:enabled="false"/>
 
 </LinearLayout>
