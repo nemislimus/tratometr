@@ -6,4 +6,6 @@
     <string name="description">Примечание</string>
     <string name="btn_add">Добавить</string>
     <string name="btn_save">Сохранить</string>
+    <string name="settings">Настройки</string>
+    <string name="settings_toolbar_description">Покинуть экран настроек</string>
 </resources>

@@ -8,12 +8,23 @@
     android:background="@android:color/transparent"
     tools:context=".settings.ui.fragment.SettingsFragment">
 
+    <androidx.appcompat.widget.Toolbar
+        android:id="@+id/tbSettings"
+        style="@style/Toolbar"
+        app:title="@string/settings"
+        app:titleTextAppearance="@style/AppTextH1"
+        app:navigationIcon="@drawable/ic_arrows_back"
+        android:contentDescription="@string/settings_toolbar_description"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"/>
+
     <TextView
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:textAlignment="center"
-        android:text="НАСТРОЙКИ"
-        android:textSize="24dp"
+        android:text="@string/settings"
+        android:textAppearance="@style/AppTextH1"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintEnd_toEndOf="parent"

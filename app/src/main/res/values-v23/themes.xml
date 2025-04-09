@@ -16,4 +16,13 @@
         <item name="appAccentColor">@color/accented</item>
         <item name="appCategoryIconBackground">@color/category_ic_background</item>
     </style>
+
+    <style name="Toolbar">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">@dimen/size_40dp</item>
+        <item name="android:layout_gravity">start|center</item>
+        <item name="android:visibility">visible</item>
+        <item name="android:background">@null</item>
+        <item name="android:titleTextColor">?attr/appTextPrimary</item>
+    </style>
 </resources>
