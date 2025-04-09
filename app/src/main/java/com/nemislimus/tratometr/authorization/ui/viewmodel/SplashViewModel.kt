@@ -4,13 +4,13 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
-import com.nemislimus.tratometr.authorization.domain.AuthRepository
+import com.nemislimus.tratometr.authorization.domain.AuthInteractor
 
 class SplashViewModel(
 //    private val settingsRepo: SettingsRepository,
-    private val authRepo: AuthRepository?, // пока nullable, чтобы прописать в фрагмент
+    private val authInteractor: AuthInteractor?, // пока nullable, чтобы прописать в фрагмент
     private val isDarkMode: () -> Boolean,
-): ViewModel() {
+) : ViewModel() {
 
     private val _isDarkMode = MutableLiveData<Boolean>()
     fun isDarkMode(): LiveData<Boolean> = _isDarkMode
@@ -22,16 +22,16 @@ class SplashViewModel(
     }
 
 
-    class Factory (
+    class Factory(
 //        private val settingsRepo: SettingsRepository,
-        private val authRepo: AuthRepository?,
+        private val authInteractor: AuthInteractor,
         private val isDarkMode: () -> Boolean
-    ): ViewModelProvider.Factory {
+    ) : ViewModelProvider.Factory {
 
         @Suppress("UNCHECKED_CAST")
         override fun <T : ViewModel> create(modelClass: Class<T>): T {
             require(modelClass == SplashViewModel::class.java)
-            return SplashViewModel(authRepo, isDarkMode) as T
+            return SplashViewModel(authInteractor, isDarkMode) as T
         }
     }
 

@@ -14,8 +14,9 @@ import com.nemislimus.tratometr.authorization.data.network.ApiService
 import com.nemislimus.tratometr.authorization.data.network.NetworkClient
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
+import javax.inject.Inject
 
-class RetrofitNetworkClient(private val context: Context) : NetworkClient {
+class RetrofitNetworkClient @Inject constructor(private val context: Context) : NetworkClient {
 
     companion object {
         private const val EMPTY = ""

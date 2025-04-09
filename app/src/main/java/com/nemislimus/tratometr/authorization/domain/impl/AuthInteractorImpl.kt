@@ -4,8 +4,9 @@ import com.nemislimus.tratometr.authorization.domain.AuthInteractor
 import com.nemislimus.tratometr.authorization.domain.AuthRepository
 import com.nemislimus.tratometr.authorization.domain.models.Resource
 import com.nemislimus.tratometr.authorization.domain.models.Tokens
+import javax.inject.Inject
 
-class AuthInteractorImpl(private val repository: AuthRepository) : AuthInteractor {
+class AuthInteractorImpl @Inject constructor(private val repository: AuthRepository) : AuthInteractor {
     override suspend fun register(email: String, password: String): Resource<Tokens> {
         return repository.register(email, password)
     }
