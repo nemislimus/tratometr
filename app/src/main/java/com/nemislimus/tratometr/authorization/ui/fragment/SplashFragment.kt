@@ -10,18 +10,29 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
+import androidx.lifecycle.lifecycleScope
 import com.airbnb.lottie.LottieDrawable
 import com.nemislimus.tratometr.R
+import com.nemislimus.tratometr.authorization.domain.models.Resource
 import com.nemislimus.tratometr.authorization.ui.viewmodel.SplashViewModel
 import com.nemislimus.tratometr.authorization.ui.viewmodel.SplashViewModel.Companion.ANIM_END_POINT
 import com.nemislimus.tratometr.authorization.ui.viewmodel.SplashViewModel.Companion.ANIM_START_LOOP_POINT
 import com.nemislimus.tratometr.authorization.ui.viewmodel.SplashViewModel.Companion.ANIM_START_POINT
+import com.nemislimus.tratometr.common.appComponent
 import com.nemislimus.tratometr.common.util.BindingFragment
 import com.nemislimus.tratometr.databinding.FragmentSplashBinding
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
+import javax.inject.Inject
 
 class SplashFragment : BindingFragment<FragmentSplashBinding>() {
 
-    private lateinit var vmFactory: SplashViewModel.Factory
+    companion object {
+        private const val FOUR_SECONDS = 4000L
+    }
+
+    @Inject
+    lateinit var vmFactory: SplashViewModel.Factory
     private lateinit var viewModel: SplashViewModel
 
     override fun createBinding(
@@ -32,8 +43,8 @@ class SplashFragment : BindingFragment<FragmentSplashBinding>() {
     }
 
     override fun onAttach(context: Context) {
+        requireActivity().appComponent.inject(this)
         super.onAttach(context)
-        vmFactory = SplashViewModel.Factory(null){ isDarkModeChecking() }
         viewModel = ViewModelProvider(requireActivity(), vmFactory)[SplashViewModel::class]
     }
 
@@ -52,11 +63,29 @@ class SplashFragment : BindingFragment<FragmentSplashBinding>() {
                 R.id.action_splashFragment_to_settingsFragment
             )
         }
+
+        lifecycleScope.launch {
+            //viewModel.clearTokens() //Добавил его тут для тестирования
+            delay(FOUR_SECONDS)
+            val freshToken = viewModel.checkAccessToken()
+
+            if (freshToken!!) {
+                findNavController().navigate(R.id.action_splashFragment_to_expensesFragment)
+            } else {
+
+                val resource = viewModel.refreshTokens()
+                if (resource is Resource.Success) {
+                    findNavController().navigate(R.id.action_splashFragment_to_expensesFragment)
+                } else {
+                    findNavController().navigate(R.id.action_splashFragment_to_authorizationFragment)
+                }
+            }
+        }
     }
 
     override fun onResume() {
         super.onResume()
-        viewModel.isDarkMode().observe(viewLifecycleOwner) {isDarkMode ->
+        viewModel.isDarkMode().observe(viewLifecycleOwner) { isDarkMode ->
             showStartLogoAnimation(isDarkMode)
         }
     }

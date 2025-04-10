@@ -35,6 +35,9 @@
         <action
             android:id="@+id/action_authorizationFragment_to_privacyPolicyFragment2"
             app:destination="@id/privacyPolicyFragment" />
+        <action
+            android:id="@+id/action_authorizationFragment_to_expensesFragment"
+            app:destination="@id/expensesFragment" />
     </fragment>
 
     <fragment
@@ -53,7 +56,11 @@
         android:id="@+id/registrationFragment"
         android:name="com.nemislimus.tratometr.authorization.ui.fragment.RegistrationFragment"
         android:label="fragment_registration"
-        tools:layout="@layout/fragment_registration" />
+        tools:layout="@layout/fragment_registration" >
+        <action
+            android:id="@+id/action_registrationFragment_to_expensesFragment"
+            app:destination="@id/expensesFragment" />
+    </fragment>
 
     <fragment
         android:id="@+id/expensesFragment"

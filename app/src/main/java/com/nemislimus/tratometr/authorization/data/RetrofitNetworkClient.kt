@@ -1,85 +1,63 @@
 package com.nemislimus.tratometr.authorization.data
 
+import android.content.Context
+import android.net.ConnectivityManager
+import com.nemislimus.tratometr.authorization.data.dto.AuthRequest
 import com.nemislimus.tratometr.authorization.data.dto.AuthResponse
 import com.nemislimus.tratometr.authorization.data.dto.CheckTokenRequest
 import com.nemislimus.tratometr.authorization.data.dto.CheckTokenResponse
-import com.nemislimus.tratometr.authorization.data.dto.LoginRequest
 import com.nemislimus.tratometr.authorization.data.dto.RecoveryRequest
 import com.nemislimus.tratometr.authorization.data.dto.RefreshTokenRequest
 import com.nemislimus.tratometr.authorization.data.dto.RefreshTokenResponse
-import com.nemislimus.tratometr.authorization.data.dto.RegistrationRequest
 import com.nemislimus.tratometr.authorization.data.dto.Response
 import com.nemislimus.tratometr.authorization.data.network.ApiService
 import com.nemislimus.tratometr.authorization.data.network.NetworkClient
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
+import javax.inject.Inject
 
-class RetrofitNetworkClient : NetworkClient {
-    private val empty = ""
-    private val baseUrl = "http://130.193.44.66:8080/"
+class RetrofitNetworkClient @Inject constructor(private val context: Context) : NetworkClient {
+
+    companion object {
+        private const val EMPTY = ""
+        private const val BASE_URL = "http://130.193.44.66:8080/"
+        private const val NETWORK_ERROR_CODE = -1
+        private const val SERVER_ERROR_CODE = 500
+        private const val NOT_FOUND_CODE = 404
+    }
 
     private val retrofit = Retrofit.Builder()
-        .baseUrl(baseUrl)
+        .baseUrl(BASE_URL)
         .addConverterFactory(GsonConverterFactory.create())
         .build()
 
     val service: ApiService = retrofit.create(ApiService::class.java)
 
-    override suspend fun doRequest(dto: Any): Response {
-        when (dto) {
-            is RegistrationRequest -> {
-                return doRegistrationRequest(dto)
-            }
-
-            is LoginRequest -> {
-                return doLoginRequest(dto)
-            }
-
-            is RefreshTokenRequest -> {
-                return doRefreshTokenRequest(dto)
-            }
-
-            is CheckTokenRequest -> {
-                return doCheckTokenRequest(dto)
-            }
-
-            is RecoveryRequest -> {
-                return doRecoveryRequest(dto)
-            }
-
-            else -> {
-                return Response().apply { resultCode = 100500 }
-            }
+    override suspend fun doAuthRequest(dto: AuthRequest): AuthResponse {
+        if (!isConnected()) {
+            return AuthResponse(EMPTY, EMPTY, 0).apply { resultCode = NETWORK_ERROR_CODE }
         }
-    }
 
-    private suspend fun doRegistrationRequest(dto: RegistrationRequest): AuthResponse {
         return try {
-            val response = service.register(dto)
+            val response = when (dto) {
+                is AuthRequest.RegistrationRequest -> service.register(dto)
+                is AuthRequest.LoginRequest -> service.login(dto)
+            }
             if (response.isSuccessful) {
                 response.body()!!.apply { resultCode = response.code() }
             } else {
-                AuthResponse(empty, empty, 0).apply { resultCode = response.code() }
+                AuthResponse(EMPTY, EMPTY, 0).apply { resultCode = response.code() }
             }
         } catch (e: Exception) {
-            AuthResponse(empty, empty, 0).apply { resultCode = 1 }
+            AuthResponse(EMPTY, EMPTY, 0).apply { resultCode = SERVER_ERROR_CODE }
         }
     }
 
-    private suspend fun doLoginRequest(dto: LoginRequest): AuthResponse {
-        return try {
-            val response = service.login(dto)
-            if (response.isSuccessful) {
-                response.body()!!.apply { resultCode = response.code() }
-            } else {
-                AuthResponse(empty, empty, 0).apply { resultCode = response.code() }
-            }
-        } catch (e: Exception) {
-            AuthResponse(empty, empty, 0).apply { resultCode = 1 }
+    override suspend fun doCheckTokenRequest(dto: CheckTokenRequest): CheckTokenResponse {
+        if (!isConnected()) {
+            return CheckTokenResponse(false).apply { resultCode = NETWORK_ERROR_CODE }
         }
-    }
 
-    private suspend fun doCheckTokenRequest(dto: CheckTokenRequest): CheckTokenResponse {
         return try {
             val authHeader = "Bearer ${dto.accessToken}"
             val response = service.checkToken(authHeader)
@@ -88,38 +66,55 @@ class RetrofitNetworkClient : NetworkClient {
                 response.body()?.apply {
                     resultCode = response.code()
                 }
-                    ?: CheckTokenResponse(false).apply { resultCode = 404 }
+                    ?: CheckTokenResponse(false).apply { resultCode = NOT_FOUND_CODE }
             } else {
                 CheckTokenResponse(false).apply { resultCode = response.code() }
             }
         } catch (e: Exception) {
-            CheckTokenResponse(false).apply { resultCode = 1 }
+            CheckTokenResponse(false).apply { resultCode = SERVER_ERROR_CODE }
         }
     }
 
-    private suspend fun doRefreshTokenRequest(dto: RefreshTokenRequest): RefreshTokenResponse {
+    override suspend fun doRefreshTokenRequest(dto: RefreshTokenRequest): RefreshTokenResponse {
+        if (!isConnected()) {
+            return RefreshTokenResponse(EMPTY, EMPTY).apply { resultCode = NETWORK_ERROR_CODE }
+        }
+
         return try {
             val response = service.refreshToken(dto)
+
             if (response.isSuccessful) {
                 response.body()!!.apply { resultCode = response.code() }
             } else {
-                RefreshTokenResponse(empty, empty).apply { resultCode = response.code() }
+                RefreshTokenResponse(EMPTY, EMPTY).apply { resultCode = response.code() }
             }
         } catch (e: Exception) {
-            RefreshTokenResponse(empty, empty).apply { resultCode = 1 }
+            RefreshTokenResponse(EMPTY, EMPTY).apply { resultCode = SERVER_ERROR_CODE }
         }
     }
 
-    private suspend fun doRecoveryRequest(dto: RecoveryRequest): Response {
+    override suspend fun doRecoveryRequest(dto: RecoveryRequest): Response {
+        if (!isConnected()) {
+            return Response().apply { resultCode = NETWORK_ERROR_CODE }
+        }
+
         return try {
             val response = service.recoverPassword(dto.email)
+
             if (response.isSuccessful) {
                 Response().apply { resultCode = response.code() }
             } else {
                 Response().apply { resultCode = response.code() }
             }
         } catch (e: Exception) {
-            Response().apply { resultCode = 1 }
+            Response().apply { resultCode = SERVER_ERROR_CODE }
         }
+    }
+
+    private fun isConnected(): Boolean {
+        val connectivityManager =
+            context.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
+        val activeNetwork = connectivityManager.activeNetworkInfo
+        return activeNetwork != null && activeNetwork.isConnected
     }
 }

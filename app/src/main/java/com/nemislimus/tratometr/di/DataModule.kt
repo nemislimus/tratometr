@@ -1,6 +1,8 @@
 package com.nemislimus.tratometr.di
 
 import android.content.Context
+import com.nemislimus.tratometr.authorization.data.RetrofitNetworkClient
+import com.nemislimus.tratometr.authorization.data.network.NetworkClient
 import com.nemislimus.tratometr.expenses.data.database.DBConverter
 import com.nemislimus.tratometr.expenses.data.database.DBHelper
 import com.nemislimus.tratometr.settings.data.repository.SettingsRepositoryImpl
@@ -26,6 +28,11 @@ class DataModule {
     fun provideDataBaseConverter(): DBConverter = DBConverter()
 
     // NETWORK SECTION
+    @Singleton
+    @Provides
+    fun provideNetworkClient(context: Context): NetworkClient {
+        return RetrofitNetworkClient(context)
+    }
 
     // SETTINGS SECTION
     @Singleton
