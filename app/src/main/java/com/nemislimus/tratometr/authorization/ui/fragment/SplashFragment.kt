@@ -9,6 +9,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.lifecycle.ViewModelProvider
+import androidx.navigation.fragment.findNavController
 import com.airbnb.lottie.LottieDrawable
 import com.nemislimus.tratometr.R
 import com.nemislimus.tratometr.authorization.ui.viewmodel.SplashViewModel
@@ -45,6 +46,12 @@ class SplashFragment : BindingFragment<FragmentSplashBinding>() {
                 showLoopLogoAnimation()
             }
         })
+
+        binding.btnSettings.setOnClickListener {
+            findNavController().navigate(
+                R.id.action_splashFragment_to_settingsFragment
+            )
+        }
     }
 
     override fun onResume() {

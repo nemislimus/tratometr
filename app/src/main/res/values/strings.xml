@@ -8,4 +8,8 @@
     <string name="btn_save">Сохранить</string>
     <string name="settings">Настройки</string>
     <string name="settings_toolbar_description">Покинуть экран настроек</string>
+    <string name="reminders">Напоминания</string>
+    <string name="theme">Тема</string>
+    <string name="export">Экспорт отчёта в csv</string>
+    <string name="logout">Выйти из аккаунта</string>
 </resources>
