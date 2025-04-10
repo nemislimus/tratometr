@@ -16,6 +16,11 @@ class SplashViewModel @Inject constructor(
     private val _isDarkMode = MutableLiveData<Boolean>(false)
     fun isDarkMode(): LiveData<Boolean> = _isDarkMode
 
+    suspend fun checkAccessToken(): Boolean? {
+        val token = tokensStorageInteractor.getTokens().accessToken
+        return authInteractor.check(token).data == true
+    }
+
     class Factory @Inject constructor(
         private val authInteractor: AuthInteractor,
         private val tokensStorageInteractor: TokensStorageInteractor

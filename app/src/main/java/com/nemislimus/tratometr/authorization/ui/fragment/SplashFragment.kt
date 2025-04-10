@@ -5,11 +5,12 @@ import android.animation.AnimatorListenerAdapter
 import android.content.Context
 import android.content.res.Configuration
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.lifecycleScope
+import androidx.navigation.fragment.findNavController
 import com.airbnb.lottie.LottieDrawable
 import com.nemislimus.tratometr.R
 import com.nemislimus.tratometr.authorization.ui.viewmodel.SplashViewModel
@@ -19,6 +20,8 @@ import com.nemislimus.tratometr.authorization.ui.viewmodel.SplashViewModel.Compa
 import com.nemislimus.tratometr.common.appComponent
 import com.nemislimus.tratometr.common.util.BindingFragment
 import com.nemislimus.tratometr.databinding.FragmentSplashBinding
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 class SplashFragment : BindingFragment<FragmentSplashBinding>() {
@@ -49,6 +52,15 @@ class SplashFragment : BindingFragment<FragmentSplashBinding>() {
                 showLoopLogoAnimation()
             }
         })
+
+        lifecycleScope.launch {
+            delay(4000)
+            if (!viewModel.checkAccessToken()!!) {
+                findNavController().navigate(R.id.action_splashFragment_to_authorizationFragment)
+            } else {
+                findNavController().navigate(R.id.action_splashFragment_to_expensesFragment)
+            }
+        }
     }
 
     override fun onResume() {

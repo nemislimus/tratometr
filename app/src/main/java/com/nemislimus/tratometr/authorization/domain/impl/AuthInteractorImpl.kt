@@ -19,7 +19,7 @@ class AuthInteractorImpl @Inject constructor(private val repository: AuthReposit
         return repository.refresh(token)
     }
 
-    override suspend fun check(token: String): Resource<Boolean> {
+    override suspend fun check(token: String?): Resource<Boolean> {
         return repository.check(token)
     }
 

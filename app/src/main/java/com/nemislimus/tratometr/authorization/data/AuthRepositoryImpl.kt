@@ -100,7 +100,7 @@ class AuthRepositoryImpl @Inject constructor(
         }
     }
 
-    override suspend fun check(token: String): Resource<Boolean> {
+    override suspend fun check(token: String?): Resource<Boolean> {
         val response = client.doCheckTokenRequest(CheckTokenRequest(token))
 
         return when (response.resultCode) {

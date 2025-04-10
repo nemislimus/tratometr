@@ -41,6 +41,15 @@
 
         </com.google.android.material.textfield.TextInputLayout>
 
+        <TextView
+            android:id="@+id/wrongEmail"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/size_32dp"
+            android:textColor="#d92d20"
+            android:text="Некорректный e-mail"
+            android:visibility="gone"/>
+
         <com.google.android.material.textfield.TextInputLayout
             android:id="@+id/passwordField"
             android:layout_width="match_parent"
@@ -63,9 +72,11 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center"
             android:layout_marginTop="@dimen/size_16dp"
+            android:textColor="#4158de"
             android:text="Забыли пароль?" />
 
         <Button
+            android:layout_marginTop="@dimen/size_16dp"
             android:layout_marginHorizontal="@dimen/size_16dp"
             android:id="@+id/loginButton"
             android:text="Войти"
