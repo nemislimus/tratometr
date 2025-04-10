@@ -55,10 +55,11 @@ class SplashFragment : BindingFragment<FragmentSplashBinding>() {
 
         lifecycleScope.launch {
             delay(4000)
-            if (!viewModel.checkAccessToken()!!) {
-                findNavController().navigate(R.id.action_splashFragment_to_authorizationFragment)
-            } else {
+            val freshToken = viewModel.checkAccessToken()
+            if (freshToken!!) {
                 findNavController().navigate(R.id.action_splashFragment_to_expensesFragment)
+            } else {
+                findNavController().navigate(R.id.action_splashFragment_to_authorizationFragment)
             }
         }
     }

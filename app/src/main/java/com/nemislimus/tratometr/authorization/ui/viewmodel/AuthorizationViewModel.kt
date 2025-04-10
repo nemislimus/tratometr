@@ -1,24 +1,25 @@
 package com.nemislimus.tratometr.authorization.ui.viewmodel
 
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import com.nemislimus.tratometr.authorization.domain.AuthInteractor
 import com.nemislimus.tratometr.authorization.domain.TokensStorageInteractor
+import com.nemislimus.tratometr.authorization.domain.models.Resource
+import com.nemislimus.tratometr.authorization.domain.models.Tokens
 import javax.inject.Inject
 
-class SplashViewModel @Inject constructor(
+class AuthorizationViewModel @Inject constructor(
     private val authInteractor: AuthInteractor,
     private val tokensStorageInteractor: TokensStorageInteractor
-) : ViewModel() {
+) :
+    ViewModel() {
 
-    private val _isDarkMode = MutableLiveData<Boolean>(false)
-    fun isDarkMode(): LiveData<Boolean> = _isDarkMode
+    suspend fun authorization(email: String, password: String): Resource<Tokens> {
+        return authInteractor.login(email, password)
+    }
 
-    suspend fun checkAccessToken(): Boolean? {
-        val token = tokensStorageInteractor.getTokens().accessToken
-        return authInteractor.check(token).value == true
+    suspend fun putTokensToStorage(tokens: Tokens){
+        tokensStorageInteractor.putTokens(tokens)
     }
 
     class Factory @Inject constructor(
@@ -28,14 +29,8 @@ class SplashViewModel @Inject constructor(
 
         @Suppress("UNCHECKED_CAST")
         override fun <T : ViewModel> create(modelClass: Class<T>): T {
-            require(modelClass == SplashViewModel::class.java)
-            return SplashViewModel(authInteractor, tokensStorageInteractor) as T
+            require(modelClass == AuthorizationViewModel::class.java)
+            return AuthorizationViewModel(authInteractor, tokensStorageInteractor) as T
         }
-    }
-
-    companion object {
-        const val ANIM_START_POINT = 0.0f
-        const val ANIM_START_LOOP_POINT = 0.69f
-        const val ANIM_END_POINT = 1.0f
     }
 }
