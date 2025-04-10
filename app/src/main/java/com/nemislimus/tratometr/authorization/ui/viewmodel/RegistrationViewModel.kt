@@ -8,14 +8,14 @@ import com.nemislimus.tratometr.authorization.domain.models.Resource
 import com.nemislimus.tratometr.authorization.domain.models.Tokens
 import javax.inject.Inject
 
-class AuthorizationViewModel @Inject constructor(
-    private val authInteractor: AuthInteractor,
-    private val tokensStorageInteractor: TokensStorageInteractor
-) :
-    ViewModel() {
+class RegistrationViewModel @Inject constructor(
+    val authInteractor: AuthInteractor,
+    val tokensStorageInteractor: TokensStorageInteractor
+) : ViewModel() {
 
-    suspend fun authorization(email: String, password: String): Resource<Tokens> {
-        return authInteractor.login(email, password)
+    suspend fun registration(email: String, password: String): Resource<Tokens> {
+        val resource = authInteractor.register(email, password)
+        return resource
     }
 
     fun putTokensToStorage(tokens: Tokens){
@@ -29,8 +29,8 @@ class AuthorizationViewModel @Inject constructor(
 
         @Suppress("UNCHECKED_CAST")
         override fun <T : ViewModel> create(modelClass: Class<T>): T {
-            require(modelClass == AuthorizationViewModel::class.java)
-            return AuthorizationViewModel(authInteractor, tokensStorageInteractor) as T
+            require(modelClass == RegistrationViewModel::class.java)
+            return RegistrationViewModel(authInteractor, tokensStorageInteractor) as T
         }
     }
 }

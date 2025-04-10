@@ -6,6 +6,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import com.nemislimus.tratometr.authorization.domain.AuthInteractor
 import com.nemislimus.tratometr.authorization.domain.TokensStorageInteractor
+import com.nemislimus.tratometr.authorization.domain.models.Tokens
 import javax.inject.Inject
 
 class SplashViewModel @Inject constructor(
@@ -17,8 +18,22 @@ class SplashViewModel @Inject constructor(
     fun isDarkMode(): LiveData<Boolean> = _isDarkMode
 
     suspend fun checkAccessToken(): Boolean? {
-        val token = tokensStorageInteractor.getTokens().accessToken
-        return authInteractor.check(token).value == true
+        val accessToken = tokensStorageInteractor.getTokens().accessToken
+        return authInteractor.check(accessToken).value == true
+    }
+
+    suspend fun refreshTokens(){
+        val refreshToken = tokensStorageInteractor.getTokens().refreshToken
+        val freshTokens = authInteractor.refresh(refreshToken!!).value
+        putTokensToStorage(freshTokens!!)
+    }
+
+    private fun putTokensToStorage(tokens: Tokens){
+        tokensStorageInteractor.putTokens(tokens)
+    }
+
+    fun clearTokens(){//Временно тут для тестирования
+        tokensStorageInteractor.clearTokens()
     }
 
     class Factory @Inject constructor(

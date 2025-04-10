@@ -40,12 +40,15 @@ class AuthorizationFragment : BindingFragment<FragmentAuthorizationBinding>() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        binding.createAccount.setOnClickListener {
+            findNavController().navigate(R.id.action_authorizationFragment_to_registrationFragment)
+        }
+
         binding.loginButton.setOnClickListener {
             val email = binding.emailText.text.toString()
             val password = binding.passwordText.text.toString()
 
             lifecycleScope.launch {
-                Log.d(email, password)
                 val response = viewModel.authorization(email, password)
                 when (response) {
                     is Resource.Success -> {

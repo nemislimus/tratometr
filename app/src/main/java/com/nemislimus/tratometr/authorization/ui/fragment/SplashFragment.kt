@@ -54,9 +54,11 @@ class SplashFragment : BindingFragment<FragmentSplashBinding>() {
         })
 
         lifecycleScope.launch {
+            //viewModel.clearTokens() //Добавил его тут для тестирования
             delay(4000)
             val freshToken = viewModel.checkAccessToken()
             if (freshToken!!) {
+                viewModel.refreshTokens()
                 findNavController().navigate(R.id.action_splashFragment_to_expensesFragment)
             } else {
                 findNavController().navigate(R.id.action_splashFragment_to_authorizationFragment)
