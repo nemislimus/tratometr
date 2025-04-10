@@ -13,6 +13,7 @@ import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import com.airbnb.lottie.LottieDrawable
 import com.nemislimus.tratometr.R
+import com.nemislimus.tratometr.authorization.domain.models.Resource
 import com.nemislimus.tratometr.authorization.ui.viewmodel.SplashViewModel
 import com.nemislimus.tratometr.authorization.ui.viewmodel.SplashViewModel.Companion.ANIM_END_POINT
 import com.nemislimus.tratometr.authorization.ui.viewmodel.SplashViewModel.Companion.ANIM_START_LOOP_POINT
@@ -25,6 +26,10 @@ import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 class SplashFragment : BindingFragment<FragmentSplashBinding>() {
+
+    companion object {
+        private const val FOUR_SECONDS = 4000L
+    }
 
     @Inject
     lateinit var vmFactory: SplashViewModel.Factory
@@ -55,13 +60,19 @@ class SplashFragment : BindingFragment<FragmentSplashBinding>() {
 
         lifecycleScope.launch {
             //viewModel.clearTokens() //Добавил его тут для тестирования
-            delay(4000)
+            delay(FOUR_SECONDS)
             val freshToken = viewModel.checkAccessToken()
+
             if (freshToken!!) {
-                viewModel.refreshTokens()
                 findNavController().navigate(R.id.action_splashFragment_to_expensesFragment)
             } else {
-                findNavController().navigate(R.id.action_splashFragment_to_authorizationFragment)
+
+                val resource = viewModel.refreshTokens()
+                if (resource is Resource.Success) {
+                    findNavController().navigate(R.id.action_splashFragment_to_expensesFragment)
+                } else {
+                    findNavController().navigate(R.id.action_splashFragment_to_authorizationFragment)
+                }
             }
         }
     }

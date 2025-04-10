@@ -6,6 +6,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import com.nemislimus.tratometr.authorization.domain.AuthInteractor
 import com.nemislimus.tratometr.authorization.domain.TokensStorageInteractor
+import com.nemislimus.tratometr.authorization.domain.models.Resource
 import com.nemislimus.tratometr.authorization.domain.models.Tokens
 import javax.inject.Inject
 
@@ -22,10 +23,12 @@ class SplashViewModel @Inject constructor(
         return authInteractor.check(accessToken).value == true
     }
 
-    suspend fun refreshTokens(){
+    suspend fun refreshTokens(): Resource<Tokens>{
         val refreshToken = tokensStorageInteractor.getTokens().refreshToken
-        val freshTokens = authInteractor.refresh(refreshToken!!).value
+        val resource = authInteractor.refresh(refreshToken!!)
+        val freshTokens = resource.value
         putTokensToStorage(freshTokens!!)
+        return resource
     }
 
     private fun putTokensToStorage(tokens: Tokens){
