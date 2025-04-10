@@ -3,7 +3,6 @@ package com.nemislimus.tratometr.authorization.ui.fragment
 import android.animation.Animator
 import android.animation.AnimatorListenerAdapter
 import android.content.Context
-import android.content.res.Configuration
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -51,6 +50,10 @@ class SplashFragment : BindingFragment<FragmentSplashBinding>() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        viewModel.isDarkMode().observe(viewLifecycleOwner) { isDarkMode ->
+            showStartLogoAnimation(isDarkMode)
+        }
+
         binding.lvLogoAnim.addAnimatorListener(object : AnimatorListenerAdapter() {
             override fun onAnimationEnd(animation: Animator) {
                 super.onAnimationEnd(animation)
@@ -85,9 +88,7 @@ class SplashFragment : BindingFragment<FragmentSplashBinding>() {
 
     override fun onResume() {
         super.onResume()
-        viewModel.isDarkMode().observe(viewLifecycleOwner) { isDarkMode ->
-            showStartLogoAnimation(isDarkMode)
-        }
+        viewModel.checkDarkMode()
     }
 
     override fun onDestroyFragment() {
@@ -114,9 +115,5 @@ class SplashFragment : BindingFragment<FragmentSplashBinding>() {
         binding.lvLogoAnim.repeatMode = LottieDrawable.RESTART
         binding.lvLogoAnim.playAnimation()
     }
-
-    // Определяем тему для viewModel. Потом заменить на значение темы из Settings репозитория
-    private fun isDarkModeChecking(): Boolean =
-        (resources.configuration.uiMode and Configuration.UI_MODE_NIGHT_MASK) == Configuration.UI_MODE_NIGHT_YES
 
 }
