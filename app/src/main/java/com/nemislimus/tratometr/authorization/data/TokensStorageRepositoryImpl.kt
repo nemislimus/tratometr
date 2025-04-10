@@ -9,7 +9,7 @@ import com.nemislimus.tratometr.authorization.domain.TokensStorageRepository
 import com.nemislimus.tratometr.authorization.domain.models.Tokens
 import javax.inject.Inject
 
-class TokensStorageRepositoryImpl @Inject constructor(private val context: Context) :
+class TokensStorageRepositoryImpl @Inject constructor(context: Context) :
     TokensStorageRepository {
     companion object {
         private const val TOKENS_REPOSITORY_KEY = "tokens"
