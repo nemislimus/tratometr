@@ -1,12 +1,18 @@
 <vector xmlns:android="http://schemas.android.com/apk/res/android"
-    android:width="64dp"
-    android:height="64dp"
+    android:width="48dp"
+    android:height="48dp"
     android:viewportWidth="64"
     android:viewportHeight="64">
-  <path
-      android:pathData="M20,4L44,4A12,12 0,0 1,56 16L56,40A12,12 0,0 1,44 52L20,52A12,12 0,0 1,8 40L8,16A12,12 0,0 1,20 4z"
-      android:fillColor="?attr/appAccentColor"/>
-  <path
-      android:pathData="M30.666,29.333H22.666V26.667H30.666V18.667H33.333V26.667H41.333V29.333H33.333V37.333H30.666V29.333Z"
-      android:fillColor="@color/button_text"/>
+
+    <group
+        android:translateX="-10.55"
+        android:translateY="-5.45"
+        android:scaleX="1.33333"
+        android:scaleY="1.33333">
+    <path android:fillColor="?attr/appAccentColor"
+        android:pathData="M20,4L44,4A12,12 0,0 1,56 16L56,40A12,12 0,0 1,44 52L20,52A12,12 0,0 1,8 40L8,16A12,12 0,0 1,20 4z"/>
+      
+    <path android:fillColor="@color/cards"
+        android:pathData="M30.668,29.333H22.668V26.667H30.668V18.667H33.335V26.667H41.335V29.333H33.335V37.333H30.668V29.333Z"/>
+    </group>
 </vector>

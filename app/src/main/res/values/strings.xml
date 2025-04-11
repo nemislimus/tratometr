@@ -1,9 +1,14 @@
 <resources>
     <string name="app_name">tratometr</string>
     <string name="add_expense">Добавить расход</string>
+    <string name="edit_expense">Редактировать расход</string>
     <string name="hint_text_category">Выбрать категорию</string>
     <string name="amount_expense_auto_fill_hints">Сумма расхода</string>
     <string name="description">Примечание</string>
     <string name="btn_add">Добавить</string>
     <string name="btn_save">Сохранить</string>
+    <string name="add_category">добавить категорию</string>
+    <string name="select_date_expense">Выберите дату расхода</string>
+    <string name="category_error">Введите категорию</string>
+    <string name="amount_error">Число 0.01 - 999\'999\'999\'999\'999</string>
 </resources>
