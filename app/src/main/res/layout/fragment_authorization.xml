@@ -22,9 +22,11 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
-            android:text="АВТОРИЗАЦИЯ"
+            android:text="@string/authorization"
             android:textAlignment="center"
-            android:textSize="24dp" />
+            android:fontFamily="@font/manrope_weight700_bold"
+            android:textColor="@color/text_primary"
+            android:textSize="@dimen/text_size_24" />
 
         <com.google.android.material.textfield.TextInputLayout
             android:id="@+id/emailField"

@@ -6,4 +6,9 @@
     <string name="description">Примечание</string>
     <string name="btn_add">Добавить</string>
     <string name="btn_save">Сохранить</string>
+    <string name="authorization">Авторизация</string>
+    <string name="registration">Регистрация</string>
+    
+    <string name="agreement_check">Нажимая кнопку, вы соглашаетесь с Политикой конфиденциальности и обработки персональных данных</string>
+    <string name="register">Зарегистрироваться</string>
 </resources>
