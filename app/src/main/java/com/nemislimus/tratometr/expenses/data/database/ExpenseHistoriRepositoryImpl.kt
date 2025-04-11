@@ -7,8 +7,6 @@ import com.nemislimus.tratometr.expenses.domain.model.Category
 import com.nemislimus.tratometr.expenses.domain.model.Expense
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -19,9 +17,9 @@ class ExpenseHistoriRepositoryImpl @Inject constructor(
 
     // ################   ЗАПРОСЫ ДЛЯ ОКНА ИСТОРИЯ РАСХОДОВ   #########################################################################################
     // Выборка строк-расходов за период и по категории
-    override fun getExpenseListFilter(startDate: Long?, endDate: Long?, category: String?): Flow<List<Expense>> = flow{
+    override fun getExpenseListFilter(startDate: Long?, endDate: Long?, category: String?): List<Expense> {
         val expenses = expenseHistoryDao.getExpenseListFilter(startDate, endDate, category)
-        emit(convertFromExpenseEntity(expenses))
+        return convertFromExpenseEntity(expenses)
     }
 
     private fun convertFromExpenseEntity(expenses: List<ExpenseEntity>): List<Expense> {
@@ -36,9 +34,9 @@ class ExpenseHistoriRepositoryImpl @Inject constructor(
 
     // ################   ЗАПРОСЫ ДЛЯ ОКНА ДОБАВЛЕНИЕ/РЕДАКТИРОВАНИЕ РАСХОДА   ######################################################################
     //Список всех категорий с иконками (по алфавиту)
-    override fun getAllCategoriesListWithIcons(): Flow<List<Category>> = flow {
+    override fun getAllCategoriesListWithIcons(): List<Category> {
         val categories = expenseHistoryDao.getAllCategoriesListWithIcons()
-        emit(convertFromCategoriesEntity(categories))
+        return convertFromCategoriesEntity(categories)
     }
 
     private fun convertFromCategoriesEntity(categories: List<CategoryEntity>): List<Category> {
@@ -59,16 +57,16 @@ class ExpenseHistoriRepositoryImpl @Inject constructor(
 
     // ################   ЗАПРОСЫ ДЛЯ ОКНА ВЫБОР КАТЕГОРИИ   ########################################################################################
     // Список категорий с иконками и фильтром(период)
-    override fun getCategoriesListWithIconsRange(startDate: Long?, endDate: Long?): Flow<List<Category>> = flow {
+    override fun getCategoriesListWithIconsRange(startDate: Long?, endDate: Long?): List<Category> {
         val categories = expenseHistoryDao.getCategoriesListWithIconsRange(startDate, endDate)
-        emit(convertFromCategoriesEntity(categories))
+        return convertFromCategoriesEntity(categories)
     }
 
     // ################   ЗАПРОСЫ ДЛЯ ОКНА СОЗДАНИЕ КАТЕГОРИИ   #####################################################################################
     // Список всех категорий
-    override fun getAllCategoriesList(): Flow<List<String>> = flow {
+    override fun getAllCategoriesList(): List<String> {
         val categories = expenseHistoryDao.getAllCategoriesList()
-        emit(categories)
+        return categories
     }
     // Добавление новой категорий
     override fun addNewCategory(category: Category) {
@@ -76,5 +74,4 @@ class ExpenseHistoriRepositoryImpl @Inject constructor(
             expenseHistoryDao.addNewCategory(dbConverter.map(category))
         }
     }
-
 }

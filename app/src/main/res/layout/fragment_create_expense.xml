@@ -13,22 +13,24 @@
 
     <TextView
         android:id="@+id/tv_title"
+        style="@style/AppTextH1"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="@string/add_expense"
         android:layout_marginStart="16dp"
-        app:drawableStartCompat="@drawable/ic_arrows_back"
         android:drawablePadding="8dp"
-        style="@style/AppTextH1"/>
+        android:text="@string/add_expense"
+        app:drawableStartCompat="@drawable/ic_arrows_back" />
 
     <FrameLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:animateLayoutChanges="true"
         android:layout_marginTop="@dimen/text_size_20">
 
         <AutoCompleteTextView
             android:id="@+id/actv_category"
             style="@style/AppEditTextPrimary"
+            android:textColor="?attr/appTextPrimary"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:dropDownHeight="wrap_content"
@@ -45,10 +47,10 @@
 
         <ImageView
             android:id="@+id/iv_icon"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_width="32dp"
+            android:layout_height="32dp"
             android:background="@drawable/circle_icons"
-            android:padding="8dp"
+            android:padding="6dp"
             android:src="@drawable/ic_custom_cat_07"
             tools:ignore="contentDescription"
             android:layout_gravity="center_vertical|start"
@@ -58,8 +60,22 @@
     </FrameLayout>
 
     <TextView
+        android:id="@+id/category_error"
+        style="@style/AppTextSecondary"
+        android:textColor="?attr/appErrorColor"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/size_32dp"
+        android:layout_marginEnd="@dimen/size_16dp"
+        android:layout_marginTop="2dp"
+        android:text="@string/category_error"
+        android:visibility="gone"/>
+
+
+    <TextView
         android:id="@+id/tv_date"
         style="@style/AppTextPrimary"
+        android:textColor="?attr/appTextPrimary"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="@drawable/card_background_selector"
@@ -73,6 +89,7 @@
     <EditText
         android:id="@+id/et_amount"
         style="@style/AppEditTextPrimary"
+        android:textColor="?attr/appTextPrimary"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="@drawable/card_background_selector"
@@ -84,22 +101,35 @@
         android:paddingVertical="12dp"
         app:drawableEndCompat="@drawable/ic_currency_ruble"/>
 
+    <TextView
+        android:id="@+id/amount_error"
+        style="@style/AppTextSecondary"
+        android:textColor="?attr/appErrorColor"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/size_32dp"
+        android:layout_marginEnd="@dimen/size_16dp"
+        android:layout_marginTop="2dp"
+        android:text="@string/amount_error"
+        android:visibility="gone"/>
+
     <EditText
         android:id="@+id/et_description"
         style="@style/AppEditTextPrimary"
         android:layout_width="match_parent"
         android:layout_height="120dp"
-        android:background="@drawable/card_background_selector"
         android:layout_marginHorizontal="@dimen/size_16dp"
         android:layout_marginTop="@dimen/size_12dp"
+        android:background="@drawable/card_background_selector"
+        android:gravity="start|top"
+        android:hint="@string/description"
         android:importantForAutofill="no"
         android:inputType="textMultiLine"
         android:maxLines="3"
         android:overScrollMode="always"
         android:paddingHorizontal="@dimen/size_16dp"
         android:paddingVertical="12dp"
-        android:hint="@string/description"
-        android:gravity="start|top"/>
+        android:textColor="?attr/appTextPrimary" />
 
     <View
         android:layout_width="1dp"

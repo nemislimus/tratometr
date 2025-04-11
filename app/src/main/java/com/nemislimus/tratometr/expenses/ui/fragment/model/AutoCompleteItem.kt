@@ -1,9 +1,9 @@
 package com.nemislimus.tratometr.expenses.ui.fragment.model
 
+import androidx.annotation.DrawableRes
+
 data class AutoCompleteItem(
     var name: String,
-    val iconResId: Int,
+    @DrawableRes val iconResId: Int,
     val isAdd: Boolean
-){
-
-}
+)

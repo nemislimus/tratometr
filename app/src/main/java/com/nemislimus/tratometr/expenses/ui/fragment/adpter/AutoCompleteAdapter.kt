@@ -4,7 +4,10 @@ import android.content.Context
 import android.content.res.ColorStateList
 import android.os.Build
 import android.text.Html
+import android.text.Spannable
 import android.text.SpannableStringBuilder
+import android.text.style.ForegroundColorSpan
+import android.util.TypedValue
 import android.widget.Filter
 import android.view.LayoutInflater
 import android.view.View
@@ -34,7 +37,6 @@ class AutoCompleteAdapter(
         return filteredItems[position]
     }
 
-    @RequiresApi(Build.VERSION_CODES.N)
     override fun getView(position: Int, convertView: View?, parent: ViewGroup): View {
         val item = getItem(position)
 
@@ -42,38 +44,17 @@ class AutoCompleteAdapter(
 
         val iconImageView: ImageView = view.findViewById(R.id.icon)
         val textView: TextView = view.findViewById(R.id.text)
+        val textAdd: TextView = view.findViewById(R.id.text_add)
 
-
-        val strAdd = Html.fromHtml(context.resources.getString(R.string.add_category), Html.FROM_HTML_MODE_COMPACT)
-
-
-
+        textView.text = item.name
         if (item.isAdd) {
-            /*val str = Html.fromHtml(item.name, Html.FROM_HTML_MODE_COMPACT)
-            val combinedStr = SpannableStringBuilder()
-            combinedStr.append(str)
-            combinedStr.append(strAdd)
-            textView.text = combinedStr*/
-            textView.text = item.name + context.resources.getString(R.string.add_category)
-
-            iconImageView.background = null
-            iconImageView.imageTintList = null
-            iconImageView.setPadding(0)
-            iconImageView.setImageResource(R.drawable.add_button)
+            textAdd.isVisible = true
+            iconImageView.setBackgroundResource(R.drawable.btn_plus_background)
+            iconImageView.setImageResource(R.drawable.ic_plus)
         } else {
-            textView.text = item.name
+            textAdd.isVisible = false
             iconImageView.setBackgroundResource(R.drawable.circle_icons)
-            val tintColor = ContextCompat.getColor(context, R.color.cards)
-            iconImageView.imageTintList = ColorStateList.valueOf(tintColor)
-            val paddingInDp = 6 // значение в dp
-            val scale = context.resources.displayMetrics.density // Получаем плотность экрана
-            val paddingInPx = (paddingInDp * scale + 0.5f).toInt() // Конвертируем dp в px
-            textView.setPadding(paddingInPx, paddingInPx, paddingInPx, paddingInPx)
-            if (item.iconResId != 0) {
-                iconImageView.setImageResource(item.iconResId)
-            } else {
-                iconImageView.setImageResource(R.drawable.add_button)
-            }
+            iconImageView.setImageResource(item.iconResId)
         }
 
         return view

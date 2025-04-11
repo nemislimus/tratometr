@@ -27,21 +27,39 @@
             android:background="@drawable/circle_icons"
             tools:ignore="ContentDescription"/>
 
-        <TextView
-            android:id="@+id/text"
-            style="@style/AppTextPrimary"
-            android:layout_width="wrap_content"
+        <LinearLayout
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            tools:text="Еда"
-            android:ellipsize="end"
-            android:singleLine="true"
-            android:lineSpacingExtra="-2dp"
-            android:textColor="?attr/appTextPrimary"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toTopOf="parent"/>
+            android:layout_gravity="center_vertical"
+            android:paddingEnd="16dp"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/text"
+                style="@style/AppTextPrimary"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                tools:text="Еда"
+                android:ellipsize="end"
+                android:singleLine="true"
+                android:lineSpacingExtra="-2dp"
+                android:textColor="?attr/appTextPrimary"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="parent"/>
 
 
+            <TextView
+                android:id="@+id/text_add"
+                style="@style/AppTextSecondary"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/add_category"
+                android:textColor="?attr/appTextSecondary"
+                android:lineSpacingExtra="-2dp"
+                android:visibility="visible" />
+
+        </LinearLayout>
     </LinearLayout>
 
 </LinearLayout>
