@@ -24,11 +24,16 @@ class SplashViewModel @Inject constructor(
     }
 
     suspend fun refreshTokens(): Resource<Tokens>{
-        val refreshToken = tokensStorageInteractor.getTokens().refreshToken
-        val resource = authInteractor.refresh(refreshToken!!)
-        val freshTokens = resource.value
-        putTokensToStorage(freshTokens!!)
-        return resource
+        val refreshToken = tokensStorageInteractor.getTokens().refreshToken ?: ""
+        val resource = authInteractor.refresh(refreshToken)
+        var freshTokens = Tokens(null, null)
+        if (resource is Resource.Success){
+            freshTokens = resource.value!!
+            putTokensToStorage(freshTokens)
+            return resource
+        } else {
+            return resource
+        }
     }
 
     private fun putTokensToStorage(tokens: Tokens){
