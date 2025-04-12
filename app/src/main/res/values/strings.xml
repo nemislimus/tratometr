@@ -11,4 +11,10 @@
     <string name="select_date_expense">Выберите дату расхода</string>
     <string name="category_error">Введите категорию</string>
     <string name="amount_error">Число 0.01 - 999\'999\'999\'999\'999</string>
+    <string name="day">День</string>
+    <string name="week">Неделя</string>
+    <string name="month">Месяц</string>
+    <string name="year">Год</string>
+    <string name="categories">Категории</string>
+    
 </resources>
