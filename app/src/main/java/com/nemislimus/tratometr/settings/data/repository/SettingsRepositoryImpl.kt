@@ -9,8 +9,8 @@ class SettingsRepositoryImpl(
     private val storage: SettingsStorage
 ): SettingsRepository {
 
-    override suspend fun updateSettings(params: SettingsParams) {
-        storage.update(
+    override suspend fun saveSettings(params: SettingsParams) {
+        storage.save(
             SettingsMapper.map(params)
         )
     }

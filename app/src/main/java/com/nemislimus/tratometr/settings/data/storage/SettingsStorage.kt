@@ -4,5 +4,5 @@ import com.nemislimus.tratometr.settings.data.storage.model.SettingsParamsDto
 
 interface SettingsStorage {
     suspend fun get(): SettingsParamsDto
-    suspend fun update(params: SettingsParamsDto)
+    suspend fun save(params: SettingsParamsDto)
 }

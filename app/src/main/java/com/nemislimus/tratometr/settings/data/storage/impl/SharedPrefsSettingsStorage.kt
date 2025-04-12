@@ -14,7 +14,7 @@ class SharedPrefsSettingsStorage(context: Context): SettingsStorage {
         return SettingsParamsDto(time, isDarkMode)
     }
 
-    override suspend fun update(params: SettingsParamsDto) {
+    override suspend fun save(params: SettingsParamsDto) {
         sharedPrefs.edit()
             .putString(REMINDER_TIME_KEY, params.remindTime)
             .putBoolean(IS_DARK_MODE_KEY, params.isDarkMode)

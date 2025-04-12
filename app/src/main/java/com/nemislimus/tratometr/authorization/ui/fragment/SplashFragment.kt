@@ -67,23 +67,23 @@ class SplashFragment : BindingFragment<FragmentSplashBinding>() {
             )
         }
 
-        lifecycleScope.launch {
-            //viewModel.clearTokens() //Добавил его тут для тестирования
-            delay(FOUR_SECONDS)
-            val freshToken = viewModel.checkAccessToken()
-
-            if (freshToken!!) {
-                findNavController().navigate(R.id.action_splashFragment_to_expensesFragment)
-            } else {
-
-                val resource = viewModel.refreshTokens()
-                if (resource is Resource.Success) {
-                    findNavController().navigate(R.id.action_splashFragment_to_expensesFragment)
-                } else {
-                    findNavController().navigate(R.id.action_splashFragment_to_authorizationFragment)
-                }
-            }
-        }
+//        lifecycleScope.launch {
+//            //viewModel.clearTokens() //Добавил его тут для тестирования
+//            delay(FOUR_SECONDS)
+//            val freshToken = viewModel.checkAccessToken()
+//
+//            if (freshToken!!) {
+//                findNavController().navigate(R.id.action_splashFragment_to_expensesFragment)
+//            } else {
+//
+//                val resource = viewModel.refreshTokens()
+//                if (resource is Resource.Success) {
+//                    findNavController().navigate(R.id.action_splashFragment_to_expensesFragment)
+//                } else {
+//                    findNavController().navigate(R.id.action_splashFragment_to_authorizationFragment)
+//                }
+//            }
+//        }
     }
 
     override fun onResume() {

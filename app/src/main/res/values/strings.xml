@@ -12,4 +12,5 @@
     <string name="theme">Тема</string>
     <string name="export">Экспорт отчёта в csv</string>
     <string name="logout">Выйти из аккаунта</string>
+    <string name="select_time">Выберите время</string>
 </resources>

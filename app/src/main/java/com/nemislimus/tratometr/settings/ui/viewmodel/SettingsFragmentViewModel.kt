@@ -24,12 +24,21 @@ class SettingsFragmentViewModel(
         }
     }
 
-    suspend fun updateSettings(params: SettingsParams) {
-        repository.updateSettings(params)
+    suspend fun saveSettings(params: SettingsParams) {
+        repository.saveSettings(params)
     }
 
     suspend fun getSettingsParams() {
         settingsParams.postValue(repository.getSettings())
+    }
+
+    fun correctTimeString(hours: Int, minutes: Int): String {
+        return when {
+            hours < 10 && minutes < 10 -> "0$hours:0$minutes"
+            hours >= 10 && minutes < 10 -> "$hours:0$minutes"
+            hours < 10 && minutes >= 10 -> "0$hours:$minutes"
+            else -> "$hours:$minutes"
+        }
     }
 
     class Factory @Inject constructor(
