@@ -42,7 +42,6 @@
                 tools:text="Еда"
                 android:ellipsize="end"
                 android:singleLine="true"
-                android:lineSpacingExtra="-2dp"
                 android:textColor="?attr/appTextPrimary"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"

@@ -17,9 +17,9 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="16dp"
+        app:drawableStartCompat="@drawable/ic_arrows_back"
         android:drawablePadding="8dp"
-        android:text="@string/add_expense"
-        app:drawableStartCompat="@drawable/ic_arrows_back" />
+        android:text="@string/add_expense"/>
 
     <FrameLayout
         android:layout_width="match_parent"
