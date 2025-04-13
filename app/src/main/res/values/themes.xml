@@ -25,14 +25,11 @@
         <item name="appErrorColor">@color/error</item>
         <item name="appAccentColor">@color/accented</item>
         <item name="appCategoryIconBackground">@color/category_ic_background</item>
+        <item name="materialTimePickerTheme">@style/ThemeOverlay.Tratometr.AppTimePicker</item>
 
-        <!-- Цвета для TimePicker и DatePicker -->
-        <item name="colorPrimary">@color/accented</item>
-        <item name="colorPrimaryContainer">@color/category_ic_background</item>
     </style>
 
-    <style name="Theme.Tratometr" parent="Base.Theme.Tratometr" />
-
+    <style name="Theme.Tratometr" parent="Base.Theme.Tratometr"/>
 
     <style name="AppTextH1">
         <item name="android:fontFamily">@font/manrope_weight600_semibold</item>
@@ -81,5 +78,71 @@
         <item name="android:textCursorDrawable">@drawable/blue_cursor</item>
     </style>
 
+    <style name="Toolbar">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">@dimen/size_40dp</item>
+        <item name="android:layout_gravity">start|center</item>
+        <item name="android:visibility">visible</item>
+        <item name="android:background">@null</item>
+    </style>
+
+    <style name="SwitchApp">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">@dimen/size_48dp</item>
+        <item name="android:layout_marginStart">@dimen/size_16dp</item>
+        <item name="android:layout_marginEnd">@dimen/size_16dp</item>
+        <item name="android:background">@drawable/card_background_regular</item>
+        <item name="android:paddingStart">@dimen/size_16dp</item>
+        <item name="android:paddingEnd">@dimen/size_16dp</item>
+        <item name="android:maxLines">1</item>
+        <item name="android:textAppearance">@style/AppTextPrimary</item>
+        <item name="android:textAlignment">textStart</item>
+        <item name="android:textColor">?attr/appTextPrimary</item>
+        <item name="trackTint">@color/switch_track_tint_selector</item>
+        <item name="thumbTint">@color/switch_thumb_tint_selector</item>
+        <item name="trackDecorationTint">@color/switch_track_decor_tint_selector</item>
+    </style>
+
+<!--    TIME_PICKER_SECTION-->
+
+    <style name="ThemeOverlay.Tratometr.AppTimePicker" parent="ThemeOverlay.Material3.MaterialTimePicker">
+        <item name="materialClockStyle">@style/AppTimePicker.Clock</item>
+        <item name="materialTimePickerStyle">@style/AppTimePicker.Background</item>
+        <item name="materialTimePickerTitleStyle">@style/AppTimePicker.Title</item>
+        <item name="imageButtonStyle">@style/AppTimePicker.ImageButton</item>
+        <item name="materialDisplayDividerStyle">@style/AppTimePicker.Dividers</item>
+        <item name="chipStyle">@style/AppTimePicker.Chips</item>
+        <item name="colorPrimary">?attr/appAccentColor</item>
+    </style>
+
+    <style name="AppTimePicker.Clock" parent="Widget.Material3.MaterialTimePicker.Clock">
+        <item name="clockFaceBackgroundColor">?attr/appDividers</item>
+        <item name="clockHandColor">?attr/appAccentColor</item>
+    </style>
+
+    <style name="AppTimePicker.Background" parent="Widget.Material3.MaterialTimePicker">
+        <item name="backgroundTint">?attr/appCardBackground</item>
+    </style>
+
+    <style name="AppTimePicker.Title" parent="TextAppearance.Material3.MaterialTimePicker.Title">
+        <item name="android:textAppearance">@style/AppTextH2</item>
+        <item name="android:textColor">?attr/appTextPrimary</item>
+    </style>
+
+    <style name="AppTimePicker.ImageButton" parent="Widget.Material3.MaterialTimePicker.ImageButton">
+        <item name="iconTint">?attr/appCardText</item>
+    </style>
+
+    <style name="AppTimePicker.Dividers" parent="Widget.Material3.MaterialTimePicker.Display.Divider">
+        <item name="android:textColor">?attr/appTextPrimary</item>
+    </style>
+
+    <style name="AppTimePicker.Chips" parent="Widget.Material3.MaterialTimePicker.Display">
+        <item name="android:textColor">?attr/appTextPrimary</item>
+        <item name="chipBackgroundColor">@color/timepicker_time_container</item>
+        <item name="android:clickable">false</item>
+    </style>
+
+    <!--    TIME_PICKER_SECTION_end-->
 
 </resources>
