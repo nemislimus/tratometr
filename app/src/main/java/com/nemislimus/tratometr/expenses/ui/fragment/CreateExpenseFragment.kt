@@ -73,7 +73,7 @@ class CreateExpenseFragment : BindingFragment<FragmentCreateExpenseBinding>() {
         typedValue = TypedValue()
 
         // Получаем список категорий
-        items = (requireActivity() as MainActivity).items2
+        //items = (requireActivity() as MainActivity).items2
 
 
 
@@ -162,10 +162,15 @@ class CreateExpenseFragment : BindingFragment<FragmentCreateExpenseBinding>() {
                         }
                     }
                     // Убираем индикацию ошибки
-                    val amount = BigDecimal(binding.etAmount.text.toString()).setScale(2, RoundingMode.HALF_UP)
-                    if (amount >= BigDecimal("0.01") && amount <= BigDecimal("999999999999999")) {
-                        errorState(false, binding.etAmount)
-                        binding.amountError!!.isVisible = false
+                    if (binding.etAmount.text.isNotEmpty()) {
+                        val amount = BigDecimal(binding.etAmount.text.toString()).setScale(
+                            2,
+                            RoundingMode.HALF_UP
+                        )
+                        if (amount >= BigDecimal("0.01") && amount <= BigDecimal("999999999999999")) {
+                            errorState(false, binding.etAmount)
+                            binding.amountError!!.isVisible = false
+                        }
                     }
                 }
             }
