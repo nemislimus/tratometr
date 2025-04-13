@@ -1,54 +1,30 @@
-package com.nemislimus.tratometr.expenses.domain.impl
+package com.nemislimus.tratometr.expenses.domain.api
 
-import com.nemislimus.tratometr.expenses.data.database.ExpenseHistoriRepositoryImpl
-import com.nemislimus.tratometr.expenses.domain.api.ExpenseHistoriInteractor
 import com.nemislimus.tratometr.expenses.domain.model.Category
 import com.nemislimus.tratometr.expenses.domain.model.Expense
-import javax.inject.Inject
 
-class ExpenseHistoriInteractorImpl @Inject constructor(
-    private val repository: ExpenseHistoriRepositoryImpl
-): ExpenseHistoriInteractor {
-
+interface ExpenseHistoryRepository {
     // ################   ЗАПРОСЫ ДЛЯ ОКНА ИСТОРИЯ РАСХОДОВ   #########################################################################################
     // Выборка строк-расходов за период и по категории
-    override fun getExpenseListFilter(startDate: Long?, endDate: Long?, category: String?): List<Expense> {
-        return repository.getExpenseListFilter(startDate, endDate, category)
-    }
-
+    fun getExpenseListFilter(startDate: Long?, endDate: Long?, category: String?): List<Expense>
     // Удаление строки-расхода по id
-    override fun deleteExpense(expenseId: Long) {
-        repository.deleteExpense(expenseId)
-    }
+    fun deleteExpense(expenseId: Long)
 
     // ################   ЗАПРОСЫ ДЛЯ ОКНА ДОБАВЛЕНИЕ/РЕДАКТИРОВАНИЕ РАСХОДА   ######################################################################
     //Список всех категорий с иконками (по алфавиту)
-    override fun getAllCategoriesListWithIcons(): List<Category> {
-       return repository.getAllCategoriesListWithIcons()
-    }
-
+    fun getAllCategoriesListWithIcons(): List<Category>
     // Добавление нового расхода
-    override fun addNewExpense(expense: Expense) {
-        repository.addNewExpense(expense)
-    }
+    fun addNewExpense(expense: Expense)
     // Обновление расхода
-    override fun updateExpense(expense: Expense) {
-        repository.updateExpense(expense)
-    }
+    fun updateExpense(expense: Expense)
 
     // ################   ЗАПРОСЫ ДЛЯ ОКНА ВЫБОР КАТЕГОРИИ   ########################################################################################
     // Список категорий с иконками и фильтром(период)
-    override fun getCategoriesListWithIconsRange(startDate: Long?, endDate: Long?): List<Category> {
-        return repository.getCategoriesListWithIconsRange(startDate, endDate)
-    }
+    fun getCategoriesListWithIconsRange(startDate: Long?, endDate: Long?): List<Category>
 
     // ################   ЗАПРОСЫ ДЛЯ ОКНА СОЗДАНИЕ КАТЕГОРИИ   #####################################################################################
     // Список всех категорий
-    override fun getAllCategoriesList(): List<String> {
-        return repository.getAllCategoriesList()
-    }
+    fun getAllCategoriesList(): List<String>
     // Добавление новой категорий
-    override fun addNewCategory(category: Category) {
-        repository.addNewCategory(category)
-    }
+    fun addNewCategory(category: Category)
 }

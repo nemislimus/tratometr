@@ -3,7 +3,7 @@ package com.nemislimus.tratometr.expenses.domain.api
 import com.nemislimus.tratometr.expenses.domain.model.Category
 import com.nemislimus.tratometr.expenses.domain.model.Expense
 
-interface ExpenseHistoriRepository {
+interface ExpenseHistoryInteractor {
     // ################   ЗАПРОСЫ ДЛЯ ОКНА ИСТОРИЯ РАСХОДОВ   #########################################################################################
     // Выборка строк-расходов за период и по категории
     fun getExpenseListFilter(startDate: Long?, endDate: Long?, category: String?): List<Expense>

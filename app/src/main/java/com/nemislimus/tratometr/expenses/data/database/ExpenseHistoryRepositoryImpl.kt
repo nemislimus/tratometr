@@ -2,7 +2,7 @@ package com.nemislimus.tratometr.expenses.data.database
 
 import com.nemislimus.tratometr.expenses.data.database.entities.CategoryEntity
 import com.nemislimus.tratometr.expenses.data.database.entities.ExpenseEntity
-import com.nemislimus.tratometr.expenses.domain.api.ExpenseHistoriRepository
+import com.nemislimus.tratometr.expenses.domain.api.ExpenseHistoryRepository
 import com.nemislimus.tratometr.expenses.domain.model.Category
 import com.nemislimus.tratometr.expenses.domain.model.Expense
 import kotlinx.coroutines.CoroutineScope
@@ -10,10 +10,10 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
-class ExpenseHistoriRepositoryImpl @Inject constructor(
+class ExpenseHistoryRepositoryImpl @Inject constructor(
     private val expenseHistoryDao: ExpenseHistoryDao,
     private val dbConverter: DBConverter
-): ExpenseHistoriRepository {
+): ExpenseHistoryRepository {
 
     // ################   ЗАПРОСЫ ДЛЯ ОКНА ИСТОРИЯ РАСХОДОВ   #########################################################################################
     // Выборка строк-расходов за период и по категории
