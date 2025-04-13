@@ -13,4 +13,6 @@
     <string name="export">Экспорт отчёта в csv</string>
     <string name="logout">Выйти из аккаунта</string>
     <string name="select_time">Выберите время</string>
+    <string name="app_name_big_first_char">Tratometr</string>
+    <string name="notification_message">Пора внести траты за день!</string>
 </resources>

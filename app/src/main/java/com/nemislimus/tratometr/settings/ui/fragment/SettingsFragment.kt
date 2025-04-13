@@ -1,6 +1,9 @@
 package com.nemislimus.tratometr.settings.ui.fragment
 
+import android.app.AlarmManager
+import android.app.PendingIntent
 import android.content.Context
+import android.content.Intent
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -17,6 +20,7 @@ import com.nemislimus.tratometr.common.appComponent
 import com.nemislimus.tratometr.common.util.BindingFragment
 import com.nemislimus.tratometr.databinding.FragmentSettingsBinding
 import com.nemislimus.tratometr.settings.domain.model.SettingsParams
+import com.nemislimus.tratometr.settings.ui.receiver.ReminderReceiver
 import com.nemislimus.tratometr.settings.ui.viewmodel.SettingsFragmentViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
@@ -170,9 +174,8 @@ class SettingsFragment : BindingFragment<FragmentSettingsBinding>() {
 
     private fun setTimePickerListeners(picker: MaterialTimePicker?) {
         picker?.addOnPositiveButtonClickListener {
-            val timeStringValue = viewModel.correctTimeString(picker.hour, picker.minute)
-            viewLifecycleOwner.lifecycleScope.launch(Dispatchers.IO) {
-                reminderStart(timeStringValue)
+            viewLifecycleOwner.lifecycleScope.launch {
+                reminderStart(picker.hour, picker.minute)
             }
         }
 
@@ -185,16 +188,61 @@ class SettingsFragment : BindingFragment<FragmentSettingsBinding>() {
         }
     }
 
-    private suspend fun reminderStart(time: String) {
-        updateSettingsParams(time)
+    private suspend fun reminderStart(hours: Int, minutes: Int) {
+        val timeStringValue = viewModel.correctTimeString(hours, minutes)
+        withContext(Dispatchers.IO) { updateSettingsParams(timeStringValue) }
+        setNotification(hours, minutes)
     }
 
     private suspend fun reminderStop() {
-        updateSettingsParams("")
+        withContext(Dispatchers.IO) { updateSettingsParams("") }
+        cancelNotification()
     }
+
+    private fun setNotification(hour: Int, minute: Int) {
+        val alarmManager = requireContext().getSystemService(Context.ALARM_SERVICE) as AlarmManager
+        val pendingIntent = createReminderPendingIntent(requireContext())
+
+        val calendar = Calendar.getInstance().apply {
+            timeInMillis = System.currentTimeMillis()
+            set(Calendar.HOUR_OF_DAY, hour)
+            set(Calendar.MINUTE, minute)
+            set(Calendar.SECOND, 0)
+            if (before(Calendar.getInstance())) {
+                add(Calendar.DATE, 1)
+            }
+        }
+
+        alarmManager.setRepeating(
+            AlarmManager.RTC_WAKEUP,
+            calendar.timeInMillis,
+            AlarmManager.INTERVAL_DAY,
+            pendingIntent
+        )
+    }
+
+    private fun cancelNotification() {
+        val alarmManager = requireContext().getSystemService(Context.ALARM_SERVICE) as AlarmManager
+        val pendingIntent = createReminderPendingIntent(requireContext())
+        alarmManager.cancel(pendingIntent)
+    }
+
+    private fun createReminderPendingIntent(context: Context): PendingIntent {
+        val intent = Intent(context, ReminderReceiver::class.java).apply {
+            action = "DAILY_REMINDER"
+        }
+        return PendingIntent.getBroadcast(
+            context,
+            REMINDER_INTENT_CODE,
+            intent,
+            PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE
+        )
+    }
+
 
     companion object {
         const val TIME_PICKER_TAG = "timepicker_tag"
+        const val REMINDER_INTENT_CODE = 13
     }
 
 }
