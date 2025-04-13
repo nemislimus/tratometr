@@ -1,6 +1,7 @@
-package com.nemislimus.tratometr.expenses.presentation
+package com.nemislimus.tratometr.expenses.ui.viewmodel
 
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
 import com.nemislimus.tratometr.expenses.domain.api.ExpenseHistoryInteractor
 import com.nemislimus.tratometr.expenses.domain.model.Category
@@ -10,7 +11,7 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import javax.inject.Inject
 
-class CreateExpenseViewModel @Inject constructor(
+class CreateExpenseViewModel (
     private val interactor: ExpenseHistoryInteractor
 ): ViewModel() {
 
@@ -34,6 +35,17 @@ class CreateExpenseViewModel @Inject constructor(
                 iconResId = category.iconResId,
                 isAdd = false // Устанавливаем isAdd в false для всех элементов
             )
+        }
+    }
+
+    class Factory @Inject constructor(
+        private val interactor: ExpenseHistoryInteractor
+    ) : ViewModelProvider.Factory {
+
+        @Suppress("UNCHECKED_CAST")
+        override fun <T : ViewModel> create(modelClass: Class<T>): T {
+            require(modelClass == CreateExpenseViewModel::class.java)
+            return CreateExpenseViewModel(interactor) as T
         }
     }
 }

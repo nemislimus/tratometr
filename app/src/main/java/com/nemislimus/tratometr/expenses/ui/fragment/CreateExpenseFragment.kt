@@ -1,6 +1,7 @@
 package com.nemislimus.tratometr.expenses.ui.fragment
 
 import android.annotation.SuppressLint
+import android.content.Context
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
@@ -16,16 +17,20 @@ import android.widget.ImageView
 import android.widget.Toast
 import androidx.appcompat.content.res.AppCompatResources
 import androidx.core.view.isVisible
+import androidx.fragment.app.viewModels
 import com.google.android.material.datepicker.MaterialDatePicker
 import com.nemislimus.tratometr.R
 import com.nemislimus.tratometr.common.MainActivity
+import com.nemislimus.tratometr.common.appComponent
 import com.nemislimus.tratometr.common.util.BindingFragment
 import com.nemislimus.tratometr.databinding.FragmentCreateExpenseBinding
 import com.nemislimus.tratometr.expenses.domain.model.Expense
 import com.nemislimus.tratometr.expenses.ui.fragment.model.AutoCompleteItem
 import com.nemislimus.tratometr.expenses.ui.fragment.adpter.AutoCompleteAdapter
+import com.nemislimus.tratometr.expenses.ui.viewmodel.CreateExpenseViewModel
 import java.math.BigDecimal
 import java.math.RoundingMode
+import javax.inject.Inject
 
 class CreateExpenseFragment : BindingFragment<FragmentCreateExpenseBinding>() {
 
@@ -38,6 +43,15 @@ class CreateExpenseFragment : BindingFragment<FragmentCreateExpenseBinding>() {
     private var scale = 0f
     private lateinit var ivIcon: ImageView
     private var dateInMilisecond = 0L
+
+    @Inject
+    lateinit var vmFactory: CreateExpenseViewModel.Factory
+    private val viewModel: CreateExpenseViewModel by viewModels { vmFactory }
+
+    override fun onAttach(context: Context) {
+        context.appComponent.inject(this)
+        super.onAttach(context)
+    }
 
     override fun createBinding(
         inflater: LayoutInflater,

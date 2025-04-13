@@ -10,7 +10,7 @@ import com.nemislimus.tratometr.authorization.domain.models.Resource
 import com.nemislimus.tratometr.authorization.domain.models.Tokens
 import javax.inject.Inject
 
-class SplashViewModel @Inject constructor(
+class SplashViewModel (
     private val authInteractor: AuthInteractor,
     private val tokensStorageInteractor: TokensStorageInteractor
 ) : ViewModel() {
