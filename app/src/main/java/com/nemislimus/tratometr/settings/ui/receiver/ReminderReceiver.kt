@@ -8,11 +8,22 @@ import android.content.Intent
 import android.os.Build
 import androidx.core.app.NotificationCompat
 import com.nemislimus.tratometr.R
+import com.nemislimus.tratometr.common.util.AppNotificationManager
 
 class ReminderReceiver: BroadcastReceiver() {
 
     override fun onReceive(context: Context?, intent: Intent?) {
-        context?.let { showNotification(it) }
+        context?.let { contextInstance ->
+            showNotification(contextInstance)
+
+            intent?.let { intentInstance ->
+                if (intentInstance.getBooleanExtra(AppNotificationManager.CANT_USE_REPEAT_ALARM_KEY, false)) {
+                    val hour = intentInstance.getIntExtra(AppNotificationManager.HOURS_KEY, -1)
+                    val minute = intentInstance.getIntExtra(AppNotificationManager.MINUTES_KEY, -1)
+                    AppNotificationManager.setNotification(contextInstance, hour, minute)
+                }
+            }
+        }
     }
 
     private fun showNotification(context: Context) {

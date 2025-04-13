@@ -1,13 +1,19 @@
 package com.nemislimus.tratometr.settings.ui.fragment
 
-import android.app.AlarmManager
-import android.app.PendingIntent
+import android.Manifest
 import android.content.Context
 import android.content.Intent
+import android.content.pm.PackageManager
+import android.net.Uri
+import android.os.Build
 import android.os.Bundle
+import android.provider.Settings
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
+import androidx.activity.result.contract.ActivityResultContracts
+import androidx.core.content.ContextCompat
 import androidx.core.view.isVisible
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
@@ -20,7 +26,6 @@ import com.nemislimus.tratometr.common.appComponent
 import com.nemislimus.tratometr.common.util.BindingFragment
 import com.nemislimus.tratometr.databinding.FragmentSettingsBinding
 import com.nemislimus.tratometr.settings.domain.model.SettingsParams
-import com.nemislimus.tratometr.settings.ui.receiver.ReminderReceiver
 import com.nemislimus.tratometr.settings.ui.viewmodel.SettingsFragmentViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
@@ -38,6 +43,26 @@ class SettingsFragment : BindingFragment<FragmentSettingsBinding>() {
     private var themeChangingJob: Job? = null
     private var reminderChangingJob: Job? = null
     private var timePicker: MaterialTimePicker? = null
+    private val systemVersionWithPermissions = Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU
+
+    private val requestPermissionLauncher =
+        registerForActivityResult(ActivityResultContracts.RequestPermission()) { permissionIsGranted: Boolean ->
+            if (permissionIsGranted) {
+                binding.swReminder.isEnabled = true
+            } else {
+                binding.swReminder.isEnabled = false
+
+                if (systemVersionWithPermissions) {
+                    val shouldShowRequestPermission =
+                        shouldShowRequestPermissionRationale(Manifest.permission.POST_NOTIFICATIONS)
+
+                    if (!shouldShowRequestPermission) {
+                        Toast.makeText(requireContext(), PERMISSION_MESSAGE, Toast.LENGTH_SHORT ).show()
+                        getPermissionAtSettings()
+                    }
+                }
+            }
+        }
 
 
     override fun onAttach(context: Context) {
@@ -59,6 +84,11 @@ class SettingsFragment : BindingFragment<FragmentSettingsBinding>() {
         }
 
         setUiListeners()
+
+        viewLifecycleOwner.lifecycleScope.launch {
+            delay(500)
+            checkNotificationPermission()
+        }
     }
 
     override fun onDestroyFragment() {
@@ -76,8 +106,6 @@ class SettingsFragment : BindingFragment<FragmentSettingsBinding>() {
         binding.swReminder.setOnClickListener {
             clickOnReminderSwitch(binding.swReminder.isChecked)
         }
-
-
 
         binding.swTheme.setOnClickListener {
             clickOnThemeSwitch(binding.swTheme.isChecked)
@@ -191,58 +219,40 @@ class SettingsFragment : BindingFragment<FragmentSettingsBinding>() {
     private suspend fun reminderStart(hours: Int, minutes: Int) {
         val timeStringValue = viewModel.correctTimeString(hours, minutes)
         withContext(Dispatchers.IO) { updateSettingsParams(timeStringValue) }
-        setNotification(hours, minutes)
+        viewModel.setNotification(requireContext(), hours, minutes)
     }
 
     private suspend fun reminderStop() {
         withContext(Dispatchers.IO) { updateSettingsParams("") }
-        cancelNotification()
+        viewModel.cancelNotification(requireContext())
     }
 
-    private fun setNotification(hour: Int, minute: Int) {
-        val alarmManager = requireContext().getSystemService(Context.ALARM_SERVICE) as AlarmManager
-        val pendingIntent = createReminderPendingIntent(requireContext())
+    private fun checkNotificationPermission() {
+        if (systemVersionWithPermissions) {
+            val permissionProvided = ContextCompat
+                .checkSelfPermission(requireContext(), Manifest.permission.POST_NOTIFICATIONS)
 
-        val calendar = Calendar.getInstance().apply {
-            timeInMillis = System.currentTimeMillis()
-            set(Calendar.HOUR_OF_DAY, hour)
-            set(Calendar.MINUTE, minute)
-            set(Calendar.SECOND, 0)
-            if (before(Calendar.getInstance())) {
-                add(Calendar.DATE, 1)
+            if (permissionProvided == PackageManager.PERMISSION_GRANTED) {
+                binding.swReminder.isEnabled = true
+            } else if (permissionProvided == PackageManager.PERMISSION_DENIED) {
+                binding.swReminder.isEnabled = false
+                if (!binding.swReminder.isEnabled) {
+                    requestPermissionLauncher.launch(Manifest.permission.POST_NOTIFICATIONS)
+                }
             }
         }
-
-        alarmManager.setRepeating(
-            AlarmManager.RTC_WAKEUP,
-            calendar.timeInMillis,
-            AlarmManager.INTERVAL_DAY,
-            pendingIntent
-        )
     }
 
-    private fun cancelNotification() {
-        val alarmManager = requireContext().getSystemService(Context.ALARM_SERVICE) as AlarmManager
-        val pendingIntent = createReminderPendingIntent(requireContext())
-        alarmManager.cancel(pendingIntent)
+    private fun getPermissionAtSettings(context: Context = requireContext()) {
+        val intent = Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS)
+        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+        intent.data= Uri.fromParts("package", context.packageName, null)
+        context.startActivity(intent)
     }
-
-    private fun createReminderPendingIntent(context: Context): PendingIntent {
-        val intent = Intent(context, ReminderReceiver::class.java).apply {
-            action = "DAILY_REMINDER"
-        }
-        return PendingIntent.getBroadcast(
-            context,
-            REMINDER_INTENT_CODE,
-            intent,
-            PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE
-        )
-    }
-
 
     companion object {
         const val TIME_PICKER_TAG = "timepicker_tag"
-        const val REMINDER_INTENT_CODE = 13
+        const val PERMISSION_MESSAGE = "Разрешите делать напоминания!"
     }
 
 }

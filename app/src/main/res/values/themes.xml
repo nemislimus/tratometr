@@ -100,7 +100,7 @@
         <item name="android:textColor">?attr/appTextPrimary</item>
         <item name="trackTint">@color/switch_track_tint_selector</item>
         <item name="thumbTint">@color/switch_thumb_tint_selector</item>
-        <item name="trackDecorationTint">?attr/appAccentColor</item>
+        <item name="trackDecorationTint">@color/switch_track_decor_tint_selector</item>
     </style>
 
 <!--    TIME_PICKER_SECTION-->

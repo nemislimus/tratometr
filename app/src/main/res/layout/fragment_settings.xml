@@ -25,6 +25,8 @@
         app:switchPadding="@dimen/size_64dp"
         android:text="@string/reminders"
         android:layout_marginTop="@dimen/size_16dp"
+        android:enabled="true"
+        android:checked="false"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/tbSettings"
         app:layout_constraintEnd_toEndOf="parent" />

@@ -1,10 +1,12 @@
 package com.nemislimus.tratometr.settings.ui.viewmodel
 
+import android.content.Context
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
+import com.nemislimus.tratometr.common.util.AppNotificationManager
 import com.nemislimus.tratometr.settings.domain.api.SettingsRepository
 import com.nemislimus.tratometr.settings.domain.model.SettingsParams
 import kotlinx.coroutines.Dispatchers
@@ -40,6 +42,14 @@ class SettingsFragmentViewModel(
             else -> "$hours:$minutes"
         }
     }
+
+    fun setNotification(context: Context, hour: Int, minute: Int) =
+        AppNotificationManager.setNotification(context, hour, minute)
+
+    fun cancelNotification(context: Context) =
+        AppNotificationManager.cancelNotification(context)
+
+
 
     class Factory @Inject constructor(
         private val repository: SettingsRepository,
