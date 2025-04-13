@@ -14,7 +14,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
-class SplashViewModel @Inject constructor(
+class SplashViewModel (
     private val authInteractor: AuthInteractor,
     private val tokensStorageInteractor: TokensStorageInteractor,
     private val getDarkModeValueUseCase: GetDarkModeValueUseCase,
