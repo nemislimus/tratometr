@@ -79,7 +79,6 @@ class ExpenseHistoryDao @Inject constructor(
         val categories = mutableListOf<CategoryEntity>()
         val args = mutableListOf<String>()
         val cursor = db.rawQuery(query, args.toTypedArray())
-
         if (cursor.moveToFirst()) {
             do {
              val categoryName = cursor.getString(0)
@@ -158,13 +157,12 @@ class ExpenseHistoryDao @Inject constructor(
             } while (cursor.moveToNext())
         }
         cursor.close()
-        db.close()
         return categories
     }
 
 // ################   ЗАПРОСЫ ДЛЯ ОКНА СОЗДАНИЕ КАТЕГОРИИ   #####################################################################################
 
-    // Список всех категорий
+    // Список всех категорий, только имена категорий без иконок
     /*  Образец запроса
         SELECT CATEGORIES.CATEGORY_NAME FROM CATEGORIES;
     */
@@ -182,7 +180,6 @@ class ExpenseHistoryDao @Inject constructor(
             } while (cursor.moveToNext())
         }
         cursor.close()
-        db.close()
         return categories
     }
 
@@ -194,6 +191,6 @@ class ExpenseHistoryDao @Inject constructor(
             put("ICON_RES_ID", category.iconResId)
         }
         db.insert("CATEGORIES", null, contentValues)
-        db.close()
+
     }
 }
