@@ -26,4 +26,6 @@
     <string name="app_name_big_first_char">Tratometr</string>
     <string name="notification_message">Пора внести траты за день!</string>
     <string name="create_category">Создать категорию</string>
+    <string name="notification_permission_request">Чтобы получить доступ к напоминаниям нужно ваше разрешение!</string>
+    <string name="alarm_permission_request">Разрешите делать напоминания!</string>
 </resources>

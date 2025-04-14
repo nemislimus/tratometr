@@ -17,6 +17,9 @@ class App : Application() {
 
     lateinit var appComponent: AppComponent
 
+    var alarmPermissionDeniedOnCurrentSession = false
+    var notificationPermissionDeniedOnCurrentSession = false
+
     override fun onCreate() {
         super.onCreate()
 
@@ -58,4 +61,30 @@ val Context.appComponent: AppComponent
     get() = when (this) {
         is App -> appComponent
         else -> this.applicationContext.appComponent
+    }
+
+/** Если пользователь не дал разрешения на alarm, больше не запрашивать на этой сессии
+ */
+@Suppress("RecursivePropertyAccessor")
+var Context.alarmPermissionDeniedOnCurrentSession: Boolean
+    get() = when (this) {
+        is App -> alarmPermissionDeniedOnCurrentSession
+        else -> this.applicationContext.alarmPermissionDeniedOnCurrentSession
+    }
+    set(value) = when (this) {
+        is App -> alarmPermissionDeniedOnCurrentSession = value
+        else -> this.applicationContext.alarmPermissionDeniedOnCurrentSession = value
+    }
+
+/** Если пользователь не дал разрешения на notification, больше не запрашивать на этой сессии
+ */
+@Suppress("RecursivePropertyAccessor")
+var Context.notificationPermissionDeniedOnCurrentSession: Boolean
+    get() = when (this) {
+        is App -> notificationPermissionDeniedOnCurrentSession
+        else -> this.applicationContext.notificationPermissionDeniedOnCurrentSession
+    }
+    set(value) = when (this) {
+        is App -> notificationPermissionDeniedOnCurrentSession = value
+        else -> this.applicationContext.notificationPermissionDeniedOnCurrentSession = value
     }

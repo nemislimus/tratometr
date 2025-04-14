@@ -1,6 +1,7 @@
 package com.nemislimus.tratometr.settings.ui.fragment
 
 import android.Manifest
+import android.app.AlarmManager
 import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
@@ -23,6 +24,8 @@ import com.google.android.material.timepicker.TimeFormat
 import com.nemislimus.tratometr.R
 import com.nemislimus.tratometr.common.App
 import com.nemislimus.tratometr.common.appComponent
+import com.nemislimus.tratometr.common.notificationPermissionDeniedOnCurrentSession
+import com.nemislimus.tratometr.common.alarmPermissionDeniedOnCurrentSession
 import com.nemislimus.tratometr.common.util.BindingFragment
 import com.nemislimus.tratometr.databinding.FragmentSettingsBinding
 import com.nemislimus.tratometr.settings.domain.model.SettingsParams
@@ -43,12 +46,12 @@ class SettingsFragment : BindingFragment<FragmentSettingsBinding>() {
     private var themeChangingJob: Job? = null
     private var reminderChangingJob: Job? = null
     private var timePicker: MaterialTimePicker? = null
-    private val systemVersionWithPermissions = Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU
+    private val systemVersionWithPermissions = Build.VERSION.SDK_INT >= Build.VERSION_CODES.S
 
     private val requestPermissionLauncher =
         registerForActivityResult(ActivityResultContracts.RequestPermission()) { permissionIsGranted: Boolean ->
             if (permissionIsGranted) {
-                binding.swReminder.isEnabled = true
+                checkExactAlarmPermission()
             } else {
                 binding.swReminder.isEnabled = false
 
@@ -57,8 +60,9 @@ class SettingsFragment : BindingFragment<FragmentSettingsBinding>() {
                         shouldShowRequestPermissionRationale(Manifest.permission.POST_NOTIFICATIONS)
 
                     if (!shouldShowRequestPermission) {
-                        Toast.makeText(requireContext(), PERMISSION_MESSAGE, Toast.LENGTH_SHORT ).show()
-                        getPermissionAtSettings()
+                        showToast(requireContext().getString(R.string.alarm_permission_request))
+                        requireContext().notificationPermissionDeniedOnCurrentSession = true
+                        getPermissionOnNotificationAtSettings()
                     }
                 }
             }
@@ -89,6 +93,12 @@ class SettingsFragment : BindingFragment<FragmentSettingsBinding>() {
             delay(500)
             checkNotificationPermission()
         }
+
+    }
+
+    override fun onResume() {
+        super.onResume()
+        if (checkAlarmPermissionOnResume()) binding.swReminder.isEnabled = true
     }
 
     override fun onDestroyFragment() {
@@ -227,32 +237,68 @@ class SettingsFragment : BindingFragment<FragmentSettingsBinding>() {
         viewModel.cancelNotification(requireContext())
     }
 
-    private fun checkNotificationPermission() {
+    private fun checkNotificationPermission(context: Context = requireContext()) {
         if (systemVersionWithPermissions) {
             val permissionProvided = ContextCompat
-                .checkSelfPermission(requireContext(), Manifest.permission.POST_NOTIFICATIONS)
+                .checkSelfPermission(context, Manifest.permission.POST_NOTIFICATIONS)
 
             if (permissionProvided == PackageManager.PERMISSION_GRANTED) {
-                binding.swReminder.isEnabled = true
+                checkExactAlarmPermission()
             } else if (permissionProvided == PackageManager.PERMISSION_DENIED) {
                 binding.swReminder.isEnabled = false
-                if (!binding.swReminder.isEnabled) {
+                if (!requireContext().notificationPermissionDeniedOnCurrentSession) {
+                    requireContext().notificationPermissionDeniedOnCurrentSession = true
                     requestPermissionLauncher.launch(Manifest.permission.POST_NOTIFICATIONS)
                 }
             }
         }
     }
 
-    private fun getPermissionAtSettings(context: Context = requireContext()) {
+    private fun checkExactAlarmPermission(context: Context = requireContext()) {
+        val alarmManager = context.getSystemService(Context.ALARM_SERVICE) as AlarmManager
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
+            if (!alarmManager.canScheduleExactAlarms()) {
+                binding.swReminder.isEnabled = false
+                if (!requireContext().alarmPermissionDeniedOnCurrentSession) {
+                    showToast(context.getString(R.string.notification_permission_request))
+                    requireContext().alarmPermissionDeniedOnCurrentSession = true
+                    getPermissionOnExactAlarmAtSettings(context)
+                }
+            } else {
+                binding.swReminder.isEnabled = true
+            }
+        }
+    }
+
+    private fun checkAlarmPermissionOnResume(context: Context = requireContext()): Boolean {
+        var alarm = false
+        if (systemVersionWithPermissions) {
+            val alarmManager = context.getSystemService(Context.ALARM_SERVICE) as AlarmManager
+            alarm = alarmManager.canScheduleExactAlarms()
+        }
+        return alarm
+    }
+
+    private fun getPermissionOnNotificationAtSettings(context: Context = requireContext()) {
         val intent = Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS)
         intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
         intent.data= Uri.fromParts("package", context.packageName, null)
         context.startActivity(intent)
     }
 
+    private fun getPermissionOnExactAlarmAtSettings(context: Context = requireContext()) {
+        val intent = Intent(Settings.ACTION_REQUEST_SCHEDULE_EXACT_ALARM).apply {
+            data = Uri.parse("package:${context.packageName}")
+        }
+        context.startActivity(intent)
+    }
+
+    private fun showToast(message: String){
+        Toast.makeText(requireContext(), message, Toast.LENGTH_LONG).show()
+    }
+
     companion object {
         const val TIME_PICKER_TAG = "timepicker_tag"
-        const val PERMISSION_MESSAGE = "Разрешите делать напоминания!"
     }
 
 }
