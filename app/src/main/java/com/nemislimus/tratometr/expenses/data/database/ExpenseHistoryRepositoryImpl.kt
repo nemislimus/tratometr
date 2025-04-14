@@ -65,8 +65,7 @@ class ExpenseHistoryRepositoryImpl @Inject constructor(
     // ################   ЗАПРОСЫ ДЛЯ ОКНА СОЗДАНИЕ КАТЕГОРИИ   #####################################################################################
     // Список всех категорий
     override fun getAllCategoriesList(): List<String> {
-        val categories = expenseHistoryDao.getAllCategoriesList()
-        return categories
+        return expenseHistoryDao.getAllCategoriesList()
     }
     // Добавление новой категорий
     override fun addNewCategory(category: Category) {

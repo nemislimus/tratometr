@@ -1,6 +1,7 @@
 <resources>
     <string name="app_name">tratometr</string>
     <string name="add_expense">Добавить расход</string>
+    <string name="edit_expense">Редактировать расход</string>
     <string name="hint_text_category">Выбрать категорию</string>
     <string name="amount_expense_auto_fill_hints">Сумма расхода</string>
     <string name="description">Примечание</string>

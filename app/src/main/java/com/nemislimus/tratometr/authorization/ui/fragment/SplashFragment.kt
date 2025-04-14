@@ -7,12 +7,11 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.fragment.app.FragmentTransaction.TRANSIT_FRAGMENT_OPEN
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
-import androidx.lifecycle.lifecycleScope
 import com.airbnb.lottie.LottieDrawable
 import com.nemislimus.tratometr.R
-import com.nemislimus.tratometr.authorization.domain.models.Resource
 import com.nemislimus.tratometr.authorization.ui.viewmodel.SplashViewModel
 import com.nemislimus.tratometr.authorization.ui.viewmodel.SplashViewModel.Companion.ANIM_END_POINT
 import com.nemislimus.tratometr.authorization.ui.viewmodel.SplashViewModel.Companion.ANIM_START_LOOP_POINT
@@ -20,8 +19,7 @@ import com.nemislimus.tratometr.authorization.ui.viewmodel.SplashViewModel.Compa
 import com.nemislimus.tratometr.common.appComponent
 import com.nemislimus.tratometr.common.util.BindingFragment
 import com.nemislimus.tratometr.databinding.FragmentSplashBinding
-import kotlinx.coroutines.delay
-import kotlinx.coroutines.launch
+import com.nemislimus.tratometr.expenses.ui.fragment.CreateExpenseFragment
 import javax.inject.Inject
 
 class SplashFragment : BindingFragment<FragmentSplashBinding>() {
@@ -66,6 +64,14 @@ class SplashFragment : BindingFragment<FragmentSplashBinding>() {
                 R.id.action_splashFragment_to_settingsFragment
             )
         }
+
+        // Андрей Добавил для тестирования окна Добавление расхода **************************************************
+        binding.btn.setOnClickListener {
+            requireActivity().supportFragmentManager.beginTransaction().setTransition(TRANSIT_FRAGMENT_OPEN)
+                .add(R.id.mainFragmentContainer, CreateExpenseFragment())
+                .addToBackStack("MainMenuFragment").commit()
+        }
+        //***********************************************************************************************************
 
 //        lifecycleScope.launch {
 //            //viewModel.clearTokens() //Добавил его тут для тестирования
