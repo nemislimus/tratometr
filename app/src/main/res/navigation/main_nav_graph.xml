@@ -19,6 +19,9 @@
         <action
             android:id="@+id/action_splashFragment_to_settingsFragment"
             app:destination="@id/settingsFragment" />
+        <action
+            android:id="@+id/action_splashFragment_to_createCategoryFragment"
+            app:destination="@id/createCategoryFragment" />
     </fragment>
 
     <fragment
