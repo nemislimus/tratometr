@@ -52,7 +52,6 @@ class AnalyticsDao @Inject constructor(
             } while (cursor.moveToNext())
         }
         cursor.close()
-        db.close()
         return categories
     }
 
@@ -95,7 +94,6 @@ class AnalyticsDao @Inject constructor(
             } while (cursor.moveToNext())
         }
         cursor.close()
-        db.close()
         return amounts
     }
 }

@@ -6,7 +6,6 @@ import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
 import android.text.format.DateFormat
-import android.util.Log
 import android.util.TypedValue
 import android.view.LayoutInflater
 import android.view.View
@@ -18,12 +17,13 @@ import android.widget.Toast
 import androidx.appcompat.content.res.AppCompatResources
 import androidx.core.view.isVisible
 import androidx.fragment.app.viewModels
+import androidx.navigation.fragment.findNavController
 import com.google.android.material.datepicker.MaterialDatePicker
 import com.nemislimus.tratometr.R
-import com.nemislimus.tratometr.common.MainActivity
 import com.nemislimus.tratometr.common.appComponent
 import com.nemislimus.tratometr.common.util.BindingFragment
 import com.nemislimus.tratometr.databinding.FragmentCreateExpenseBinding
+import com.nemislimus.tratometr.expenses.domain.model.Category
 import com.nemislimus.tratometr.expenses.domain.model.Expense
 import com.nemislimus.tratometr.expenses.ui.fragment.model.AutoCompleteItem
 import com.nemislimus.tratometr.expenses.ui.fragment.adpter.AutoCompleteAdapter
@@ -31,12 +31,15 @@ import com.nemislimus.tratometr.expenses.ui.viewmodel.CreateExpenseViewModel
 import java.math.BigDecimal
 import java.math.RoundingMode
 import javax.inject.Inject
+import kotlin.random.Random
 
 class CreateExpenseFragment : BindingFragment<FragmentCreateExpenseBinding>() {
 
     private var expense: Expense? = null
-    private var mode = "ADD"                        // Режим ADD - добавление, EDIT - редактирование
-    private lateinit var items: List<AutoCompleteItem>
+    private var isAddMode = true                        // Режим true - добавление, false - редактирование
+    private lateinit var itemsOriginal: List<AutoCompleteItem>
+    private lateinit var items: MutableList<AutoCompleteItem>
+    private lateinit var adapter: AutoCompleteAdapter
     private lateinit var typedValue: TypedValue
     private lateinit var autoCompleteTextView: AutoCompleteTextView
     private var currentText: String = ""
@@ -76,9 +79,9 @@ class CreateExpenseFragment : BindingFragment<FragmentCreateExpenseBinding>() {
             expense = null
         }
 
-        mode = if (expense == null) "ADD" else "EDIT"
+        isAddMode = expense == null
         // Настройка экрана
-        if (mode == "ADD") showAddMode() else showEditMode()
+        if (isAddMode) showAddMode() else showEditMode()
 
         autoCompleteTextView = binding.actvCategory
         ivIcon = binding.ivIcon
@@ -86,16 +89,28 @@ class CreateExpenseFragment : BindingFragment<FragmentCreateExpenseBinding>() {
         autoCompleteTextView.dropDownVerticalOffset = 25        // Отступ списка вниз от поля
         typedValue = TypedValue()
 
-        // Получаем список категорий
-        //items = (requireActivity() as MainActivity).items2
+        binding.tvTitle.setOnClickListener {
+            findNavController().popBackStack()
+        }
 
+        items = mutableListOf()
+        /*items = listOf(
+            AutoCompleteItem("Яблоко", R.drawable.ic_custom_cat_01, false),
+            AutoCompleteItem("Ананас", R.drawable.ic_custom_cat_02, false),
+            AutoCompleteItem("Апельсин", R.drawable.ic_custom_cat_03, false),
+            AutoCompleteItem("Абрикос", R.drawable.ic_custom_cat_04, false),
+            AutoCompleteItem("Банан", R.drawable.ic_custom_cat_05, false),
+            AutoCompleteItem("Картошка", R.drawable.ic_custom_cat_06, false)
+        )*/
 
+        //val sortedItems = items.sortedBy { it.name }.toMutableList() // Сортировка списка по алфавиту
+        //sortedItems.add(0, AutoCompleteItem("", 0, true))
 
-        val sortedItems = items.sortedBy { it.name }.toMutableList() // Сортировка списка по алфавиту
-        sortedItems.add(0, AutoCompleteItem("", 0, true))
-
-        val adapter = AutoCompleteAdapter(requireContext(), sortedItems)
+        adapter = AutoCompleteAdapter(requireContext(), items)
         autoCompleteTextView.setAdapter(adapter)
+        // Получаем список категорий
+        updateItems()
+
 
         autoCompleteTextView.threshold = 1 // Начинать показывать предложения после ввода 1 символа
 
@@ -103,7 +118,7 @@ class CreateExpenseFragment : BindingFragment<FragmentCreateExpenseBinding>() {
             val selectedItem = (parent.getItemAtPosition(position) as AutoCompleteItem)
             if (!selectedItem.isAdd) {
                 autoCompleteTextView.setText(selectedItem.name)
-                showIcons(selectedItem.iconResId, true)
+                showIcons(selectedItem.iconResId)
                 // Убираем индикацию ошибки
                 errorState(false, binding.actvCategory)
                 binding.categoryError!!.isVisible = false
@@ -120,22 +135,22 @@ class CreateExpenseFragment : BindingFragment<FragmentCreateExpenseBinding>() {
             }
             override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
                 val currentStr = s.toString()
-                if (items.any { it.name == currentStr}) {
-                    if (sortedItems[0].isAdd) {
-                        sortedItems.removeAt(0)
-                        val foundItem = items.find { it.name == currentStr }
-                        showIcons(foundItem?.iconResId, true)
+                if (itemsOriginal.any { it.name == currentStr}) {
+                    if (items[0].isAdd) {
+                        items.removeAt(0)
+                        val foundItem = itemsOriginal.find { it.name == currentStr }
+                        showIcons(foundItem?.iconResId)
                         autoCompleteTextView.dismissDropDown() // Скрываем список
                         // Убираем индикацию ошибки
                         errorState(false, autoCompleteTextView)
                         binding.categoryError!!.isVisible = false
                     }
                 } else {
-                    showIcons(null, false)
-                    if (sortedItems[0].isAdd) {
-                        sortedItems[0].name = currentStr
+                    showIcons(null)
+                    if (items.size > 0 && items[0].isAdd) {
+                        items[0].name = currentStr
                     } else {
-                        sortedItems.add(0, AutoCompleteItem(currentStr, 0, true))
+                        items.add(0, AutoCompleteItem(currentStr, 0, true))
                     }
                 }
                 adapter.notifyDataSetChanged()
@@ -160,31 +175,26 @@ class CreateExpenseFragment : BindingFragment<FragmentCreateExpenseBinding>() {
 
         // Ограничение ввода суммы, не даем ввсести больше двух симоволов после точки
         binding.etAmount.addTextChangedListener(object : TextWatcher {
-            private var isEditing = false
-            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
-                isEditing = true
-            }
+            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
 
             override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
-                if (isEditing) {
-                    if (s != null) {
-                        val parts = s.toString().split(".")
-                        if (parts.size == 2 && parts[1].length > 2) { // если введен третий симовол после точки
-                            // Отменяем ввод последнего символа
-                            binding.etAmount.setText(s.substring(0, s.length - 1))
-                            binding.etAmount.setSelection(binding.etAmount.text.length) // Устанавливаем курсор в конец текста
-                        }
+                if (s != null) {
+                    val parts = s.toString().split(".")
+                    if (parts.size == 2 && parts[1].length > 2) {                       // если введен третий симовол после точки
+                        binding.etAmount.setText(s.substring(0, s.length - 1))          // Отменяем ввод последнего символа
+                        binding.etAmount.setSelection(binding.etAmount.text.length)     // Устанавливаем курсор в конец текста
                     }
-                    // Убираем индикацию ошибки
-                    if (binding.etAmount.text.isNotEmpty()) {
-                        val amount = BigDecimal(binding.etAmount.text.toString()).setScale(
-                            2,
-                            RoundingMode.HALF_UP
-                        )
-                        if (amount >= BigDecimal("0.01") && amount <= BigDecimal("999999999999999")) {
-                            errorState(false, binding.etAmount)
-                            binding.amountError!!.isVisible = false
-                        }
+                }
+                if (binding.etAmount.text.isNotEmpty()) {
+                    val amount = BigDecimal(binding.etAmount.text.toString()).setScale(
+                        2,
+                        RoundingMode.HALF_UP
+                    )
+                    // Если Сумма введена правильно
+                    if (amount >= BigDecimal("0.01") && amount <= BigDecimal("999999999999999")) {
+                        // Убираем индикацию ошибки
+                        errorState(false, binding.etAmount)
+                        binding.amountError!!.isVisible = false
                     }
                 }
             }
@@ -209,27 +219,55 @@ class CreateExpenseFragment : BindingFragment<FragmentCreateExpenseBinding>() {
     }
 
     private fun executeSave() {
-        if (mode == "ADD") {
-            Toast.makeText(requireContext(), "Добавление", Toast.LENGTH_SHORT).show()
+        val newExpense = Expense(
+            expense?.id ?: 0,
+            dateInMilisecond,
+            BigDecimal(binding.etAmount.text.toString()),
+            binding.actvCategory.text.toString(),
+            0,
+            binding.etDescription.text.toString()
+        )
+        if (isAddMode) {
+            viewModel.addNewExpense(newExpense)
         } else {
-            Toast.makeText(requireContext(), "Сохранение", Toast.LENGTH_SHORT).show()
+            viewModel.updateExpense(newExpense)
         }
+        findNavController().popBackStack()
     }
 
     private fun openCategoryWindow(category: String){
         Toast.makeText(requireContext(), "Переход к окну Создание категории", Toast.LENGTH_SHORT).show()
+        // Для отладки создаем категорию ***********************************************************************************
+        val icons = listOf(
+            R.drawable.ic_custom_cat_01,
+            R.drawable.ic_custom_cat_02,
+            R.drawable.ic_custom_cat_03,
+            R.drawable.ic_custom_cat_04,
+            R.drawable.ic_custom_cat_05
+        )
+        val randomIndex = Random.nextInt(0, 5)
+        val newCategory = Category(autoCompleteTextView.text.toString(), icons[randomIndex])
+        viewModel.addNewCategory(newCategory) {
+            updateItems()
+        }
+        //********************************************************************************************************************
     }
 
-    private fun showIcons(iconResId: Int?, isShow: Boolean) {
-        val left = if (isShow) 64 else 16
+    private fun showIcons(iconResId: Int?) {
+        val leftPadding = if (iconResId != null) 64 else 16
         autoCompleteTextView.setPadding(
-            (left * scale + 0.5f).toInt(),
+            (leftPadding * scale + 0.5f).toInt(),
             (12 * scale + 0.5f).toInt(),
             (16 * scale + 0.5f).toInt(),
             (12 * scale + 0.5f).toInt()
         )
-        iconResId?.let { ivIcon.setImageDrawable(AppCompatResources.getDrawable(requireContext(), it)) }
-        ivIcon.isVisible = isShow
+
+        ivIcon.isVisible = iconResId != null
+        if (iconResId != null) {
+            ivIcon.setImageDrawable(
+                AppCompatResources.getDrawable(requireContext(), iconResId)
+            )
+        }
     }
 
     @SuppressLint("SetTextI18n")
@@ -256,7 +294,6 @@ class CreateExpenseFragment : BindingFragment<FragmentCreateExpenseBinding>() {
     }
 
     private fun errorInCaregory(): Boolean {
-        Log.e("МОЁ",  "errorInCaregor")
         if (items.any { it.name == autoCompleteTextView.text.toString() }) {
             errorState(false, autoCompleteTextView)
             binding.categoryError!!.isVisible = false
@@ -269,7 +306,6 @@ class CreateExpenseFragment : BindingFragment<FragmentCreateExpenseBinding>() {
     }
 
     private fun errorInAmount(): Boolean {
-        Log.e("МОЁ",  "errorInAmount")
         val amount = BigDecimal(binding.etAmount.text.toString()).setScale(2, RoundingMode.HALF_UP)
         if (amount >= BigDecimal("0.01") && amount <= BigDecimal("999999999999999")) {
             errorState(false, binding.etAmount)
@@ -305,5 +341,18 @@ class CreateExpenseFragment : BindingFragment<FragmentCreateExpenseBinding>() {
         outState.putLong("Date", dateInMilisecond)
         outState.putString("Amount", binding.etAmount.text.toString())
         outState.putString("Description", binding.etDescription.text.toString())
+    }
+
+    private fun updateItems() {
+        viewModel.getAllCategories { newItems ->
+            itemsOriginal = newItems                // Сохраняем отдельно исходный список
+            // Подготовка списка для адаптера
+            val sortedItems = newItems.sortedBy { it.name }.toMutableList() // Сортировка списка по алфавиту
+            sortedItems.add(0, AutoCompleteItem("", 0, true))
+            // Смена списка в адаптере
+            items.clear()
+            items.addAll(sortedItems)
+            adapter.notifyDataSetChanged()
+        }
     }
 }

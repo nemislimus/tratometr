@@ -5,6 +5,7 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
 import com.nemislimus.tratometr.expenses.domain.api.ExpenseHistoryInteractor
 import com.nemislimus.tratometr.expenses.domain.model.Category
+import com.nemislimus.tratometr.expenses.domain.model.Expense
 import com.nemislimus.tratometr.expenses.ui.fragment.model.AutoCompleteItem
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -37,6 +38,23 @@ class CreateExpenseViewModel (
             )
         }
     }
+
+    fun addNewExpense(expense: Expense) {
+        interactor.addNewExpense(expense)
+    }
+
+    fun updateExpense(expense: Expense) {
+        interactor.updateExpense(expense)
+    }
+
+    // Для отладки *****************************************************************************************************************
+    fun addNewCategory(category: Category, callback: () -> Unit) {
+        viewModelScope.launch {
+            interactor.addNewCategory(category)
+            callback()
+        }
+    }
+    //******************************************************************************************************************************
 
     class Factory @Inject constructor(
         private val interactor: ExpenseHistoryInteractor
