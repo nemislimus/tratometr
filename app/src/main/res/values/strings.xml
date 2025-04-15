@@ -30,4 +30,6 @@
     <string name="create_category">Создать категорию</string>
     <string name="notification_permission_request">Чтобы получить доступ к напоминаниям нужно ваше разрешение!</string>
     <string name="alarm_permission_request">Разрешите делать напоминания!</string>
+    <string name="title_of_creating_category">Название категории</string>
+    <string name="category_icon_selection">Выбор иконки</string>
 </resources>
