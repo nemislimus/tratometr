@@ -144,6 +144,33 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
+        <LinearLayout
+            android:id="@+id/placeholder"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="56dp"
+            android:layout_gravity="top|center"
+            android:gravity="center_horizontal"
+            android:orientation="vertical"
+            android:visibility="gone">
+
+            <TextView
+                style="@style/AppTextH2"
+                android:textColor="?attr/appTextPrimary"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/no_expenses"/>
+
+            <TextView
+                style="@style/AppTextPrimary"
+                android:textColor="?attr/appTextPrimary"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:text="@string/change_filter"/>
+
+        </LinearLayout>
+
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/recycler"
             android:layout_width="match_parent"
@@ -155,7 +182,19 @@
             android:paddingBottom="120dp"
             android:scrollbarThumbVertical="?attr/appCategoryIconBackground"
             android:scrollbars="vertical"
-            app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager" />
+            app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+            android:visibility="visible"/>
+
+        <ProgressBar
+            android:id="@+id/progress_bar"
+            style="@style/Widget.AppCompat.ProgressBar"
+            android:layout_width="64dp"
+            android:layout_height="64dp"
+            android:layout_gravity="top|center_horizontal"
+            android:layout_marginTop="128dp"
+            android:indeterminateTint="?attr/appAccentColor"
+            android:indeterminate="true"
+            android:visibility="gone"/>
 
 
         <ImageView
