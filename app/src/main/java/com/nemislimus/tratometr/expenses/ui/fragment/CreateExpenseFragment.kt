@@ -31,6 +31,7 @@ import com.nemislimus.tratometr.expenses.ui.viewmodel.CreateExpenseViewModel
 import java.math.BigDecimal
 import java.math.RoundingMode
 import java.util.Calendar
+import java.util.TimeZone
 import javax.inject.Inject
 import kotlin.random.Random
 
@@ -359,7 +360,7 @@ class CreateExpenseFragment : BindingFragment<FragmentCreateExpenseBinding>() {
     }
 
     private fun today(): Long {
-        val calendar = Calendar.getInstance()
+        val calendar = Calendar.getInstance(TimeZone.getTimeZone("UTC"))
         calendar.set(Calendar.HOUR_OF_DAY, 0)
         calendar.set(Calendar.MINUTE, 0)
         calendar.set(Calendar.SECOND, 0)

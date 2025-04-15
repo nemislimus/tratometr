@@ -16,13 +16,13 @@ class MainActivity : AppCompatActivity() {
         setContentView(binding.root)
 
         // Создание БД
-        val dbHelper = DBHelper(this)
-        database = dbHelper.writableDatabase
+        /*val dbHelper = DBHelper(this)
+        database = dbHelper.writableDatabase*/
 
     }
 
-    override fun onDestroy() {
+    /*override fun onDestroy() {
         database.close()
         super.onDestroy()
-    }
+    }*/
 }

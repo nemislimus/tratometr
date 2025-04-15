@@ -18,7 +18,7 @@ class CreateExpenseViewModel (
 
 
     fun getAllCategories(callback: (List<AutoCompleteItem>) -> Unit) {
-        viewModelScope.launch {
+        viewModelScope.launch(Dispatchers.IO) {
             val categories = getAllCategoriesListWithIcons()
             val items = convertCategoriesToAutoCompleteItems(categories)
             callback(items)
@@ -49,7 +49,7 @@ class CreateExpenseViewModel (
 
     // Для отладки *****************************************************************************************************************
     fun addNewCategory(category: Category, callback: () -> Unit) {
-        viewModelScope.launch {
+        viewModelScope.launch(Dispatchers.IO) {
             interactor.addNewCategory(category)
             callback()
         }
