@@ -4,6 +4,7 @@ import com.nemislimus.tratometr.expenses.domain.api.ExpenseHistoryInteractor
 import com.nemislimus.tratometr.expenses.domain.api.ExpenseHistoryRepository
 import com.nemislimus.tratometr.expenses.domain.model.Category
 import com.nemislimus.tratometr.expenses.domain.model.Expense
+import kotlinx.coroutines.flow.Flow
 import javax.inject.Inject
 
 class ExpenseHistoryInteractorImpl @Inject constructor(
@@ -12,7 +13,7 @@ class ExpenseHistoryInteractorImpl @Inject constructor(
 
     // ################   ЗАПРОСЫ ДЛЯ ОКНА ИСТОРИЯ РАСХОДОВ   #########################################################################################
     // Выборка строк-расходов за период и по категории
-    override fun getExpenseListFilter(startDate: Long?, endDate: Long?, category: String?): List<Expense> {
+    override fun getExpenseListFilter(startDate: Long?, endDate: Long?, category: String?): Flow<List<Expense>> {
         return repository.getExpenseListFilter(startDate, endDate, category)
     }
 

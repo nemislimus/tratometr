@@ -19,6 +19,7 @@
     <string name="select_range">Выберите диапазон дат</string>
     <string name="no_expenses">За этот период нет трат</string>
     <string name="change_filter">Добавьте расход или измените\nпараметры фильтра.</string>
+    <string name="formatted_sum">%1$s₽</string>
     <string name="categories">Категории</string>
     <string name="settings">Настройки</string>
     <string name="settings_toolbar_description">Покинуть экран настроек</string>
