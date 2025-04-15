@@ -157,6 +157,7 @@ class ExpenseHistoryDao @Inject constructor(
             } while (cursor.moveToNext())
         }
         cursor.close()
+        db.close()
         return categories
     }
 
@@ -180,6 +181,7 @@ class ExpenseHistoryDao @Inject constructor(
             } while (cursor.moveToNext())
         }
         cursor.close()
+        db.close()
         return categories
     }
 
@@ -191,6 +193,6 @@ class ExpenseHistoryDao @Inject constructor(
             put("ICON_RES_ID", category.iconResId)
         }
         db.insert("CATEGORIES", null, contentValues)
-
+        db.close()
     }
 }

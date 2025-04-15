@@ -11,7 +11,9 @@ import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.core.content.ContextCompat
+import androidx.core.view.isVisible
 import androidx.fragment.app.viewModels
+import androidx.navigation.fragment.findNavController
 import com.google.android.material.datepicker.MaterialDatePicker
 import com.nemislimus.tratometr.R
 import com.nemislimus.tratometr.common.appComponent
@@ -19,16 +21,22 @@ import com.nemislimus.tratometr.common.util.BindingFragment
 import com.nemislimus.tratometr.common.util.DateRangeHelper
 import com.nemislimus.tratometr.common.util.ExpenseFilter
 import com.nemislimus.tratometr.common.util.ExpenseFilterCallback
+import com.nemislimus.tratometr.common.util.MoneyСonverter
 import com.nemislimus.tratometr.common.util.TimePresetManager
 import com.nemislimus.tratometr.databinding.FragmentExpensesBinding
 import com.nemislimus.tratometr.expenses.ui.viewmodel.CreateExpenseViewModel
+import com.nemislimus.tratometr.expenses.ui.viewmodel.ExpenseHistoryViewModel
+import java.math.BigDecimal
+import java.math.RoundingMode
+import java.text.NumberFormat
+import java.util.Locale
 import javax.inject.Inject
 
 class ExpensesFragment : BindingFragment<FragmentExpensesBinding>(), ExpenseFilterCallback {
 
     @Inject
-    lateinit var vmFactory: CreateExpenseViewModel.Factory
-    private val viewModel: CreateExpenseViewModel by viewModels { vmFactory }
+    lateinit var vmFactory: ExpenseHistoryViewModel.Factory
+    private val viewModel: ExpenseHistoryViewModel by viewModels { vmFactory }
 
     override fun onAttach(context: Context) {
         context.appComponent.inject(this)
@@ -46,6 +54,27 @@ class ExpensesFragment : BindingFragment<FragmentExpensesBinding>(), ExpenseFilt
         super.onViewCreated(view, savedInstanceState)
         // Подписываемся на наблюдение за фильтром
         ExpenseFilter.addExpenseFilterListener(this)
+
+        viewModel.getFoundExpenseLiveData().observe(viewLifecycleOwner) { searchList ->
+            // Суммируем все расходы из списка и выводим в поле сумма
+            val sum = searchList.sumOf { it.amount }
+            binding.tvSum.text = MoneyСonverter.convertBigDecimalToRubleString(requireContext(), sum)
+
+
+            // Отправляем запрос на переработку
+        }
+
+        binding.ivSettings.setOnClickListener {
+            findNavController().navigate(
+                R.id.action_expensesFragment_to_settingsFragment
+            )
+        }
+
+        binding.ivDiagram.setOnClickListener {
+            findNavController().navigate(
+                R.id.action_expensesFragment_to_analyticsFragment
+            )
+        }
 
         binding.ivCalendar.setOnClickListener {
             val dateRangePicker = MaterialDatePicker.Builder.dateRangePicker()
@@ -72,6 +101,12 @@ class ExpensesFragment : BindingFragment<FragmentExpensesBinding>(), ExpenseFilt
             val range = DateRangeHelper.getCurrentYear()
             ExpenseFilter.setDateInterval(range.first, range.second, TimePresetManager.YEAR)
         }
+        binding.tvCategories.setOnClickListener {
+            findNavController().navigate(
+                R.id.action_expensesFragment_to_selectCategoryFragment
+            )
+        }
+
     }
 
 
@@ -84,10 +119,13 @@ class ExpensesFragment : BindingFragment<FragmentExpensesBinding>(), ExpenseFilt
         )
         // Выделяем нужную кнопку фильтра
         accentOnButton(expenseFilter.presetButton)
-        // Запрос на получение списка расходов
-        // Суммируем все расходы из списка и выводим в поле сумма
-        // Отправляем запрос на переработку
-
+        // Запрос на получение списка найденых расходов
+        binding.progressBar.isVisible = true
+        viewModel.getExpenseListFilter(
+            expenseFilter.startDate,
+            expenseFilter.endDate,
+            expenseFilter.category
+        )
     }
 
     private fun accentOnButton(presetButton: TimePresetManager?) {

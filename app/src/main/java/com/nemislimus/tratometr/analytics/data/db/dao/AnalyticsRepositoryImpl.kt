@@ -12,8 +12,8 @@ class AnalyticsRepositoryImpl @Inject constructor(
     private val dbConverter: DBConverter
 ): AnalyticsRepository {
     // Список категорий с иконками и фильтром(период, категория)
-    override fun getCategoriesListWithIconsFiltr(startDate: Long?, endDate: Long?, category: String?): List<Category> {
-        val expenses = analyticsDao.getCategoriesListWithIconsFiltr(startDate, endDate, category)
+    override fun getCategoriesListWithIconsFilter(startDate: Long?, endDate: Long?, category: String?): List<Category> {
+        val expenses = analyticsDao.getCategoriesListWithIconsFilter(startDate, endDate, category)
         return(convertFromExpenseEntity(expenses))
     }
 
