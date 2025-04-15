@@ -30,6 +30,7 @@ import com.nemislimus.tratometr.expenses.ui.fragment.adpter.AutoCompleteAdapter
 import com.nemislimus.tratometr.expenses.ui.viewmodel.CreateExpenseViewModel
 import java.math.BigDecimal
 import java.math.RoundingMode
+import java.util.Calendar
 import javax.inject.Inject
 import kotlin.random.Random
 
@@ -77,6 +78,8 @@ class CreateExpenseFragment : BindingFragment<FragmentCreateExpenseBinding>() {
         } else {
             // Получаем расход
             expense = null
+
+            dateInMilisecond = today()
         }
 
         isAddMode = expense == null
@@ -283,8 +286,7 @@ class CreateExpenseFragment : BindingFragment<FragmentCreateExpenseBinding>() {
     private fun showAddMode() {
         binding.tvTitle.setText(R.string.add_expense)
         binding.btnAction?.setText(R.string.btn_add)
-        val currentTimeMillis = System.currentTimeMillis()
-        binding.tvDate.text = DateFormat.format("dd.MM.yyyy", currentTimeMillis).toString()
+        binding.tvDate.text = DateFormat.format("dd.MM.yyyy", dateInMilisecond).toString()
     }
 
     private fun errorInCaregoryOrAmount(): Boolean {
@@ -354,5 +356,14 @@ class CreateExpenseFragment : BindingFragment<FragmentCreateExpenseBinding>() {
             items.addAll(sortedItems)
             adapter.notifyDataSetChanged()
         }
+    }
+
+    private fun today(): Long {
+        val calendar = Calendar.getInstance()
+        calendar.set(Calendar.HOUR_OF_DAY, 0)
+        calendar.set(Calendar.MINUTE, 0)
+        calendar.set(Calendar.SECOND, 0)
+        calendar.set(Calendar.MILLISECOND, 0)
+        return calendar.timeInMillis
     }
 }
