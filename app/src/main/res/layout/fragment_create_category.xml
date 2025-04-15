@@ -77,7 +77,6 @@
             android:layout_gravity="center_horizontal"
             app:layoutManager="androidx.recyclerview.widget.GridLayoutManager"
             app:spanCount="5"
-            tools:itemCount="13"
             tools:listitem="@layout/item_create_cat_icon"/>
 
     </LinearLayout>
