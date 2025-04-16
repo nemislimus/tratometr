@@ -8,15 +8,17 @@
     android:background="@android:color/transparent"
     tools:context=".expenses.ui.fragment.SelectCategoryFragment">
 
-    <TextView
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:textAlignment="center"
-        android:text="ВЫБРАТЬ КАТЕГОРИЮ"
-        android:textSize="24dp"
+    <androidx.appcompat.widget.Toolbar
+        android:id="@+id/tbSelectCategory"
+        style="@style/Toolbar"
+        app:title="@string/select_category"
+        app:titleTextColor="?attr/appTextPrimary"
+        app:titleTextAppearance="@style/AppTextH1"
+        app:navigationIcon="@drawable/ic_arrows_back"
+        android:contentDescription="@string/settings_toolbar_description"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintBottom_toBottomOf="parent"/>
+        app:layout_constraintEnd_toEndOf="parent"/>
+
 
 </androidx.constraintlayout.widget.ConstraintLayout>
