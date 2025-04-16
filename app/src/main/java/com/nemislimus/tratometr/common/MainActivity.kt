@@ -1,23 +1,28 @@
 package com.nemislimus.tratometr.common
 
+import android.database.sqlite.SQLiteDatabase
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
-import androidx.navigation.NavController
-import androidx.navigation.fragment.NavHostFragment
-import com.nemislimus.tratometr.R
 import com.nemislimus.tratometr.databinding.ActivityMainBinding
+import com.nemislimus.tratometr.expenses.data.database.DBHelper
 
 class MainActivity : AppCompatActivity() {
     private lateinit var binding: ActivityMainBinding
-    private lateinit var navController: NavController
+    private lateinit var database: SQLiteDatabase
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        val navHostFragment = supportFragmentManager.findFragmentById(R.id.mainFragmentContainer) as NavHostFragment
-        navController = navHostFragment.navController
+        // Создание БД
+        /*val dbHelper = DBHelper(this)
+        database = dbHelper.writableDatabase*/
 
     }
+
+    /*override fun onDestroy() {
+        database.close()
+        super.onDestroy()
+    }*/
 }

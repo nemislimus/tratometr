@@ -8,14 +8,98 @@
     android:background="@android:color/transparent"
     tools:context=".expenses.ui.fragment.CreateCategoryFragment">
 
-    <TextView
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:textAlignment="center"
-        android:text="СОЗДАТЬ КАТЕГОРИЮ"
-        android:textSize="24dp"
+    <androidx.appcompat.widget.Toolbar
+        android:id="@+id/tbCreateCategory"
+        style="@style/Toolbar"
+        app:title="@string/create_category"
+        app:titleTextAppearance="@style/AppTextH1"
+        app:navigationIcon="@drawable/ic_arrows_back"
+        android:contentDescription="@string/settings_toolbar_description"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"/>
+
+    <EditText
+        android:id="@+id/etTitleOfCategory"
+        style="@style/AppEditTextPrimary"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/size_40dp"
+        android:paddingStart="@dimen/size_16dp"
+        android:paddingEnd="@dimen/size_16dp"
+        android:background="@drawable/card_background_selector"
+        android:textColor="?attr/appTextPrimary"
+        android:inputType="textPersonName"
+        android:maxLines="1"
+        android:ellipsize="end"
+        android:hint="@string/title_of_creating_category"
+        android:layout_marginHorizontal="@dimen/size_16dp"
+        android:layout_marginTop="@dimen/size_20dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/tbCreateCategory"
+        app:layout_constraintEnd_toEndOf="parent"/>
+
+    <LinearLayout
+        android:id="@+id/llCategoryIconsContainer"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:background="@drawable/card_background_regular"
+        android:orientation="vertical"
+        android:paddingStart="@dimen/size_8dp"
+        android:paddingEnd="@dimen/size_20dp"
+        android:paddingTop="@dimen/size_12dp"
+        android:paddingBottom="@dimen/size_4dp"
+        android:layout_marginStart="@dimen/size_16dp"
+        android:layout_marginEnd="@dimen/size_16dp"
+        android:layout_marginTop="@dimen/size_12dp"
+        android:layout_marginBottom="@dimen/size_12dp"
+        app:layout_constraintVertical_chainStyle="spread_inside"
+        app:layout_constraintVertical_bias="0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/etTitleOfCategory"
+        app:layout_constraintBottom_toTopOf="@id/btnCategorySave">
+
+        <TextView
+            style="@style/AppTextPrimary"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/size_8dp"
+            android:layout_marginEnd="@dimen/size_8dp"
+            android:textAlignment="textStart"
+            android:maxLines="1"
+            android:text="@string/category_icon_selection"/>
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/rvIconList"
+            android:orientation="vertical"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            app:layoutManager="androidx.recyclerview.widget.GridLayoutManager"
+            app:spanCount="5"
+            tools:itemCount="13"
+            tools:listitem="@layout/item_create_cat_icon"/>
+
+    </LinearLayout>
+
+    <TextView
+        android:id="@+id/btnCategorySave"
+        style="@style/AppTextH2"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingTop="@dimen/size_12dp"
+        android:paddingBottom="@dimen/size_12dp"
+        android:gravity="center"
+        android:background="@drawable/btn_background_selector"
+        android:text="@string/btn_save"
+        android:textColor="@color/button_text"
+        android:enabled="false"
+        android:layout_marginStart="@dimen/size_16dp"
+        android:layout_marginEnd="@dimen/size_16dp"
+        android:layout_marginBottom="@dimen/size_12dp"
+        app:layout_constraintVertical_bias="1"
+        app:layout_constraintTop_toBottomOf="@id/llCategoryIconsContainer"
+        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintBottom_toBottomOf="parent"/>
 

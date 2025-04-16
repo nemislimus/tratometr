@@ -3,17 +3,15 @@ package com.nemislimus.tratometr.authorization.ui.fragment
 import android.animation.Animator
 import android.animation.AnimatorListenerAdapter
 import android.content.Context
-import android.content.res.Configuration
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.fragment.app.FragmentTransaction.TRANSIT_FRAGMENT_OPEN
 import androidx.lifecycle.ViewModelProvider
-import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import com.airbnb.lottie.LottieDrawable
 import com.nemislimus.tratometr.R
-import com.nemislimus.tratometr.authorization.domain.models.Resource
 import com.nemislimus.tratometr.authorization.ui.viewmodel.SplashViewModel
 import com.nemislimus.tratometr.authorization.ui.viewmodel.SplashViewModel.Companion.ANIM_END_POINT
 import com.nemislimus.tratometr.authorization.ui.viewmodel.SplashViewModel.Companion.ANIM_START_LOOP_POINT
@@ -21,8 +19,7 @@ import com.nemislimus.tratometr.authorization.ui.viewmodel.SplashViewModel.Compa
 import com.nemislimus.tratometr.common.appComponent
 import com.nemislimus.tratometr.common.util.BindingFragment
 import com.nemislimus.tratometr.databinding.FragmentSplashBinding
-import kotlinx.coroutines.delay
-import kotlinx.coroutines.launch
+import com.nemislimus.tratometr.expenses.ui.fragment.CreateExpenseFragment
 import javax.inject.Inject
 
 class SplashFragment : BindingFragment<FragmentSplashBinding>() {
@@ -51,6 +48,10 @@ class SplashFragment : BindingFragment<FragmentSplashBinding>() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        viewModel.isDarkMode().observe(viewLifecycleOwner) { isDarkMode ->
+            showStartLogoAnimation(isDarkMode)
+        }
+
         binding.lvLogoAnim.addAnimatorListener(object : AnimatorListenerAdapter() {
             override fun onAnimationEnd(animation: Animator) {
                 super.onAnimationEnd(animation)
@@ -58,30 +59,54 @@ class SplashFragment : BindingFragment<FragmentSplashBinding>() {
             }
         })
 
-        lifecycleScope.launch {
-            //viewModel.clearTokens() //Добавил его тут для тестирования
-            delay(FOUR_SECONDS)
-            val freshToken = viewModel.checkAccessToken()
-
-            if (freshToken!!) {
-                findNavController().navigate(R.id.action_splashFragment_to_expensesFragment)
-            } else {
-
-                val resource = viewModel.refreshTokens()
-                if (resource is Resource.Success) {
-                    findNavController().navigate(R.id.action_splashFragment_to_expensesFragment)
-                } else {
-                    findNavController().navigate(R.id.action_splashFragment_to_authorizationFragment)
-                }
-            }
+        binding.btnSettings.setOnClickListener {
+            findNavController().navigate(
+                R.id.action_splashFragment_to_settingsFragment
+            )
         }
+
+        binding.btnCreateCategory.setOnClickListener {
+            findNavController().navigate(
+                R.id.action_splashFragment_to_createCategoryFragment
+            )
+        }
+
+        // Андрей Добавил для тестирования окна История расходов **************************************************
+        binding.btnExpenses.setOnClickListener {
+            findNavController().navigate(
+                R.id.action_splashFragment_to_expensesFragment
+            )
+        }
+        // Андрей Добавил для тестирования окна Добавление расхода **************************************************
+        binding.btn.setOnClickListener {
+            requireActivity().supportFragmentManager.beginTransaction().setTransition(TRANSIT_FRAGMENT_OPEN)
+                .add(R.id.mainFragmentContainer, CreateExpenseFragment())
+                .addToBackStack("MainMenuFragment").commit()
+        }
+        //***********************************************************************************************************
+
+//        lifecycleScope.launch {
+//            //viewModel.clearTokens() //Добавил его тут для тестирования
+//            delay(FOUR_SECONDS)
+//            val freshToken = viewModel.checkAccessToken()
+//
+//            if (freshToken!!) {
+//                findNavController().navigate(R.id.action_splashFragment_to_expensesFragment)
+//            } else {
+//
+//                val resource = viewModel.refreshTokens()
+//                if (resource is Resource.Success) {
+//                    findNavController().navigate(R.id.action_splashFragment_to_expensesFragment)
+//                } else {
+//                    findNavController().navigate(R.id.action_splashFragment_to_authorizationFragment)
+//                }
+//            }
+//        }
     }
 
     override fun onResume() {
         super.onResume()
-        viewModel.isDarkMode().observe(viewLifecycleOwner) { isDarkMode ->
-            showStartLogoAnimation(isDarkMode)
-        }
+        viewModel.checkDarkMode()
     }
 
     override fun onDestroyFragment() {
@@ -108,9 +133,5 @@ class SplashFragment : BindingFragment<FragmentSplashBinding>() {
         binding.lvLogoAnim.repeatMode = LottieDrawable.RESTART
         binding.lvLogoAnim.playAnimation()
     }
-
-    // Определяем тему для viewModel. Потом заменить на значение темы из Settings репозитория
-    private fun isDarkModeChecking(): Boolean =
-        (resources.configuration.uiMode and Configuration.UI_MODE_NIGHT_MASK) == Configuration.UI_MODE_NIGHT_YES
 
 }
