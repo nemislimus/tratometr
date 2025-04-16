@@ -38,7 +38,6 @@ class CreateCategoryFragment : BindingFragment<FragmentCreateCategoryBinding>() 
     private var selectedIconRes: Int = R.drawable.ic_star
     private var textWatcher: TextWatcher? = null
 
-
     override fun onAttach(context: Context) {
         requireActivity().appComponent.inject(this)
         super.onAttach(context)
@@ -69,13 +68,6 @@ class CreateCategoryFragment : BindingFragment<FragmentCreateCategoryBinding>() 
                 }
                 findNavController().popBackStack()
             }
-        }
-    }
-
-    override fun onResume() {
-        super.onResume()
-        viewLifecycleOwner.lifecycleScope.launch(Dispatchers.IO) {
-            viewModel.getAllCategoriesNames()
         }
     }
 

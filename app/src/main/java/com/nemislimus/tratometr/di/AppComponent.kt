@@ -9,6 +9,7 @@ import com.nemislimus.tratometr.authorization.ui.fragment.SplashFragment
 import com.nemislimus.tratometr.expenses.ui.fragment.CreateCategoryFragment
 import com.nemislimus.tratometr.expenses.ui.fragment.CreateExpenseFragment
 import com.nemislimus.tratometr.expenses.ui.fragment.ExpensesFragment
+import com.nemislimus.tratometr.expenses.ui.fragment.SelectCategoryFragment
 import dagger.BindsInstance
 import dagger.Component
 import javax.inject.Singleton
@@ -23,6 +24,7 @@ interface AppComponent {
     fun inject(fragment: ExpensesFragment)
     fun inject(fragment: SettingsFragment)
     fun inject(fragment: CreateCategoryFragment)
+    fun inject(fragment: SelectCategoryFragment)
 
     fun getSettingsRepository(): SettingsRepository
 

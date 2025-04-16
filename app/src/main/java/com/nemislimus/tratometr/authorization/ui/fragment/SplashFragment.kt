@@ -71,6 +71,12 @@ class SplashFragment : BindingFragment<FragmentSplashBinding>() {
             )
         }
 
+        binding.btnSelectCategory.setOnClickListener {
+            findNavController().navigate(
+                R.id.action_splashFragment_to_selectCategoryFragment
+            )
+        }
+
         // Андрей Добавил для тестирования окна История расходов **************************************************
         binding.btnExpenses.setOnClickListener {
             findNavController().navigate(

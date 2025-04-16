@@ -22,6 +22,9 @@
         <action
             android:id="@+id/action_splashFragment_to_createCategoryFragment"
             app:destination="@id/createCategoryFragment" />
+        <action
+            android:id="@+id/action_splashFragment_to_selectCategoryFragment"
+            app:destination="@id/selectCategoryFragment" />
     </fragment>
 
     <fragment
