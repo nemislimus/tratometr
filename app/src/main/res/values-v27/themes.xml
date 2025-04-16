@@ -18,6 +18,8 @@
         <item name="appCategoryIconBackground">@color/category_ic_background</item>
         <item name="materialTimePickerTheme">@style/ThemeOverlay.Tratometr.AppTimePicker</item>
 
+        <item name="colorPrimary">@color/accented</item>
+
     </style>
 
 </resources>

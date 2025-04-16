@@ -24,7 +24,7 @@ interface ExpenseHistoryInteractor {
 
     // ################   ЗАПРОСЫ ДЛЯ ОКНА СОЗДАНИЕ КАТЕГОРИИ   #####################################################################################
     // Список всех категорий
-    fun getAllCategoriesList(): List<String>
+    suspend fun getAllCategoriesList(): List<String>
     // Добавление новой категорий
-    fun addNewCategory(category: Category)
+    suspend fun addNewCategory(category: Category)
 }

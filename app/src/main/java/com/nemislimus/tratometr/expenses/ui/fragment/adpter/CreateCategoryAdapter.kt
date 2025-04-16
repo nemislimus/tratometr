@@ -7,7 +7,9 @@ import com.nemislimus.tratometr.databinding.ItemCreateCatIconBinding
 import com.nemislimus.tratometr.expenses.ui.fragment.model.CreateCategoryItem
 import com.nemislimus.tratometr.expenses.ui.fragment.viewholder.CreateCategoryViewHolder
 
-class CreateCategoryAdapter : RecyclerView.Adapter<CreateCategoryViewHolder>() {
+class CreateCategoryAdapter(
+    private val onIconItemClick: (resId: Int?) -> Unit,
+) : RecyclerView.Adapter<CreateCategoryViewHolder>() {
     private val iconsItems: MutableList<CreateCategoryItem> = mutableListOf()
 
     fun setItems(items: List<CreateCategoryItem>) {
@@ -23,6 +25,7 @@ class CreateCategoryAdapter : RecyclerView.Adapter<CreateCategoryViewHolder>() {
 
             if (position != RecyclerView.NO_POSITION) {
                 val selectedIconRes = iconsItems.getOrNull(position)?.iconResId
+                onIconItemClick(selectedIconRes)
                 iconsItems.forEach { item ->
                     item.isSelected = item.iconResId == selectedIconRes
                 }

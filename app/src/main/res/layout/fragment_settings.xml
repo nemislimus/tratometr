@@ -12,6 +12,7 @@
         android:id="@+id/tbSettings"
         style="@style/Toolbar"
         app:title="@string/settings"
+        app:titleTextColor="?attr/appTextPrimary"
         app:titleTextAppearance="@style/AppTextH1"
         app:navigationIcon="@drawable/ic_arrows_back"
         android:contentDescription="@string/settings_toolbar_description"
