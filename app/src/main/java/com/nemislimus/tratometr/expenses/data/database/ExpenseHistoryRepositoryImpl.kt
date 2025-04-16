@@ -7,6 +7,8 @@ import com.nemislimus.tratometr.expenses.domain.model.Category
 import com.nemislimus.tratometr.expenses.domain.model.Expense
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -17,9 +19,9 @@ class ExpenseHistoryRepositoryImpl @Inject constructor(
 
     // ################   ЗАПРОСЫ ДЛЯ ОКНА ИСТОРИЯ РАСХОДОВ   #########################################################################################
     // Выборка строк-расходов за период и по категории
-    override fun getExpenseListFilter(startDate: Long?, endDate: Long?, category: String?): List<Expense> {
+    override fun getExpenseListFilter(startDate: Long?, endDate: Long?, category: String?): Flow<List<Expense>> = flow {
         val expenses = expenseHistoryDao.getExpenseListFilter(startDate, endDate, category)
-        return convertFromExpenseEntity(expenses)
+        emit(convertFromExpenseEntity(expenses))
     }
 
     private fun convertFromExpenseEntity(expenses: List<ExpenseEntity>): List<Expense> {

@@ -2,11 +2,12 @@ package com.nemislimus.tratometr.expenses.domain.api
 
 import com.nemislimus.tratometr.expenses.domain.model.Category
 import com.nemislimus.tratometr.expenses.domain.model.Expense
+import kotlinx.coroutines.flow.Flow
 
 interface ExpenseHistoryInteractor {
     // ################   ЗАПРОСЫ ДЛЯ ОКНА ИСТОРИЯ РАСХОДОВ   #########################################################################################
     // Выборка строк-расходов за период и по категории
-    fun getExpenseListFilter(startDate: Long?, endDate: Long?, category: String?): List<Expense>
+    fun getExpenseListFilter(startDate: Long?, endDate: Long?, category: String?): Flow<List<Expense>>
     // Удаление строки-расхода по id
     fun deleteExpense(expenseId: Long)
 
