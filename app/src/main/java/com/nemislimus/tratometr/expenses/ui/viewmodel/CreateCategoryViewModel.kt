@@ -13,7 +13,7 @@ import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 class CreateCategoryViewModel(
-    private val expenseInteractor: ExpenseHistoryInteractor
+    private val interactor: ExpenseHistoryInteractor
 ) : ViewModel() {
 
     private var allCategories: Set<String> = emptySet()
@@ -23,7 +23,6 @@ class CreateCategoryViewModel(
             getAllCategoriesNames()
         }
     }
-
 
     fun getIconsItems(): List<CreateCategoryItem> = CustomCategoryIcons.entries.map {
         CreateCategoryItem(
@@ -35,16 +34,15 @@ class CreateCategoryViewModel(
     fun isCategoryExist(name: String): Boolean = allCategories.contains(name.lowercase())
 
     suspend fun getAllCategoriesNames() {
-        allCategories = expenseInteractor.getAllCategoriesList()
+        allCategories = interactor.getAllCategoriesList()
             .asSequence()
             .map { name -> name.lowercase() }
             .toSet()
     }
 
     suspend fun saveCategory(name: String, @DrawableRes resId: Int) {
-        expenseInteractor.addNewCategory(Category(name, resId))
+        interactor.addNewCategory(Category(name, resId))
     }
-
 
     class Factory @Inject constructor(
         private val expenseInteractor: ExpenseHistoryInteractor

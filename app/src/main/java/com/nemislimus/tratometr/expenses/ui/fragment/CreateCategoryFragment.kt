@@ -38,7 +38,6 @@ class CreateCategoryFragment : BindingFragment<FragmentCreateCategoryBinding>() 
     private var selectedIconRes: Int = R.drawable.ic_star
     private var textWatcher: TextWatcher? = null
 
-
     override fun onAttach(context: Context) {
         requireActivity().appComponent.inject(this)
         super.onAttach(context)
