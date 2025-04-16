@@ -71,13 +71,6 @@ class CreateCategoryFragment : BindingFragment<FragmentCreateCategoryBinding>() 
         }
     }
 
-    override fun onResume() {
-        super.onResume()
-        viewLifecycleOwner.lifecycleScope.launch(Dispatchers.IO) {
-            viewModel.getAllCategoriesNames()
-        }
-    }
-
     override fun onDestroyFragment() {
         binding.etTitleOfCategory.removeTextChangedListener(textWatcher)
         textWatcher = null

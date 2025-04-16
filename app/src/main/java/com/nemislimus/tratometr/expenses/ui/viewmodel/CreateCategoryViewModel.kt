@@ -33,7 +33,7 @@ class CreateCategoryViewModel(
 
     fun isCategoryExist(name: String): Boolean = allCategories.contains(name.lowercase())
 
-    suspend fun getAllCategoriesNames() {
+    private suspend fun getAllCategoriesNames() {
         allCategories = interactor.getAllCategoriesList()
             .asSequence()
             .map { name -> name.lowercase() }

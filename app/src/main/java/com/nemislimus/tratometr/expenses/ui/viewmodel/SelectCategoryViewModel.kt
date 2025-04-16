@@ -12,8 +12,8 @@ class SelectCategoryViewModel(
     private val interactor: ExpenseHistoryInteractor
 ) : ViewModel() {
 
-    private val settingsParams = MutableLiveData<CategoryListState>()
-    fun observeSettingsParams(): LiveData<CategoryListState> = settingsParams
+    private val state = MutableLiveData<CategoryListState>()
+    fun observeState(): LiveData<CategoryListState> = state
 
 
     class Factory @Inject constructor(
