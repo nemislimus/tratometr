@@ -45,11 +45,11 @@ class ExpenseHistoryInteractorImpl @Inject constructor(
 
     // ################   ЗАПРОСЫ ДЛЯ ОКНА СОЗДАНИЕ КАТЕГОРИИ   #####################################################################################
     // Список всех категорий
-    override fun getAllCategoriesList(): List<String> {
+    override suspend fun getAllCategoriesList(): List<String> {
         return repository.getAllCategoriesList()
     }
     // Добавление новой категорий
-    override fun addNewCategory(category: Category) {
+    override suspend fun addNewCategory(category: Category) {
         repository.addNewCategory(category)
     }
 }

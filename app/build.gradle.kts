@@ -56,6 +56,7 @@ dependencies {
     // UI-layer
     implementation(libs.material)
     implementation(libs.androidx.constraintlayout)
+    implementation(libs.androidx.recyclerview)
     implementation(libs.androidx.activity.ktx)
     implementation(libs.lifecycle.viewmodel.ktx)
     implementation(libs.fragment.ktx)

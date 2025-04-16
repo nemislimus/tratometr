@@ -6,6 +6,7 @@ import com.nemislimus.tratometr.settings.ui.fragment.SettingsFragment
 import com.nemislimus.tratometr.authorization.ui.fragment.AuthorizationFragment
 import com.nemislimus.tratometr.authorization.ui.fragment.RegistrationFragment
 import com.nemislimus.tratometr.authorization.ui.fragment.SplashFragment
+import com.nemislimus.tratometr.expenses.ui.fragment.CreateCategoryFragment
 import com.nemislimus.tratometr.expenses.ui.fragment.CreateExpenseFragment
 import com.nemislimus.tratometr.expenses.ui.fragment.ExpensesFragment
 import dagger.BindsInstance
@@ -21,11 +22,13 @@ interface AppComponent {
     fun inject(fragment: CreateExpenseFragment)
     fun inject(fragment: ExpensesFragment)
     fun inject(fragment: SettingsFragment)
+    fun inject(fragment: CreateCategoryFragment)
 
     fun getSettingsRepository(): SettingsRepository
 
     @Component.Builder
     interface Builder {
+
         @BindsInstance
         fun setContextToComponent(context: Context): Builder
         fun build(): AppComponent
