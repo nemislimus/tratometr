@@ -2,8 +2,6 @@ package com.nemislimus.tratometr.authorization.ui.fragment
 
 import android.content.Context
 import android.os.Bundle
-import android.text.Editable
-import android.text.TextWatcher
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -15,6 +13,8 @@ import com.nemislimus.tratometr.authorization.domain.models.Resource
 import com.nemislimus.tratometr.authorization.ui.viewmodel.RegistrationViewModel
 import com.nemislimus.tratometr.common.appComponent
 import com.nemislimus.tratometr.common.util.BindingFragment
+import com.nemislimus.tratometr.common.util.FieldValidator
+import com.nemislimus.tratometr.common.util.TratometrTextWatcher
 import com.nemislimus.tratometr.databinding.FragmentRegistrationBinding
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -42,17 +42,41 @@ class RegistrationFragment : BindingFragment<FragmentRegistrationBinding>() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        binding.emailText.addTextChangedListener(TextFieldValidation(binding.emailText))
-        binding.passwordText.addTextChangedListener(TextFieldValidation(binding.passwordText))
-        binding.repeatPasswordText.addTextChangedListener(TextFieldValidation(binding.repeatPasswordText))
+        binding.emailText.addTextChangedListener(
+            TratometrTextWatcher(
+                TratometrTextWatcher.FieldType.Email(binding.emailField, binding.emailText),
+                ::updateRegistrationButtonState
+            )
+        )
+
+        binding.passwordText.addTextChangedListener(
+            TratometrTextWatcher(
+                TratometrTextWatcher.FieldType.Password(
+                    binding.passwordField,
+                    binding.passwordText
+                ),
+                ::updateRegistrationButtonState
+            )
+        )
+
+        binding.repeatPasswordText.addTextChangedListener(
+            TratometrTextWatcher(
+                TratometrTextWatcher.FieldType.PasswordMatch(
+                    binding.passwordText,
+                    binding.repeatPasswordField,
+                    binding.repeatPasswordText
+                ),
+                ::updateRegistrationButtonState
+            )
+        )
 
         binding.checkbox.setOnCheckedChangeListener { checkBox, isChecked ->
             if (isChecked) {
                 privacyAccepted = true
-                updateButtonState()
+                updateRegistrationButtonState()
             } else {
                 privacyAccepted = false
-                updateButtonState()
+                updateRegistrationButtonState()
             }
         }
 
@@ -78,89 +102,15 @@ class RegistrationFragment : BindingFragment<FragmentRegistrationBinding>() {
         }
     }
 
-    inner class TextFieldValidation(
-        private val view: View,
-    ) : TextWatcher {
-        override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {}
-        override fun onTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {}
-        override fun afterTextChanged(p0: Editable?) {
-
-            when (view.id) {
-                R.id.emailText -> {
-                    validateEmail()
-                }
-
-                R.id.passwordText -> {
-                    validatePassword()
-                    passwordsCheck()
-                }
-
-                R.id.repeatPasswordText -> {
-                    passwordsCheck()
-                }
-            }
-            updateButtonState()
-
-        }
-    }
-
-    private fun validatePassword(): Boolean {
-        if (binding.passwordText.text.toString().trim().isEmpty()) {
-            binding.passwordField.error = AuthorizationFragment.REQUIRED_FIELD
-            return false
-        } else if (binding.passwordText.text.toString().length < 6) {
-            binding.passwordField.error = AuthorizationFragment.SHORT_PASSWORD
-            return false
-        } else {
-            binding.passwordField.isErrorEnabled = false
-        }
-        return true
-    }
-
-    private fun validateEmail(): Boolean {
-        if (binding.emailText.text.toString().trim().isEmpty()) {
-            binding.emailField.error = AuthorizationFragment.REQUIRED_FIELD
-            return false
-        } else if (!isValidEmail(binding.emailText.text.toString())) {
-            binding.emailField.error = AuthorizationFragment.INVALID_EMAIL
-            return false
-        } else {
-            binding.emailField.isErrorEnabled = false
-        }
-        return true
-    }
-
-    private fun passwordsCheck(): Boolean {
-        val password = binding.passwordText.text.toString()
-        val repeatPassword = binding.repeatPasswordText.text.toString()
-
-        return when {
-            password.isEmpty() || repeatPassword.isEmpty() -> {
-                binding.repeatPasswordField.error = null
-                false
-            }
-
-            password != repeatPassword -> {
-                binding.repeatPasswordField.error = AuthorizationFragment.NOT_MATCH
-                false
-            }
-
-            else -> {
-                binding.repeatPasswordField.error = null
-                true
-            }
-        }
-    }
-
-    private fun isValidEmail(email: String): Boolean {
-        val emailRegexPattern = "^[A-Za-z0-9+_.-]+@[A-Za-z0-9.-]+\\.[A-Za-z]{2,}$"
-        return Regex(emailRegexPattern).matches(email)
-    }
-
-    private fun updateButtonState() {
-        val isEmailValid = validateEmail()
-        val isPasswordValid = validatePassword()
-        val arePasswordsMatch = passwordsCheck()
+    private fun updateRegistrationButtonState() {
+        val isEmailValid = FieldValidator.validateEmail(binding.emailField, binding.emailText)
+        val isPasswordValid =
+            FieldValidator.validatePassword(binding.passwordField, binding.passwordText)
+        val arePasswordsMatch = FieldValidator.validatePasswordMatch(
+            binding.passwordText,
+            binding.repeatPasswordField,
+            binding.repeatPasswordText
+        )
 
         binding.registrationButton.isEnabled =
             isEmailValid && isPasswordValid && arePasswordsMatch && privacyAccepted
