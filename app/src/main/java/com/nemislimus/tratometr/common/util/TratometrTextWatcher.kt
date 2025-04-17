@@ -34,11 +34,21 @@ class TratometrTextWatcher(
     override fun afterTextChanged(s: Editable?) {
         when (fieldType) {
             is FieldType.Email -> {
-                FieldValidator.validateEmail(fieldType.emailField, fieldType.emailText)
+                if (!fieldType.emailText.text.isNullOrEmpty()) {
+                    FieldValidator.validateEmail(fieldType.emailField, fieldType.emailText)
+                } else {
+                    fieldType.emailField.error = null
+                    fieldType.emailField.isErrorEnabled = false
+                }
             }
 
             is FieldType.Password -> {
-                FieldValidator.validatePassword(fieldType.passwordField, fieldType.passwordText)
+                if (!fieldType.passwordText.text.isNullOrEmpty()) {
+                    FieldValidator.validatePassword(fieldType.passwordField, fieldType.passwordText)
+                } else {
+                    fieldType.passwordField.error = null
+                    fieldType.passwordField.isErrorEnabled = false
+                }
             }
 
             is FieldType.PasswordMatch -> {
