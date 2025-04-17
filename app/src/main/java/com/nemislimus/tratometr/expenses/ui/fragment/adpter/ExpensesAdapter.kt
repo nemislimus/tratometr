@@ -1,17 +1,29 @@
 package com.nemislimus.tratometr.expenses.ui.fragment.adpter
 
+import android.annotation.SuppressLint
+import android.text.TextUtils
 import android.view.LayoutInflater
+import android.view.MotionEvent
 import android.view.ViewGroup
+import android.view.animation.AnimationUtils
+import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
+import com.nemislimus.tratometr.R
 import com.nemislimus.tratometr.databinding.ItemHistoryDateBinding
 import com.nemislimus.tratometr.databinding.ItemHistoryExpenseBinding
+import com.nemislimus.tratometr.expenses.ui.fragment.ExpensesFragment
 import com.nemislimus.tratometr.expenses.ui.fragment.viewholder.ExpensesDateViewHolder
 import com.nemislimus.tratometr.expenses.ui.fragment.viewholder.ExpensesViewHolder
 import com.nemislimus.tratometr.expenses.ui.viewmodel.history_model.Historical
+import kotlin.math.abs
 
-class ExpensesAdapter : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
+class ExpensesAdapter(private val listener: ExpensesAdapterListener): RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
     var items = mutableListOf<Historical>()
+
+    companion object {
+        const val SWIPE_THRESHOLD = 10
+    }
 
     override fun getItemViewType(position: Int): Int {
         return when (items[position]) {
@@ -37,11 +49,74 @@ class ExpensesAdapter : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
             }
             2 -> {
                 val expenseHolder = holder as ExpensesViewHolder
-                expenseHolder.bind(items[position] as Historical.HistoryContent)
+                val item = items[position] as Historical.HistoryContent
+                expenseHolder.bind(item)
+                addListeners(expenseHolder, item, position)
             }
             else -> error("Не известный viewType = [$holder.itemViewType]. Не могу создать холдер")
         }
     }
+
+    @SuppressLint("ClickableViewAccessibility")
+    private fun addListeners(holder: ExpensesViewHolder, item: Historical.HistoryContent, position: Int) {
+        holder.flBackground.setOnFocusChangeListener { _, hasFocus ->
+            if (!hasFocus) {
+                listener.returnHolderToOriginalState(holder)
+            }
+        }
+
+        var downX = 0f
+        var isShift = false
+        holder.flForeground.setOnTouchListener { v, event ->
+            when (event.action) {
+                MotionEvent.ACTION_DOWN -> {
+                    downX = event.x
+                    isShift = false
+                }
+                MotionEvent.ACTION_HOVER_EXIT, MotionEvent.ACTION_MOVE -> {
+                    if (abs(event.x - downX) > SWIPE_THRESHOLD) isShift = true         // Если жест горизонталный
+                }
+                MotionEvent.ACTION_UP -> if (!isShift) v.requestFocus()
+            }
+            return@setOnTouchListener true
+        }
+
+        holder.flForeground.setOnFocusChangeListener { _, hasFocus ->
+            if (hasFocus) {
+                makeTextViewMultiline(holder.tvCategory)
+                makeTextViewMultiline(holder.tvDescription)
+            } else {
+                makeTextViewSingleLine(holder.tvCategory)
+                makeTextViewSingleLine(holder.tvDescription)
+            }
+        }
+
+        holder.btnDel.setOnClickListener {
+            holder.flForeground.startAnimation(
+                AnimationUtils.loadAnimation((listener as ExpensesFragment).requireContext(), R.anim.del_holder)
+            ) // Анимация удаления
+            listener.onDeleteExpense(item, position)
+        }
+
+        holder.btnEdit.setOnClickListener {
+            listener.onEditExpense(item, position)
+        }
+    }
+
+    private fun makeTextViewMultiline(tv: TextView) {
+        with(tv) {
+            ellipsize = null
+            isSingleLine = false
+        }
+    }
+
+    private fun makeTextViewSingleLine(tv: TextView) {
+        with(tv) {
+            ellipsize = TextUtils.TruncateAt.END
+            isSingleLine = true
+        }
+    }
+
 
     override fun getItemCount(): Int = items.size
 }

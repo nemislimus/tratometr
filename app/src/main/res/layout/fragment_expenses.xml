@@ -6,9 +6,6 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-
-    android:background="?attr/appBackgroundColor"
-
     tools:context=".expenses.ui.fragment.ExpensesFragment">
 
     <LinearLayout
@@ -36,7 +33,7 @@
             android:layout_marginHorizontal="20dp"
             android:textColor="?attr/appTextPrimary"
             android:gravity="center"
-            tools:text="1–30 Апреля 2025"/>
+            tools:text="1–30 Апреля 2025"/>
 
         <ImageView
             android:id="@+id/iv_diagram"
@@ -196,7 +193,7 @@
 
 
         <ImageView
-            android:id="@+id/iv_add"
+            android:id="@+id/btn_add_expense"
             android:layout_width="@dimen/size_48dp"
             android:layout_height="@dimen/size_48dp"
             android:layout_gravity="bottom|end"
