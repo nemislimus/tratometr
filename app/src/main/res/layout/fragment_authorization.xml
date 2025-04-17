@@ -19,69 +19,79 @@
 
         <TextView
             android:id="@+id/title"
+            style="@style/AppTextH1"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
-            android:text="АВТОРИЗАЦИЯ"
+            android:text="@string/authorization"
             android:textAlignment="center"
-            android:textSize="24dp" />
+            android:textColor="@color/text_primary"
+            android:textSize="@dimen/text_size_24" />
 
         <com.google.android.material.textfield.TextInputLayout
             android:id="@+id/emailField"
+            style="@style/RoundedTextInputLayout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginHorizontal="@dimen/size_16dp">
+            android:layout_marginHorizontal="@dimen/size_16dp"
+            android:layout_marginTop="@dimen/size_16dp"
+            android:textColor="?attr/appTextPrimary"
+            app:hintEnabled="false">
 
             <com.google.android.material.textfield.TextInputEditText
                 android:id="@+id/emailText"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:hint="Почта"
-                android:inputType="textEmailAddress" />
+                android:layout_height="@dimen/size_48dp"
+                android:hint="@string/email"
+                android:inputType="textEmailAddress"
+                android:paddingVertical="@dimen/size_4dp"
+                android:textColor="@color/text_primary" />
 
         </com.google.android.material.textfield.TextInputLayout>
 
-        <TextView
-            android:id="@+id/wrongEmail"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="@dimen/size_32dp"
-            android:text="Некорректный e-mail"
-            android:textColor="#d92d20"
-            android:visibility="gone" />
-
         <com.google.android.material.textfield.TextInputLayout
             android:id="@+id/passwordField"
+            style="@style/RoundedTextInputLayout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginHorizontal="@dimen/size_16dp"
-            app:endIconMode="password_toggle">
+            android:layout_marginTop="@dimen/size_16dp"
+            app:endIconMode="password_toggle"
+
+            app:hintEnabled="false">
 
             <com.google.android.material.textfield.TextInputEditText
                 android:id="@+id/passwordText"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:hint="Пароль"
-                android:inputType="textPassword" />
+                android:layout_height="@dimen/size_48dp"
+                android:hint="@string/password"
+                android:inputType="textPassword"
+                android:paddingVertical="@dimen/size_4dp"
+                android:textColor="@color/text_primary"
+                android:textSize="@dimen/text_size_16" />
 
         </com.google.android.material.textfield.TextInputLayout>
 
         <TextView
-            android:id="@+id/forgot_password"
+            android:id="@+id/forgotPassword"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
             android:layout_marginTop="@dimen/size_16dp"
-            android:text="Забыли пароль?"
-            android:textColor="#4158de" />
+            android:text="@string/forgot_password"
+            android:textColor="@color/accented" />
 
-        <Button
+        <com.google.android.material.button.MaterialButton
             android:id="@+id/loginButton"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="@dimen/size_48dp"
             android:layout_marginHorizontal="@dimen/size_16dp"
             android:layout_marginTop="@dimen/size_16dp"
-            android:text="Войти" />
+            android:enabled="false"
+            android:insetTop="@dimen/size_0dp"
+            android:insetBottom="@dimen/size_0dp"
+            android:text="@string/login"
+            app:cornerRadius="@dimen/size_16dp" />
 
     </LinearLayout>
 
@@ -98,15 +108,16 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginBottom="@dimen/size_16dp"
-            android:text="Впервые в приложении? " />
+            android:text="@string/first_time_in_app" />
 
         <TextView
             android:id="@+id/createAccount"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/size_4dp"
             android:layout_marginBottom="@dimen/size_16dp"
-            android:text="Создайте аккаунт"
-            android:textColor="#4158de" />
+            android:text="@string/create_account"
+            android:textColor="@color/accented" />
 
     </LinearLayout>
 

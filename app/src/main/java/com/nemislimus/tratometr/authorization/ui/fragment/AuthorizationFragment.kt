@@ -2,10 +2,10 @@ package com.nemislimus.tratometr.authorization.ui.fragment
 
 import android.content.Context
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.content.ContextCompat
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
@@ -14,6 +14,8 @@ import com.nemislimus.tratometr.authorization.domain.models.Resource
 import com.nemislimus.tratometr.authorization.ui.viewmodel.AuthorizationViewModel
 import com.nemislimus.tratometr.common.appComponent
 import com.nemislimus.tratometr.common.util.BindingFragment
+import com.nemislimus.tratometr.common.util.FieldValidator
+import com.nemislimus.tratometr.common.util.TratometrTextWatcher
 import com.nemislimus.tratometr.databinding.FragmentAuthorizationBinding
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -40,6 +42,23 @@ class AuthorizationFragment : BindingFragment<FragmentAuthorizationBinding>() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        binding.emailText.addTextChangedListener(
+            TratometrTextWatcher(
+                TratometrTextWatcher.FieldType.Email(binding.emailField, binding.emailText),
+                ::updateLoginButtonState
+            )
+        )
+
+        binding.passwordText.addTextChangedListener(
+            TratometrTextWatcher(
+                TratometrTextWatcher.FieldType.Password(
+                    binding.passwordField,
+                    binding.passwordText
+                ),
+                ::updateLoginButtonState
+            )
+        )
+
         binding.createAccount.setOnClickListener {
             findNavController().navigate(R.id.action_authorizationFragment_to_registrationFragment)
         }
@@ -57,15 +76,27 @@ class AuthorizationFragment : BindingFragment<FragmentAuthorizationBinding>() {
                     }
 
                     is Resource.Error -> {
-                        binding.wrongEmail.text = response.message
-                        binding.wrongEmail.visibility = View.VISIBLE
+                        binding.emailText.setTextColor(
+                            ContextCompat.getColor(
+                                requireContext(),
+                                R.color.error
+                            )
+                        )
+                        binding.emailField.error = FieldValidator.INVALID_EMAIL
                     }
                 }
             }
         }
+
+        binding.forgotPassword.setOnClickListener {
+            findNavController().navigate(R.id.action_authorizationFragment_to_passRecoveryFragment)
+        }
     }
 
-    private suspend fun login(email: String, password: String) {
-        viewModel.authorization(email, password)
+    private fun updateLoginButtonState() {
+        val isEmailValid = FieldValidator.validateEmail(binding.emailField, binding.emailText)
+        val isPasswordValid =
+            FieldValidator.validatePassword(binding.passwordField, binding.passwordText)
+        binding.loginButton.isEnabled = isEmailValid && isPasswordValid
     }
 }
