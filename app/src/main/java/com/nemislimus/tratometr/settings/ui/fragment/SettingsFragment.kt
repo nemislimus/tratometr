@@ -23,9 +23,9 @@ import com.google.android.material.timepicker.MaterialTimePicker
 import com.google.android.material.timepicker.TimeFormat
 import com.nemislimus.tratometr.R
 import com.nemislimus.tratometr.common.App
+import com.nemislimus.tratometr.common.alarmPermissionDeniedOnCurrentSession
 import com.nemislimus.tratometr.common.appComponent
 import com.nemislimus.tratometr.common.notificationPermissionDeniedOnCurrentSession
-import com.nemislimus.tratometr.common.alarmPermissionDeniedOnCurrentSession
 import com.nemislimus.tratometr.common.util.BindingFragment
 import com.nemislimus.tratometr.databinding.FragmentSettingsBinding
 import com.nemislimus.tratometr.settings.domain.model.SettingsParams
@@ -92,6 +92,11 @@ class SettingsFragment : BindingFragment<FragmentSettingsBinding>() {
         viewLifecycleOwner.lifecycleScope.launch {
             delay(500)
             checkNotificationPermission()
+        }
+
+        binding.btnLogOut.setOnClickListener {
+            viewModel.logOut()
+            findNavController().navigate(R.id.action_settingsFragment_to_authorizationFragment)
         }
 
     }
@@ -282,7 +287,7 @@ class SettingsFragment : BindingFragment<FragmentSettingsBinding>() {
     private fun getPermissionOnNotificationAtSettings(context: Context = requireContext()) {
         val intent = Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS)
         intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
-        intent.data= Uri.fromParts("package", context.packageName, null)
+        intent.data = Uri.fromParts("package", context.packageName, null)
         context.startActivity(intent)
     }
 
@@ -293,7 +298,7 @@ class SettingsFragment : BindingFragment<FragmentSettingsBinding>() {
         context.startActivity(intent)
     }
 
-    private fun showToast(message: String){
+    private fun showToast(message: String) {
         Toast.makeText(requireContext(), message, Toast.LENGTH_LONG).show()
     }
 

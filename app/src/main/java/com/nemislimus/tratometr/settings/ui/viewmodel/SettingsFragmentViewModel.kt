@@ -6,6 +6,8 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
+import com.nemislimus.tratometr.authorization.domain.AuthInteractor
+import com.nemislimus.tratometr.authorization.domain.TokensStorageInteractor
 import com.nemislimus.tratometr.common.util.AppNotificationManager
 import com.nemislimus.tratometr.settings.domain.api.SettingsRepository
 import com.nemislimus.tratometr.settings.domain.model.SettingsParams
@@ -14,7 +16,8 @@ import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 class SettingsFragmentViewModel(
-    private val repository: SettingsRepository
+    private val repository: SettingsRepository,
+    private val tokensStorageInteractor: TokensStorageInteractor
 ) : ViewModel() {
 
     private val settingsParams = MutableLiveData<SettingsParams>()
@@ -32,6 +35,10 @@ class SettingsFragmentViewModel(
 
     suspend fun getSettingsParams() {
         settingsParams.postValue(repository.getSettings())
+    }
+
+    fun logOut(){
+        tokensStorageInteractor.clearTokens()
     }
 
     fun correctTimeString(hours: Int, minutes: Int): String {
@@ -53,12 +60,13 @@ class SettingsFragmentViewModel(
 
     class Factory @Inject constructor(
         private val repository: SettingsRepository,
+        private val tokensStorageInteractor: TokensStorageInteractor
     ) : ViewModelProvider.Factory {
 
         @Suppress("UNCHECKED_CAST")
         override fun <T : ViewModel> create(modelClass: Class<T>): T {
             require(modelClass == SettingsFragmentViewModel::class.java)
-            return SettingsFragmentViewModel(repository) as T
+            return SettingsFragmentViewModel(repository, tokensStorageInteractor) as T
         }
     }
 

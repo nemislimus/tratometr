@@ -29,7 +29,7 @@ import javax.inject.Inject
 class SplashFragment : BindingFragment<FragmentSplashBinding>() {
 
     companion object {
-        private const val FOUR_SECONDS = 1000L// TODO: исправить время загрузки на 4000
+        private const val FOUR_SECONDS = 4000L
     }
 
     @Inject

@@ -107,7 +107,11 @@
         android:id="@+id/settingsFragment"
         android:name="com.nemislimus.tratometr.settings.ui.fragment.SettingsFragment"
         android:label="fragment_settings"
-        tools:layout="@layout/fragment_settings" />
+        tools:layout="@layout/fragment_settings" >
+        <action
+            android:id="@+id/action_settingsFragment_to_authorizationFragment"
+            app:destination="@id/authorizationFragment" />
+    </fragment>
 
     <fragment
         android:id="@+id/selectCategoryFragment"
