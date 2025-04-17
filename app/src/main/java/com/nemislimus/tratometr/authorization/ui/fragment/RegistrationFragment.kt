@@ -100,6 +100,10 @@ class RegistrationFragment : BindingFragment<FragmentRegistrationBinding>() {
                 }
             }
         }
+
+        binding.privacy.setOnClickListener {
+            findNavController().navigate(R.id.action_registrationFragment_to_privacyPolicyFragment)
+        }
     }
 
     private fun updateRegistrationButtonState() {

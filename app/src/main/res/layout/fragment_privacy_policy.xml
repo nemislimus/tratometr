@@ -18,15 +18,17 @@
         app:layout_constraintTop_toTopOf="parent">
 
         <ImageView
+            android:id="@+id/backButton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_gravity="center"
             android:layout_marginStart="@dimen/size_16dp"
             android:layout_marginEnd="@dimen/size_8dp"
+            android:layout_marginTop="@dimen/size_16dp"
             android:src="@drawable/ic_arrows_back" />
 
         <TextView
             android:id="@+id/title"
+            style="@style/AppTextH1"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginEnd="@dimen/size_16dp"
@@ -37,22 +39,129 @@
     </LinearLayout>
 
     <androidx.core.widget.NestedScrollView
-        android:layout_width="0dp"
-        android:layout_height="0dp"
+        android:layout_width="@dimen/size_0dp"
+        android:layout_height="@dimen/size_0dp"
+        android:layout_marginBottom="@dimen/size_16dp"
         android:fillViewport="true"
-        android:layout_marginTop="@dimen/size_16dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/topBlock">
 
-        <TextView
-            android:id="@+id/text"
-            android:layout_width="match_parent"
+        <LinearLayout
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/agreement_text"
-            android:textSize="@dimen/text_size_14"
-            android:padding="@dimen/size_16dp"/>
+            android:orientation="vertical">
+
+            <TextView
+                style="@style/header1"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/first_header" />
+
+            <TextView
+                style="@style/regular"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/first_text" />
+
+            <TextView
+                style="@style/header1"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/second_header" />
+
+            <TextView
+                style="@style/regular"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/second_text" />
+
+            <TextView
+                style="@style/header1"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/third_header" />
+
+            <TextView
+                style="@style/regular"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/third_text" />
+
+            <TextView
+                style="@style/header1"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/fourth_header" />
+
+            <TextView
+                style="@style/regular"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/fourth_text" />
+
+            <TextView
+                style="@style/header1"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/fifth_header" />
+
+            <TextView
+                style="@style/regular"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/fifth_text" />
+
+            <TextView
+                style="@style/header1"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/sixth_header" />
+
+            <TextView
+                style="@style/regular"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/sixth_text" /><!--&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;-->
+
+            <TextView
+                style="@style/header1"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/seventh_header" />
+
+            <TextView
+                style="@style/regular"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/seventh_text" />
+
+            <TextView
+                style="@style/header1"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/eighth_header" />
+
+            <TextView
+                style="@style/regular"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/eighth_text" />
+
+            <TextView
+                style="@style/header1"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/ninth_header" />
+
+            <TextView
+                style="@style/regular"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/ninth_text" />
+
+        </LinearLayout>
 
     </androidx.core.widget.NestedScrollView>
 
