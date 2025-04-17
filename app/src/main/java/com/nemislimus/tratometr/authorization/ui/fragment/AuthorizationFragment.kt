@@ -87,6 +87,10 @@ class AuthorizationFragment : BindingFragment<FragmentAuthorizationBinding>() {
                 }
             }
         }
+
+        binding.forgotPassword.setOnClickListener {
+            findNavController().navigate(R.id.action_authorizationFragment_to_passRecoveryFragment)
+        }
     }
 
     private fun updateLoginButtonState() {
