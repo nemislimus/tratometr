@@ -39,6 +39,11 @@
     <string name="required_field">Обязательное поле!</string>
     <string name="category_already_exist">Такая категория уже существует!</string>
     <string name="select_category">Выбрать категорию</string>
+    <string name="search">Поиск</string>
+    <string name="btn_apply">Применить</string>
+    <string name="btn_new_category">Новая категория</string>
+    <string name="category_list_placeholder_header">Категории отсутствуют</string>
+    <string name="category_list_placeholder_text">Добавьте новые категории расходов.\nДля этого нажмите на кнопку\n\"Новая категория\"</string>
     <string name="authorization">Авторизация</string>
     <string name="registration">Регистрация</string>
 

@@ -6,7 +6,7 @@ import androidx.lifecycle.viewModelScope
 import com.nemislimus.tratometr.expenses.domain.api.ExpenseHistoryInteractor
 import com.nemislimus.tratometr.expenses.domain.model.Category
 import com.nemislimus.tratometr.expenses.domain.model.Expense
-import com.nemislimus.tratometr.expenses.ui.fragment.model.AutoCompleteItem
+import com.nemislimus.tratometr.expenses.ui.model.AutoCompleteItem
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext

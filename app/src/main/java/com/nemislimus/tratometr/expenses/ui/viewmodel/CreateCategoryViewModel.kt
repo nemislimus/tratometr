@@ -7,7 +7,7 @@ import androidx.lifecycle.viewModelScope
 import com.nemislimus.tratometr.common.util.CustomCategoryIcons
 import com.nemislimus.tratometr.expenses.domain.api.ExpenseHistoryInteractor
 import com.nemislimus.tratometr.expenses.domain.model.Category
-import com.nemislimus.tratometr.expenses.ui.fragment.model.CreateCategoryItem
+import com.nemislimus.tratometr.expenses.ui.model.CreateCategoryItem
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import javax.inject.Inject

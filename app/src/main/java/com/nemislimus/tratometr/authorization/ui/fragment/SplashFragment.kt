@@ -69,12 +69,6 @@ class SplashFragment : BindingFragment<FragmentSplashBinding>() {
             )
         }
 
-        binding.btnCreateCategory.setOnClickListener {
-            findNavController().navigate(
-                R.id.action_splashFragment_to_createCategoryFragment
-            )
-        }
-
         binding.btnSelectCategory.setOnClickListener {
             findNavController().navigate(
                 R.id.action_splashFragment_to_selectCategoryFragment

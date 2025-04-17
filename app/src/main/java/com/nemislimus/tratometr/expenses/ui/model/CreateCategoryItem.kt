@@ -1,4 +1,4 @@
-package com.nemislimus.tratometr.expenses.ui.fragment.model
+package com.nemislimus.tratometr.expenses.ui.model
 
 import androidx.annotation.DrawableRes
 

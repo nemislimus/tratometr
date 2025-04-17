@@ -20,9 +20,6 @@
             android:id="@+id/action_splashFragment_to_settingsFragment"
             app:destination="@id/settingsFragment" />
         <action
-            android:id="@+id/action_splashFragment_to_createCategoryFragment"
-            app:destination="@id/createCategoryFragment" />
-        <action
             android:id="@+id/action_splashFragment_to_selectCategoryFragment"
             app:destination="@id/selectCategoryFragment" />
     </fragment>
@@ -117,7 +114,11 @@
         android:id="@+id/selectCategoryFragment"
         android:name="com.nemislimus.tratometr.expenses.ui.fragment.SelectCategoryFragment"
         android:label="fragment_select_category"
-        tools:layout="@layout/fragment_select_category" />
+        tools:layout="@layout/fragment_select_category" >
+        <action
+            android:id="@+id/action_selectCategoryFragment_to_createCategoryFragment"
+            app:destination="@id/createCategoryFragment" />
+    </fragment>
 
     <fragment
         android:id="@+id/createCategoryFragment"

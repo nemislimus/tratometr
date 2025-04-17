@@ -4,8 +4,11 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.viewModelScope
 import com.nemislimus.tratometr.expenses.domain.api.ExpenseHistoryInteractor
-import com.nemislimus.tratometr.expenses.ui.fragment.model.CategoryListState
+import com.nemislimus.tratometr.expenses.ui.model.CategoryListState
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 class SelectCategoryViewModel(
@@ -14,6 +17,14 @@ class SelectCategoryViewModel(
 
     private val state = MutableLiveData<CategoryListState>()
     fun observeState(): LiveData<CategoryListState> = state
+
+    fun getAllCategories() {
+        val categories = interactor.getAllCategoriesListWithIcons()
+        when {
+            categories.isEmpty() -> state.postValue(CategoryListState.Empty)
+            else -> state.postValue(CategoryListState.Content(categories))
+        }
+    }
 
 
     class Factory @Inject constructor(
