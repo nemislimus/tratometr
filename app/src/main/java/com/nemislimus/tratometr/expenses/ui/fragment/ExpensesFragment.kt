@@ -1,9 +1,9 @@
 package com.nemislimus.tratometr.expenses.ui.fragment
 
+import android.annotation.SuppressLint
 import android.content.Context
 import android.content.res.ColorStateList
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -25,20 +25,22 @@ import com.nemislimus.tratometr.common.util.MoneyConverter
 import com.nemislimus.tratometr.common.util.TimePresetManager
 import com.nemislimus.tratometr.databinding.FragmentExpensesBinding
 import com.nemislimus.tratometr.expenses.ui.fragment.adpter.ExpensesAdapter
+import com.nemislimus.tratometr.expenses.ui.fragment.adpter.ExpensesAdapterListener
 import com.nemislimus.tratometr.expenses.ui.fragment.recycler.ExpensesRecyclerView
+import com.nemislimus.tratometr.expenses.ui.fragment.viewholder.ExpensesViewHolder
 import com.nemislimus.tratometr.expenses.ui.viewmodel.ExpenseHistoryViewModel
 import com.nemislimus.tratometr.expenses.ui.viewmodel.history_model.Historical
 import javax.inject.Inject
 
-class ExpensesFragment : BindingFragment<FragmentExpensesBinding>(), ExpenseFilterCallback {
-
-    private val adapter = ExpensesAdapter()
-    private var mIth: ItemTouchHelper? = null
-    private lateinit var recycler: RecyclerView
+class ExpensesFragment : BindingFragment<FragmentExpensesBinding>(), ExpenseFilterCallback, ExpensesAdapterListener {
 
     @Inject
     lateinit var vmFactory: ExpenseHistoryViewModel.Factory
     private val viewModel: ExpenseHistoryViewModel by viewModels { vmFactory }
+
+    private val adapter = ExpensesAdapter(this)
+    private var mIth: ItemTouchHelper? = null
+    private lateinit var recycler: RecyclerView
 
     override fun onAttach(context: Context) {
         context.appComponent.inject(this)
@@ -52,14 +54,12 @@ class ExpensesFragment : BindingFragment<FragmentExpensesBinding>(), ExpenseFilt
         return FragmentExpensesBinding.inflate(inflater,container,false)
     }
 
+    @SuppressLint("ClickableViewAccessibility")
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
         recycler = binding.recycler
-
         initializingRecyclerView()  // Создание рециклера
-
-
 
         // Подписываемся на наблюдение за фильтром
         ExpenseFilter.addExpenseFilterListener(this)
@@ -75,18 +75,26 @@ class ExpensesFragment : BindingFragment<FragmentExpensesBinding>(), ExpenseFilt
         }
 
         binding.ivSettings.setOnClickListener {
+            requestFocusToCalendar()
             findNavController().navigate(
                 R.id.action_expensesFragment_to_settingsFragment
             )
         }
 
         binding.ivDiagram.setOnClickListener {
+            requestFocusToCalendar()
             findNavController().navigate(
                 R.id.action_expensesFragment_to_analyticsFragment
             )
         }
 
+        binding.btnAddExpense.setOnClickListener {
+            requestFocusToCalendar()
+            addExpense()
+        }
+
         binding.ivCalendar.setOnClickListener {
+            requestFocusToCalendar()
             val dateRangePicker = MaterialDatePicker.Builder.dateRangePicker()
                 .setTitleText(R.string.select_range)
                 .build()
@@ -96,25 +104,35 @@ class ExpensesFragment : BindingFragment<FragmentExpensesBinding>(), ExpenseFilt
             dateRangePicker.show(requireActivity().supportFragmentManager, "DATE_RANGE_PICKER")
         }
         binding.tvDay.setOnClickListener {
+            requestFocusToCalendar()
             val range = DateRangeHelper.getCurrentDay()
             ExpenseFilter.setDateInterval(range.first, range.second, TimePresetManager.DAY)
         }
         binding.tvWeek.setOnClickListener {
+            requestFocusToCalendar()
             val range = DateRangeHelper.getCurrentWeek()
             ExpenseFilter.setDateInterval(range.first, range.second, TimePresetManager.WEEK)
         }
         binding.tvMonth.setOnClickListener {
+            requestFocusToCalendar()
             val range = DateRangeHelper.getCurrentMonth()
             ExpenseFilter.setDateInterval(range.first, range.second, TimePresetManager.MONTH)
         }
         binding.tvYear.setOnClickListener {
+            requestFocusToCalendar()
             val range = DateRangeHelper.getCurrentYear()
             ExpenseFilter.setDateInterval(range.first, range.second, TimePresetManager.YEAR)
         }
         binding.tvCategories.setOnClickListener {
+            requestFocusToCalendar()
             findNavController().navigate(
                 R.id.action_expensesFragment_to_selectCategoryFragment
             )
+        }
+
+        recycler.setOnTouchListener { v, event ->
+            requestFocusToCalendar()
+            false
         }
 
     }
@@ -176,10 +194,10 @@ class ExpensesFragment : BindingFragment<FragmentExpensesBinding>(), ExpenseFilt
     }
 
     private fun initializingRecyclerView() {
-        val recyclerView = ExpensesRecyclerView(requireContext(), recycler, adapter)
+        val recyclerView = ExpensesRecyclerView(this, recycler, adapter)
         recyclerView.setupRecyclerView()
-        //mIth = recyclerView.createItemTouchHelper()
-        //mIth!!.attachToRecyclerView(recycler)
+        mIth = recyclerView.createItemTouchHelper()
+        mIth!!.attachToRecyclerView(recycler)
     }
 
     private fun updateRecyclerView(list: List<Historical>) {
@@ -188,16 +206,44 @@ class ExpensesFragment : BindingFragment<FragmentExpensesBinding>(), ExpenseFilt
         adapter.notifyDataSetChanged()
     }
 
+    // Вызывается из адаптера для возврата Foreground в исходное положение
+    override fun returnHolderToOriginalState(holder: ExpensesViewHolder) {
+        ItemTouchHelper.Callback.getDefaultUIUtil().clearView(holder.flForeground)
+    }
 
+    override fun onDeleteExpense(expense: Historical.HistoryContent, position: Int) {
+        val id = expense.expense.id
+        viewModel.deleteExpense(id)
+        adapter.items.removeAt(position)
+        adapter.notifyItemRemoved(position) // Уведомление об удалении
+        adapter.notifyItemRangeChanged(position, adapter.items.size - 1)
+    }
 
+    override fun onEditExpense(expense: Historical.HistoryContent, position: Int) {
+        findNavController().navigate(
+            R.id.action_expensesFragment_to_createExpenseFragment
+        )
+        // Редактирование расхода
+    }
 
+    private fun addExpense() {
+        findNavController().navigate(
+            R.id.action_expensesFragment_to_createExpenseFragment
+        )
+        // Добавление расхода
+    }
 
+    private fun requestFocusToCalendar(){
+        with(binding.ivCalendar) {
+            isFocusableInTouchMode = true
+            requestFocus()
+            isFocusableInTouchMode = false
+        }
+    }
 
     override fun onDestroyView() {
         super.onDestroyView()
         // Удаляем текущий фрагмент как наблюдателя
         ExpenseFilter.removeExpenseFilterListener(this)
     }
-
-
 }

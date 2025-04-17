@@ -6,8 +6,7 @@
   <group android:scaleX="0.74"
       android:scaleY="0.74"
       android:translateX="141.7"
-      android:translateY="141.7">>
-        
+      android:translateY="141.7">
       <group>
               
           <clip-path android:pathData="M786.9,918.2C747.8,943.7 704.9,962.7 659.8,974.8L631,867.4C664.8,858.4 697,844.1 726.4,825L786.9,918.2Z"/>

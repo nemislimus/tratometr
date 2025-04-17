@@ -23,7 +23,7 @@ class ExpenseHistoryViewModel (
     private val interactor: ExpenseHistoryInteractor
 ): ViewModel() {
 
-    private var expensesLiveData = MutableLiveData(HistoryState(BigDecimal(0),listOf<Historical>()))
+    private var expensesLiveData = MutableLiveData(HistoryState(BigDecimal(0),listOf()))
 
     fun getExpensesLiveData(): LiveData<HistoryState> = expensesLiveData
 
@@ -70,32 +70,12 @@ class ExpenseHistoryViewModel (
                 }
             }
         }
-
-
-
-
         return historyList
     }
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+    fun deleteExpense(expenseId: Long) {
+        interactor.deleteExpense(expenseId)
+    }
 
 
 
