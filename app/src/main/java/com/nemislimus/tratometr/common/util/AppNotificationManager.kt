@@ -6,6 +6,7 @@ import android.app.PendingIntent
 import android.content.Context
 import android.content.Intent
 import android.os.Build
+import com.nemislimus.tratometr.common.MainActivity
 import com.nemislimus.tratometr.settings.ui.receiver.ReminderReceiver
 import java.util.Calendar
 
@@ -16,6 +17,7 @@ object AppNotificationManager {
     const val MINUTES_KEY = "MINUTES_KEY"
 
     private const val REMINDER_INTENT_CODE = 13
+    private const val NOTIFICATION_INTENT_CODE = 31
     private val cantUseRepeatAlarm = Build.VERSION.SDK_INT > Build.VERSION_CODES.R
 
     @SuppressLint("ScheduleExactAlarm")
@@ -66,6 +68,19 @@ object AppNotificationManager {
         return PendingIntent.getBroadcast(
             context,
             REMINDER_INTENT_CODE,
+            intent,
+            PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE
+        )
+    }
+
+    fun createNotificationPendingIntent(context: Context): PendingIntent {
+        val intent = Intent(context, MainActivity::class.java).apply {
+            flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
+        }
+
+        return PendingIntent.getActivity(
+            context,
+            NOTIFICATION_INTENT_CODE,
             intent,
             PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE
         )

@@ -43,6 +43,8 @@ class ReminderReceiver: BroadcastReceiver() {
             .setSmallIcon(R.drawable.ic_notification_label)
             .setContentText(context.getString(R.string.notification_message))
             .setPriority(NotificationCompat.PRIORITY_HIGH)
+            .setContentIntent(AppNotificationManager.createNotificationPendingIntent(context))
+            .setAutoCancel(true)
             .build()
 
         notificationManager.notify(NOTIFICATION_ID, notification)
