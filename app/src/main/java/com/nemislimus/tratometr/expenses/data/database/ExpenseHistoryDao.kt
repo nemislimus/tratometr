@@ -41,7 +41,7 @@ class ExpenseHistoryDao @Inject constructor(
             args.add("%$category%")
         }
         // Добавляем сортировку
-        queryBuilder.append(" ORDER BY EXPENSES.DATE;")
+        queryBuilder.append(" ORDER BY EXPENSES.Date DESC;")
         // Выполняем запрос
         val cursor = db.rawQuery(queryBuilder.toString(), args.toTypedArray())
 
