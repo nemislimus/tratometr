@@ -66,13 +66,11 @@ class ExpenseHistoryRepositoryImpl @Inject constructor(
 
     // ################   ЗАПРОСЫ ДЛЯ ОКНА СОЗДАНИЕ КАТЕГОРИИ   #####################################################################################
     // Список всех категорий
-    override fun getAllCategoriesList(): List<String> {
+    override suspend fun getAllCategoriesList(): List<String> {
         return expenseHistoryDao.getAllCategoriesList()
     }
     // Добавление новой категорий
-    override fun addNewCategory(category: Category) {
-        CoroutineScope(Dispatchers.IO).launch {
-            expenseHistoryDao.addNewCategory(dbConverter.map(category))
-        }
+    override suspend fun addNewCategory(category: Category) {
+        expenseHistoryDao.addNewCategory(dbConverter.map(category))
     }
 }

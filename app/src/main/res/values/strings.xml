@@ -35,6 +35,9 @@
     <string name="alarm_permission_request">Разрешите делать напоминания!</string>
     <string name="title_of_creating_category">Название категории</string>
     <string name="category_icon_selection">Выбор иконки</string>
+    <string name="required_field">Обязательное поле!</string>
+    <string name="category_already_exist">Такая категория уже существует!</string>
+    <string name="select_category">Выбрать категорию</string>
     <string name="authorization">Авторизация</string>
     <string name="registration">Регистрация</string>
 
