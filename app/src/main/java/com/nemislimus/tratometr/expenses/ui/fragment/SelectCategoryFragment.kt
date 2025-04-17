@@ -15,7 +15,6 @@ import com.nemislimus.tratometr.R
 import com.nemislimus.tratometr.common.appComponent
 import com.nemislimus.tratometr.common.util.BindingFragment
 import com.nemislimus.tratometr.common.util.ExpenseFilter
-import com.nemislimus.tratometr.common.util.ExpenseFilterCallback
 import com.nemislimus.tratometr.databinding.FragmentSelectCategoryBinding
 import com.nemislimus.tratometr.expenses.domain.model.Category
 import com.nemislimus.tratometr.expenses.ui.fragment.adpter.SelectCategoryAdapter
