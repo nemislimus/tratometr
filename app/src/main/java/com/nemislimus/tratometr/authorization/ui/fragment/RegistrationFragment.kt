@@ -24,6 +24,7 @@ class RegistrationFragment : BindingFragment<FragmentRegistrationBinding>() {
     @Inject
     lateinit var vmFactory: RegistrationViewModel.Factory
     lateinit var viewModel: RegistrationViewModel
+    var privacyAccepted = false
 
     override fun createBinding(
         inflater: LayoutInflater,
@@ -45,12 +46,22 @@ class RegistrationFragment : BindingFragment<FragmentRegistrationBinding>() {
         binding.passwordText.addTextChangedListener(TextFieldValidation(binding.passwordText))
         binding.repeatPasswordText.addTextChangedListener(TextFieldValidation(binding.repeatPasswordText))
 
+        binding.checkbox.setOnCheckedChangeListener { checkBox, isChecked ->
+            if (isChecked) {
+                privacyAccepted = true
+                updateButtonState()
+            } else {
+                privacyAccepted = false
+                updateButtonState()
+            }
+        }
+
         binding.registrationButton.setOnClickListener {
             val email = binding.emailText.text.toString()
             val password = binding.passwordText.text.toString()
 
             lifecycleScope.launch {
-                val response = viewModel.registration(email,password)
+                val response = viewModel.registration(email, password)
 
                 when (response) {
                     is Resource.Success -> {
@@ -95,10 +106,10 @@ class RegistrationFragment : BindingFragment<FragmentRegistrationBinding>() {
 
     private fun validatePassword(): Boolean {
         if (binding.passwordText.text.toString().trim().isEmpty()) {
-            binding.passwordField.error = "Required Field!"
+            binding.passwordField.error = AuthorizationFragment.REQUIRED_FIELD
             return false
         } else if (binding.passwordText.text.toString().length < 6) {
-            binding.passwordField.error = "password can't be less than 6"
+            binding.passwordField.error = AuthorizationFragment.SHORT_PASSWORD
             return false
         } else {
             binding.passwordField.isErrorEnabled = false
@@ -108,10 +119,10 @@ class RegistrationFragment : BindingFragment<FragmentRegistrationBinding>() {
 
     private fun validateEmail(): Boolean {
         if (binding.emailText.text.toString().trim().isEmpty()) {
-            binding.emailField.error = "Required Field!"
+            binding.emailField.error = AuthorizationFragment.REQUIRED_FIELD
             return false
         } else if (!isValidEmail(binding.emailText.text.toString())) {
-            binding.emailField.error = "Invalid Email!"
+            binding.emailField.error = AuthorizationFragment.INVALID_EMAIL
             return false
         } else {
             binding.emailField.isErrorEnabled = false
@@ -130,7 +141,7 @@ class RegistrationFragment : BindingFragment<FragmentRegistrationBinding>() {
             }
 
             password != repeatPassword -> {
-                binding.repeatPasswordField.error = "Пароли не совпадают"
+                binding.repeatPasswordField.error = AuthorizationFragment.NOT_MATCH
                 false
             }
 
@@ -151,6 +162,7 @@ class RegistrationFragment : BindingFragment<FragmentRegistrationBinding>() {
         val isPasswordValid = validatePassword()
         val arePasswordsMatch = passwordsCheck()
 
-        binding.registrationButton.isEnabled = isEmailValid && isPasswordValid && arePasswordsMatch
+        binding.registrationButton.isEnabled =
+            isEmailValid && isPasswordValid && arePasswordsMatch && privacyAccepted
     }
 }

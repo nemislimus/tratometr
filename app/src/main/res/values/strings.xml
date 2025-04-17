@@ -87,4 +87,11 @@
 По вопросам, связанным с обработкой персональных данных, пользователь может обратиться по адресу: office@spendwise.com
 Дата последнего обновления: 31.03.2025</string>
     <string name="privacy_policy">Политика конфедициальности и обработки персональных данных</string>
+    <string name="email">Почта</string>
+    <string name="password">Пароль</string>
+    <string name="forgot_password">Забыли пароль?</string>
+    <string name="login">Войти</string>
+    <string name="first_time_in_app">Впервые в приложении?</string>
+    <string name="create_account">Создайте аккаунт</string>
+    <string name="repeat_password">Повторите пароль</string>
 </resources>
