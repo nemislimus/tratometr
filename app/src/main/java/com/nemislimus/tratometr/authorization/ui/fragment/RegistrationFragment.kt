@@ -104,6 +104,10 @@ class RegistrationFragment : BindingFragment<FragmentRegistrationBinding>() {
         binding.privacy.setOnClickListener {
             findNavController().navigate(R.id.action_registrationFragment_to_privacyPolicyFragment)
         }
+
+        binding.backButton.setOnClickListener {
+            requireActivity().onBackPressedDispatcher.onBackPressed()
+        }
     }
 
     private fun updateRegistrationButtonState() {
