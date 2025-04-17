@@ -1,6 +1,7 @@
 package com.nemislimus.tratometr.expenses.data.database
 
 import android.content.ContentValues
+import android.util.Log
 import com.nemislimus.tratometr.expenses.data.database.entities.CategoryEntity
 import com.nemislimus.tratometr.expenses.data.database.entities.ExpenseEntity
 import javax.inject.Inject
@@ -21,7 +22,7 @@ class ExpenseHistoryDao @Inject constructor(
         val expenses = mutableListOf<ExpenseEntity>()
         // Начинаем строить базовый запрос
         val queryBuilder =
-            StringBuilder("SELECT EXPENSES.[_id], EXPENSES.DATE, EXPENSES.AMOUNT, EXPENSES.NOTE, EXPENSES.CATEGORY, CATEGORIES.ICON_RES_ID ")
+            StringBuilder("SELECT EXPENSES.[_id], EXPENSES.DATE, EXPENSES.AMOUNT, EXPENSES.CATEGORY, EXPENSES.NOTE, CATEGORIES.ICON_RES_ID ")
         queryBuilder.append("FROM EXPENSES LEFT JOIN CATEGORIES ON EXPENSES.CATEGORY = CATEGORIES.CATEGORY_NAME ")
         queryBuilder.append("WHERE  1=1")
         val args = mutableListOf<String>()

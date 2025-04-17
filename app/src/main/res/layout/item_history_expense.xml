@@ -3,10 +3,13 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content">
 
-    <include layout="@layout/item_history_expense_background"/>
+    <include
+        android:id="@+id/fl_background"
+        layout="@layout/item_history_expense_background"/>
 
     <include
-        android:id="@+id/ihh_foreground"
-        layout="@layout/item_history_expense_foreground"/>
+        android:id="@+id/fl_foreground"
+        layout="@layout/item_history_expense_foreground"
+        />
 
 </FrameLayout>

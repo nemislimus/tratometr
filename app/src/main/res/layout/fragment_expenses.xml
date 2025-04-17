@@ -180,8 +180,6 @@
             android:focusable="true"
             android:paddingHorizontal="16dp"
             android:paddingBottom="120dp"
-            android:scrollbarThumbVertical="?attr/appCategoryIconBackground"
-            android:scrollbars="vertical"
             app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
             android:visibility="visible"/>
 
