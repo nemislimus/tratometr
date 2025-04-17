@@ -1,10 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/fl_background"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
+    android:layout_height="match_parent"
+    android:clickable="true"
+    android:focusable="true"
+    android:focusableInTouchMode="true"
     android:layout_marginVertical="4dp"
-    android:background="@drawable/card_exhense_background">
+    android:background="@drawable/card_exhense_background"
+    android:importantForAccessibility="no">
 
     <ImageView
         android:id="@+id/iv_del"
@@ -13,25 +18,17 @@
         android:layout_gravity="end|center_vertical"
         android:padding="@dimen/size_12dp"
         android:src="@drawable/ic_delete"
+        android:background="@drawable/btn_del_background"
         tools:ignore="contentDescription"/>
 
     <ImageView
         android:id="@+id/iv_edit"
         android:layout_width="wrap_content"
-        android:layout_height="match_parent"
+        android:layout_height="wrap_content"
         android:layout_gravity="end|center_vertical"
         android:layout_marginEnd="@dimen/size_48dp"
-        android:paddingVertical="18dp"
-        android:paddingHorizontal="@dimen/size_12dp"
+        android:padding="@dimen/size_12dp"
         android:src="@drawable/ic_edit"
-        android:background="@color/edit_icon_background"
         tools:ignore="contentDescription"/>
-
-    <View
-        android:layout_width="@dimen/size_48dp"
-        android:layout_height="60dp"
-        android:layout_gravity="end"
-        android:layout_marginEnd="96dp"
-        android:background="@color/edit_icon_background"/>
 
 </FrameLayout>

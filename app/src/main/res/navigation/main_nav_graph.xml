@@ -36,9 +36,6 @@
             android:id="@+id/action_authorizationFragment_to_passRecoveryFragment"
             app:destination="@id/passRecoveryFragment" />
         <action
-            android:id="@+id/action_authorizationFragment_to_privacyPolicyFragment2"
-            app:destination="@id/privacyPolicyFragment" />
-        <action
             android:id="@+id/action_authorizationFragment_to_expensesFragment"
             app:destination="@id/expensesFragment" />
     </fragment>
@@ -63,6 +60,9 @@
         <action
             android:id="@+id/action_registrationFragment_to_expensesFragment"
             app:destination="@id/expensesFragment" />
+        <action
+            android:id="@+id/action_registrationFragment_to_privacyPolicyFragment"
+            app:destination="@id/privacyPolicyFragment" />
     </fragment>
 
     <fragment
@@ -104,7 +104,11 @@
         android:id="@+id/settingsFragment"
         android:name="com.nemislimus.tratometr.settings.ui.fragment.SettingsFragment"
         android:label="fragment_settings"
-        tools:layout="@layout/fragment_settings" />
+        tools:layout="@layout/fragment_settings" >
+        <action
+            android:id="@+id/action_settingsFragment_to_authorizationFragment"
+            app:destination="@id/authorizationFragment" />
+    </fragment>
 
     <fragment
         android:id="@+id/selectCategoryFragment"

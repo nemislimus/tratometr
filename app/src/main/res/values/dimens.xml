@@ -3,6 +3,7 @@
     <dimen name="text_size_14">14sp</dimen>
     <dimen name="text_size_16">16sp</dimen>
     <dimen name="text_size_20">20sp</dimen>
+    <dimen name="text_size_24">24sp</dimen>
     <dimen name="text_size_36">36sp</dimen>
 
     <dimen name="size_12dp">12dp</dimen>
@@ -16,6 +17,8 @@
     <dimen name="size_8dp">8dp</dimen>
     <dimen name="size_20dp">20dp</dimen>
     <dimen name="size_4dp">4dp</dimen>
+    <dimen name="size_52dp">52dp</dimen>
+    <dimen name="size_0dp">0dp</dimen>
     <dimen name="size_92dp">92dp</dimen>
     <dimen name="size_56dp">56dp</dimen>
 

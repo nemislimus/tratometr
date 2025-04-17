@@ -13,6 +13,7 @@ class TokensStorageRepositoryImpl @Inject constructor(context: Context) :
     TokensStorageRepository {
     companion object {
         private const val TOKENS_REPOSITORY_KEY = "tokens"
+        private const val EMPTY = ""
     }
 
     private val tokensPrefs = context.getSharedPreferences(TOKENS_REPOSITORY_KEY, MODE_PRIVATE)
@@ -27,7 +28,7 @@ class TokensStorageRepositoryImpl @Inject constructor(context: Context) :
     }
 
     override fun getTokens(): Tokens {
-        val data = tokensPrefs.getString(TOKENS_REPOSITORY_KEY, null)
+        val data = tokensPrefs.getString(TOKENS_REPOSITORY_KEY, EMPTY)
         return tokensFromJson(data)
     }
 
