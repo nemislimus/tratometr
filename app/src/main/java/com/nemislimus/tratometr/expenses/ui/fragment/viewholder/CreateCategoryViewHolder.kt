@@ -5,7 +5,7 @@ import androidx.core.view.isVisible
 import androidx.recyclerview.widget.RecyclerView
 import com.nemislimus.tratometr.R
 import com.nemislimus.tratometr.databinding.ItemCreateCatIconBinding
-import com.nemislimus.tratometr.expenses.ui.fragment.model.CreateCategoryItem
+import com.nemislimus.tratometr.expenses.ui.model.CreateCategoryItem
 
 class CreateCategoryViewHolder(
     private val binding: ItemCreateCatIconBinding,

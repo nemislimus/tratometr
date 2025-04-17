@@ -16,15 +16,27 @@ class SelectCategoryAdapter(
     private var previousSelectedCategoryPosition = RecyclerView.NO_POSITION
 
 
-    private val categories: MutableList<Category> = mutableListOf()
+    private val categoriesList: MutableList<Category> = mutableListOf()
+    private val filteredCategoryList: MutableList<Category> = mutableListOf()
 
     fun setCategories(items: List<Category>) {
-        categories.clear()
-        categories.addAll(items)
+        categoriesList.clear()
+        categoriesList.addAll(items)
+        filterCategoriesByName()
+    }
+
+    fun filterCategoriesByName(name: String = "") {
+        filteredCategoryList.clear()
+        if(name.isBlank()) {
+            filteredCategoryList.addAll(categoriesList)
+        } else {
+            val newList = categoriesList.filter { category -> category.name.startsWith(name, true) }
+            filteredCategoryList.addAll(newList)
+        }
         notifyDataSetChanged()
     }
 
-    override fun getItemCount(): Int = categories.size
+    override fun getItemCount(): Int = filteredCategoryList.size
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): SelectCategoryViewHolder {
         val layoutInflater = LayoutInflater.from(parent.context)
@@ -32,7 +44,7 @@ class SelectCategoryAdapter(
             ItemCategoryListBinding.inflate(layoutInflater, parent, false)) { position ->
             if (position != RecyclerView.NO_POSITION) {
                 if (position != previousSelectedCategoryPosition) {
-                    onCategoryClick(categories.getOrNull(position)?.name)
+                    onCategoryClick(filteredCategoryList.getOrNull(position)?.name)
                 } else {
                     onCategoryClick(null)
                 }
@@ -41,7 +53,7 @@ class SelectCategoryAdapter(
     }
 
     override fun onBindViewHolder(holder: SelectCategoryViewHolder, position: Int) {
-        categories.getOrNull(position)?.let { category ->
+        filteredCategoryList.getOrNull(position)?.let { category ->
             if (position == previousSelectedCategoryPosition) {
                 holder.bind(category)
             } else {

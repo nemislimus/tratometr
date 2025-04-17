@@ -25,7 +25,7 @@ import com.nemislimus.tratometr.common.util.BindingFragment
 import com.nemislimus.tratometr.databinding.FragmentCreateExpenseBinding
 import com.nemislimus.tratometr.expenses.domain.model.Category
 import com.nemislimus.tratometr.expenses.domain.model.Expense
-import com.nemislimus.tratometr.expenses.ui.fragment.model.AutoCompleteItem
+import com.nemislimus.tratometr.expenses.ui.model.AutoCompleteItem
 import com.nemislimus.tratometr.expenses.ui.fragment.adpter.AutoCompleteAdapter
 import com.nemislimus.tratometr.expenses.ui.viewmodel.CreateExpenseViewModel
 import java.math.BigDecimal

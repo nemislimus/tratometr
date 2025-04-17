@@ -1,4 +1,4 @@
-package com.nemislimus.tratometr.expenses.ui.fragment.model
+package com.nemislimus.tratometr.expenses.ui.model
 
 import com.nemislimus.tratometr.expenses.domain.model.Category
 

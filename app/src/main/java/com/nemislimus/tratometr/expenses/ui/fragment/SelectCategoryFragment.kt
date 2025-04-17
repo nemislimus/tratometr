@@ -2,6 +2,8 @@ package com.nemislimus.tratometr.expenses.ui.fragment
 
 import android.content.Context
 import android.os.Bundle
+import android.text.Editable
+import android.text.TextWatcher
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -12,10 +14,12 @@ import androidx.navigation.fragment.findNavController
 import com.nemislimus.tratometr.R
 import com.nemislimus.tratometr.common.appComponent
 import com.nemislimus.tratometr.common.util.BindingFragment
+import com.nemislimus.tratometr.common.util.ExpenseFilter
+import com.nemislimus.tratometr.common.util.ExpenseFilterCallback
 import com.nemislimus.tratometr.databinding.FragmentSelectCategoryBinding
 import com.nemislimus.tratometr.expenses.domain.model.Category
 import com.nemislimus.tratometr.expenses.ui.fragment.adpter.SelectCategoryAdapter
-import com.nemislimus.tratometr.expenses.ui.fragment.model.CategoryListState
+import com.nemislimus.tratometr.expenses.ui.model.CategoryListState
 import com.nemislimus.tratometr.expenses.ui.viewmodel.SelectCategoryViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -26,6 +30,7 @@ class SelectCategoryFragment : BindingFragment<FragmentSelectCategoryBinding>() 
     @Inject
     lateinit var vmFactory: SelectCategoryViewModel.Factory
     private val viewModel: SelectCategoryViewModel by viewModels { vmFactory }
+    private var searchTextWatcher: TextWatcher? = null
 
     private var selectedCategoryName: String? = null
 
@@ -61,6 +66,11 @@ class SelectCategoryFragment : BindingFragment<FragmentSelectCategoryBinding>() 
         }
     }
 
+    override fun onDestroyFragment() {
+        binding.etSearchCategory.removeTextChangedListener(searchTextWatcher)
+        searchTextWatcher = null
+    }
+
     private fun setUiConfigurations() {
         binding.rvCategoryList.adapter = adapter
 
@@ -72,6 +82,23 @@ class SelectCategoryFragment : BindingFragment<FragmentSelectCategoryBinding>() 
             )
         }
 
+        binding.btnCategoryApply.setOnClickListener {
+            ExpenseFilter.category = selectedCategoryName
+            findNavController().navigateUp()
+        }
+
+        installTextWatcher()
+    }
+
+    private fun installTextWatcher() {
+        searchTextWatcher = object : TextWatcher {
+            override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {}
+            override fun onTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {}
+            override fun afterTextChanged(s: Editable?) {
+                adapter.filterCategoriesByName(s.toString())
+            }
+        }
+        binding.etSearchCategory.addTextChangedListener(searchTextWatcher)
     }
 
     private fun stateProcessing(state: CategoryListState) {

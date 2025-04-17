@@ -4,7 +4,7 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.nemislimus.tratometr.databinding.ItemCreateCatIconBinding
-import com.nemislimus.tratometr.expenses.ui.fragment.model.CreateCategoryItem
+import com.nemislimus.tratometr.expenses.ui.model.CreateCategoryItem
 import com.nemislimus.tratometr.expenses.ui.fragment.viewholder.CreateCategoryViewHolder
 
 class CreateCategoryAdapter(

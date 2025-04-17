@@ -6,7 +6,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
 import com.nemislimus.tratometr.expenses.domain.api.ExpenseHistoryInteractor
-import com.nemislimus.tratometr.expenses.ui.fragment.model.CategoryListState
+import com.nemislimus.tratometr.expenses.ui.model.CategoryListState
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import javax.inject.Inject
