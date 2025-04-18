@@ -92,6 +92,11 @@ class ExpensesAdapter(private val listener: ExpensesAdapterListener): RecyclerVi
         }
 
         holder.btnDel.setOnClickListener {
+            with(holder.btnDel) {
+                isFocusableInTouchMode = true
+                requestFocus()
+                isFocusableInTouchMode = true
+            }
             holder.flForeground.startAnimation(
                 AnimationUtils.loadAnimation((listener as ExpensesFragment).requireContext(), R.anim.del_holder)
             ) // Анимация удаления
@@ -99,7 +104,7 @@ class ExpensesAdapter(private val listener: ExpensesAdapterListener): RecyclerVi
         }
 
         holder.btnEdit.setOnClickListener {
-            listener.onEditExpense(item, position)
+            listener.onEditExpense(item)
         }
     }
 

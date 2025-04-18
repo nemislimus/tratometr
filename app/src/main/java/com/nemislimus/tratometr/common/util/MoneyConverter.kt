@@ -10,7 +10,7 @@ import java.text.DecimalFormatSymbols
 object MoneyConverter {
     private val decimalFormatSymbols = DecimalFormatSymbols().apply {
         groupingSeparator = ' '
-        decimalSeparator = '.'
+        decimalSeparator = ','
     }
 
     // Округляет BigDecimal до рубля и возвращает строку с разделителями разрядов и символом ₽ в конце

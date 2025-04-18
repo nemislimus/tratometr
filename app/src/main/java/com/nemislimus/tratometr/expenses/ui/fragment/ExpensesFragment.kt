@@ -4,6 +4,7 @@ import android.annotation.SuppressLint
 import android.content.Context
 import android.content.res.ColorStateList
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -138,6 +139,7 @@ class ExpensesFragment : BindingFragment<FragmentExpensesBinding>(), ExpenseFilt
     }
 
     override fun onFilterChanged(expenseFilter: ExpenseFilter) {
+        Log.e("МОЁ", expenseFilter.category.toString())
         // Заполняем поле период
         binding.tvRange.text = DateRangeHelper.convertDatesInRange(
             requireContext(),
@@ -148,6 +150,7 @@ class ExpensesFragment : BindingFragment<FragmentExpensesBinding>(), ExpenseFilt
         accentOnButton(expenseFilter.presetButton)
         // Запрос на получение списка найденых расходов
         binding.progressBar.isVisible = true
+
         viewModel.getExpenseListFilter(
             expenseFilter.startDate,
             expenseFilter.endDate,
@@ -212,6 +215,7 @@ class ExpensesFragment : BindingFragment<FragmentExpensesBinding>(), ExpenseFilt
     }
 
     override fun onDeleteExpense(expense: Historical.HistoryContent, position: Int) {
+        requestFocusToCalendar()
         val id = expense.expense.id
         viewModel.deleteExpense(id)
         adapter.items.removeAt(position)
@@ -219,18 +223,17 @@ class ExpensesFragment : BindingFragment<FragmentExpensesBinding>(), ExpenseFilt
         adapter.notifyItemRangeChanged(position, adapter.items.size - 1)
     }
 
-    override fun onEditExpense(expense: Historical.HistoryContent, position: Int) {
+    override fun onEditExpense(expense: Historical.HistoryContent) {
+        requestFocusToCalendar()
         findNavController().navigate(
-            R.id.action_expensesFragment_to_createExpenseFragment
+            R.id.action_expensesFragment_to_createExpenseFragment,
+            CreateExpenseFragment.createArgs(expense)
         )
-        // Редактирование расхода
     }
 
     private fun addExpense() {
-        findNavController().navigate(
-            R.id.action_expensesFragment_to_createExpenseFragment
-        )
-        // Добавление расхода
+        findNavController().navigate(R.id.action_expensesFragment_to_createExpenseFragment,
+            CreateExpenseFragment.createArgs(null))
     }
 
     private fun requestFocusToCalendar(){

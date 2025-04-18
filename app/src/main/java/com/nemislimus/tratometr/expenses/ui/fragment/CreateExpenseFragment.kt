@@ -2,6 +2,7 @@ package com.nemislimus.tratometr.expenses.ui.fragment
 
 import android.annotation.SuppressLint
 import android.content.Context
+import android.os.Build
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
@@ -15,6 +16,7 @@ import android.widget.EditText
 import android.widget.ImageView
 import android.widget.Toast
 import androidx.appcompat.content.res.AppCompatResources
+import androidx.core.os.bundleOf
 import androidx.core.view.isVisible
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
@@ -28,6 +30,7 @@ import com.nemislimus.tratometr.expenses.domain.model.Expense
 import com.nemislimus.tratometr.expenses.ui.model.AutoCompleteItem
 import com.nemislimus.tratometr.expenses.ui.fragment.adpter.AutoCompleteAdapter
 import com.nemislimus.tratometr.expenses.ui.viewmodel.CreateExpenseViewModel
+import com.nemislimus.tratometr.expenses.ui.viewmodel.history_model.Historical
 import java.math.BigDecimal
 import java.math.RoundingMode
 import java.util.Calendar
@@ -36,6 +39,13 @@ import javax.inject.Inject
 import kotlin.random.Random
 
 class CreateExpenseFragment : BindingFragment<FragmentCreateExpenseBinding>() {
+
+    companion object {
+        private const val EXTRA_EXPENSE = "EXTRA_EXPENSE"       // Тег для РАСХОДА
+
+        fun createArgs(expense: Historical.HistoryContent? ): Bundle =
+            bundleOf(EXTRA_EXPENSE to expense?.expense)
+    }
 
     private var expense: Expense? = null
     private var isAddMode = true                        // Режим true - добавление, false - редактирование
@@ -78,7 +88,7 @@ class CreateExpenseFragment : BindingFragment<FragmentCreateExpenseBinding>() {
             binding.tvDate.text = DateFormat.format("dd.MM.yyyy", dateInMilisecond).toString()
         } else {
             // Получаем расход
-            expense = null
+            expense = getExpense()
 
             dateInMilisecond = today()
         }
@@ -98,17 +108,6 @@ class CreateExpenseFragment : BindingFragment<FragmentCreateExpenseBinding>() {
         }
 
         items = mutableListOf()
-        /*items = listOf(
-            AutoCompleteItem("Яблоко", R.drawable.ic_custom_cat_01, false),
-            AutoCompleteItem("Ананас", R.drawable.ic_custom_cat_02, false),
-            AutoCompleteItem("Апельсин", R.drawable.ic_custom_cat_03, false),
-            AutoCompleteItem("Абрикос", R.drawable.ic_custom_cat_04, false),
-            AutoCompleteItem("Банан", R.drawable.ic_custom_cat_05, false),
-            AutoCompleteItem("Картошка", R.drawable.ic_custom_cat_06, false)
-        )*/
-
-        //val sortedItems = items.sortedBy { it.name }.toMutableList() // Сортировка списка по алфавиту
-        //sortedItems.add(0, AutoCompleteItem("", 0, true))
 
         adapter = AutoCompleteAdapter(requireContext(), items)
         autoCompleteTextView.setAdapter(adapter)
@@ -282,6 +281,8 @@ class CreateExpenseFragment : BindingFragment<FragmentCreateExpenseBinding>() {
         binding.tvDate.text = DateFormat.format("dd.MM.yyyy", expense!!.date).toString()
         binding.etAmount.setText(expense!!.amount.toString())
         expense!!.description?.let { binding.etDescription.setText(expense!!.description) }
+        // Проверка, надо ли сделать кнопку Сохранить активной
+        binding.btnAction!!.isEnabled = enableBtnAction()
     }
 
     private fun showAddMode() {
@@ -366,5 +367,14 @@ class CreateExpenseFragment : BindingFragment<FragmentCreateExpenseBinding>() {
         calendar.set(Calendar.SECOND, 0)
         calendar.set(Calendar.MILLISECOND, 0)
         return calendar.timeInMillis
+    }
+
+    private fun getExpense(): Expense? {
+        return if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+            requireArguments().getSerializable(EXTRA_EXPENSE, Expense::class.java)
+        } else {
+            requireArguments().getSerializable(EXTRA_EXPENSE) as Expense
+        }
+
     }
 }
