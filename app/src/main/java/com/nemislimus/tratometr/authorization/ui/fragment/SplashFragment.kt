@@ -75,20 +75,6 @@ class SplashFragment : BindingFragment<FragmentSplashBinding>() {
             )
         }
 
-        // Андрей Добавил для тестирования окна История расходов **************************************************
-        binding.btnExpenses.setOnClickListener {
-            findNavController().navigate(
-                R.id.action_splashFragment_to_expensesFragment
-            )
-        }
-        // Андрей Добавил для тестирования окна Добавление расхода **************************************************
-        binding.btn.setOnClickListener {
-            requireActivity().supportFragmentManager.beginTransaction().setTransition(TRANSIT_FRAGMENT_OPEN)
-                .add(R.id.mainFragmentContainer, CreateExpenseFragment())
-                .addToBackStack("MainMenuFragment").commit()
-        }
-        //***********************************************************************************************************
-
        lifecycleScope.launch {
            //viewModel.clearTokens() //Добавил его тут для тестирования
            delay(FOUR_SECONDS)

@@ -12,7 +12,7 @@ class DBConverter {
         return ExpenseEntity (
             expense.id,
             expense.date,
-            expense.amount.multiply(BigDecimal("100")).toLong(),
+            map(expense.amount),
             expense.category,
             expense.iconResId,
             expense.description
@@ -23,7 +23,7 @@ class DBConverter {
         return Expense(
             expense.id,
             expense.date,
-            BigDecimal.valueOf(expense.amount).divide(BigDecimal.valueOf(100), RoundingMode.HALF_UP),
+            map(expense.amount),
             expense.category,
             expense.iconResId,
             expense.description
@@ -45,10 +45,10 @@ class DBConverter {
     }
 
     fun map(amount: Long): BigDecimal {
-        return BigDecimal.valueOf(amount).divide(BigDecimal.valueOf(100), RoundingMode.HALF_UP)
+        return BigDecimal(amount).divide(BigDecimal(100), 2, RoundingMode.HALF_UP)
     }
 
-    fun map(amount: BigDecimal): Long {
+    private fun map(amount: BigDecimal): Long {
         return amount.multiply(BigDecimal("100")).toLong()
     }
 }

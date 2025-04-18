@@ -24,7 +24,8 @@
             android:layout_marginStart="@dimen/size_16dp"
             android:layout_marginEnd="@dimen/size_8dp"
             android:layout_marginTop="@dimen/size_16dp"
-            android:src="@drawable/ic_arrows_back" />
+            android:src="@drawable/ic_arrows_back"
+            tools:ignore="ContentDescription" />
 
         <TextView
             android:id="@+id/title"
