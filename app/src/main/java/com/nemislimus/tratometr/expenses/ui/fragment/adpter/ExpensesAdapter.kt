@@ -65,22 +65,6 @@ class ExpensesAdapter(private val listener: ExpensesAdapterListener): RecyclerVi
             }
         }
 
-        var downX = 0f
-        var isShift = false
-        holder.flForeground.setOnTouchListener { v, event ->
-            when (event.action) {
-                MotionEvent.ACTION_DOWN -> {
-                    downX = event.x
-                    isShift = false
-                }
-                MotionEvent.ACTION_HOVER_EXIT, MotionEvent.ACTION_MOVE -> {
-                    if (abs(event.x - downX) > SWIPE_THRESHOLD) isShift = true         // Если жест горизонталный
-                }
-                MotionEvent.ACTION_UP -> if (!isShift) v.requestFocus()
-            }
-            return@setOnTouchListener true
-        }
-
         holder.flForeground.setOnFocusChangeListener { _, hasFocus ->
             if (hasFocus) {
                 makeTextViewMultiline(holder.tvCategory)
@@ -92,6 +76,11 @@ class ExpensesAdapter(private val listener: ExpensesAdapterListener): RecyclerVi
         }
 
         holder.btnDel.setOnClickListener {
+            with(holder.btnDel) {
+                isFocusableInTouchMode = true
+                requestFocus()
+                isFocusableInTouchMode = true
+            }
             holder.flForeground.startAnimation(
                 AnimationUtils.loadAnimation((listener as ExpensesFragment).requireContext(), R.anim.del_holder)
             ) // Анимация удаления
@@ -99,7 +88,7 @@ class ExpensesAdapter(private val listener: ExpensesAdapterListener): RecyclerVi
         }
 
         holder.btnEdit.setOnClickListener {
-            listener.onEditExpense(item, position)
+            listener.onEditExpense(item)
         }
     }
 

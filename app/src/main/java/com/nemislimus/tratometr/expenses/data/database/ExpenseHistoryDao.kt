@@ -1,7 +1,6 @@
 package com.nemislimus.tratometr.expenses.data.database
 
 import android.content.ContentValues
-import android.util.Log
 import com.nemislimus.tratometr.expenses.data.database.entities.CategoryEntity
 import com.nemislimus.tratometr.expenses.data.database.entities.ExpenseEntity
 import javax.inject.Inject
@@ -38,7 +37,7 @@ class ExpenseHistoryDao @Inject constructor(
         // Добавляем условие для категории, если она задана
         if (category != null) {
             queryBuilder.append(" AND EXPENSES.CATEGORY = ?")
-            args.add("%$category%")
+            args.add(category)
         }
         // Добавляем сортировку
         queryBuilder.append(" ORDER BY EXPENSES.Date DESC;")

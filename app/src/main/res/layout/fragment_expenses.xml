@@ -175,7 +175,6 @@
             android:clickable="true"
             android:clipToPadding="false"
             android:focusable="true"
-            android:paddingHorizontal="16dp"
             android:paddingBottom="120dp"
             app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
             android:visibility="visible"/>
