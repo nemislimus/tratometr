@@ -9,7 +9,6 @@
 
     <include
         android:id="@+id/fl_foreground"
-        layout="@layout/item_history_expense_foreground"
-        />
+        layout="@layout/item_history_expense_foreground"/>
 
 </FrameLayout>

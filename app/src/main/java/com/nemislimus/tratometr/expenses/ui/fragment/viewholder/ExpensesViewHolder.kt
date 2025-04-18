@@ -21,7 +21,7 @@ class ExpensesViewHolder(private val binding: ItemHistoryExpenseBinding) : Recyc
         tvDescription.text = expenseItem.expense.description
         with(binding.flForeground) {
             icon.setImageResource(expenseItem.expense.iconResId)
-            tvAmount.text = MoneyConverter.convertBigDecimalToRubleString(binding.root.context, expenseItem.expense.amount)
+            tvAmount.text = MoneyConverter.convertBigDecimalToRublesKopecksString(binding.root.context, expenseItem.expense.amount)
         }
     }
 }

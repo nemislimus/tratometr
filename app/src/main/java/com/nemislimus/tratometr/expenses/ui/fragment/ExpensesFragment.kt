@@ -66,7 +66,7 @@ class ExpensesFragment : BindingFragment<FragmentExpensesBinding>(), ExpenseFilt
         // Подписываемся на наблюдение за данными из БД
         viewModel.getExpensesLiveData().observe(viewLifecycleOwner) { state ->
             binding.progressBar.isVisible = false
-            binding.tvSum.text = MoneyConverter.convertBigDecimalToRubleString(requireContext(), state.sum)
+            binding.tvSum.text = MoneyConverter.convertBigDecimalToRublesString(requireContext(),state.sum)
             val empty = state.expenses.isEmpty()
             binding.recycler.isVisible = !empty
             binding.placeholder.isVisible = empty
@@ -130,7 +130,7 @@ class ExpensesFragment : BindingFragment<FragmentExpensesBinding>(), ExpenseFilt
             )
         }
 
-        recycler.setOnTouchListener { v, event ->
+        recycler.setOnTouchListener { _, _ ->
             requestFocusToCalendar()
             false
         }
