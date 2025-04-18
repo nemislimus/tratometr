@@ -59,6 +59,16 @@ class RegistrationFragment : BindingFragment<FragmentRegistrationBinding>() {
             )
         )
 
+        binding.passwordText.addTextChangedListener(
+            TratometrTextWatcher(
+                TratometrTextWatcher.FieldType.PasswordMatch(
+                    binding.passwordText,
+                    binding.repeatPasswordField,
+                    binding.repeatPasswordText
+                ), ::updateRegistrationButtonState
+            )
+        )
+
         binding.repeatPasswordText.addTextChangedListener(
             TratometrTextWatcher(
                 TratometrTextWatcher.FieldType.PasswordMatch(
@@ -111,14 +121,13 @@ class RegistrationFragment : BindingFragment<FragmentRegistrationBinding>() {
     }
 
     private fun updateRegistrationButtonState() {
-        val isEmailValid = FieldValidator.validateEmail(binding.emailField, binding.emailText)
-        val isPasswordValid =
-            FieldValidator.validatePassword(binding.passwordField, binding.passwordText)
-        val arePasswordsMatch = FieldValidator.validatePasswordMatch(
-            binding.passwordText,
-            binding.repeatPasswordField,
-            binding.repeatPasswordText
-        )
+        val email = binding.emailText.text.toString()
+        val password = binding.passwordText.text.toString()
+        val repeatPassword = binding.repeatPasswordText.text.toString()
+
+        val isEmailValid = FieldValidator.isValidEmail(email)
+        val isPasswordValid = FieldValidator.isValidPassword(password)
+        val arePasswordsMatch = FieldValidator.doPasswordsMatch(password, repeatPassword)
 
         binding.registrationButton.isEnabled =
             isEmailValid && isPasswordValid && arePasswordsMatch && privacyAccepted
