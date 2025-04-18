@@ -6,6 +6,8 @@ import com.nemislimus.tratometr.authorization.domain.AuthInteractor
 import com.nemislimus.tratometr.authorization.domain.TokensStorageInteractor
 import com.nemislimus.tratometr.authorization.domain.models.Resource
 import com.nemislimus.tratometr.authorization.domain.models.Tokens
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.withContext
 import javax.inject.Inject
 
 class AuthorizationViewModel @Inject constructor(
@@ -14,11 +16,13 @@ class AuthorizationViewModel @Inject constructor(
 ) :
     ViewModel() {
 
-    suspend fun authorization(email: String, password: String): Resource<Tokens> {
-        return authInteractor.login(email, password)
+    suspend fun authorization(email: String, password: String): Resource<Tokens> = withContext(
+        Dispatchers.IO
+    ) {
+        authInteractor.login(email, password)
     }
 
-    fun putTokensToStorage(tokens: Tokens){
+    fun putTokensToStorage(tokens: Tokens) {
         tokensStorageInteractor.putTokens(tokens)
     }
 
