@@ -16,9 +16,9 @@ import com.nemislimus.tratometr.common.appComponent
 import com.nemislimus.tratometr.common.util.BindingFragment
 import com.nemislimus.tratometr.common.util.ExpenseFilter
 import com.nemislimus.tratometr.databinding.FragmentSelectCategoryBinding
-import com.nemislimus.tratometr.expenses.domain.model.Category
 import com.nemislimus.tratometr.expenses.ui.fragment.adpter.SelectCategoryAdapter
 import com.nemislimus.tratometr.expenses.ui.model.CategoryListState
+import com.nemislimus.tratometr.expenses.ui.model.SelectCategoryItem
 import com.nemislimus.tratometr.expenses.ui.viewmodel.SelectCategoryViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -102,12 +102,12 @@ class SelectCategoryFragment : BindingFragment<FragmentSelectCategoryBinding>() 
 
     private fun stateProcessing(state: CategoryListState) {
         when(state) {
-            is CategoryListState.Content -> showContent(state.playlists)
+            is CategoryListState.Content -> showContent(state.categoriesItems)
             CategoryListState.Empty -> showPlaceholder()
         }
     }
 
-    private fun showContent(playlists: List<Category>) {
+    private fun showContent(playlists: List<SelectCategoryItem>) {
         adapter.setCategories(playlists)
         showPlaceholder(false)
     }

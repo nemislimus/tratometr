@@ -4,11 +4,10 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
-import androidx.lifecycle.viewModelScope
 import com.nemislimus.tratometr.expenses.domain.api.ExpenseHistoryInteractor
+import com.nemislimus.tratometr.expenses.domain.model.Category
 import com.nemislimus.tratometr.expenses.ui.model.CategoryListState
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
+import com.nemislimus.tratometr.expenses.ui.model.SelectCategoryItem
 import javax.inject.Inject
 
 class SelectCategoryViewModel(
@@ -22,7 +21,17 @@ class SelectCategoryViewModel(
         val categories = interactor.getAllCategoriesListWithIcons()
         when {
             categories.isEmpty() -> state.postValue(CategoryListState.Empty)
-            else -> state.postValue(CategoryListState.Content(categories))
+            else -> state.postValue(CategoryListState.Content(mapCatsToItems(categories)))
+        }
+    }
+
+    private fun mapCatsToItems(categories: List<Category>): List<SelectCategoryItem> {
+        return categories.map { cat ->
+            SelectCategoryItem(
+                name = cat.name,
+                iconResId = cat.iconResId,
+                false
+            )
         }
     }
 
