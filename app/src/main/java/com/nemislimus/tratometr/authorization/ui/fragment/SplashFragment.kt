@@ -75,6 +75,12 @@ class SplashFragment : BindingFragment<FragmentSplashBinding>() {
             )
         }
 
+        binding.btnAnalytics.setOnClickListener {
+            findNavController().navigate(
+                R.id.action_splashFragment_to_analyticsFragment
+            )
+        }
+
        lifecycleScope.launch {
            //viewModel.clearTokens() //Добавил его тут для тестирования
            delay(FOUR_SECONDS)
