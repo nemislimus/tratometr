@@ -7,6 +7,7 @@ import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
 import android.text.format.DateFormat
+import android.util.Log
 import android.util.TypedValue
 import android.view.LayoutInflater
 import android.view.View
@@ -66,12 +67,14 @@ class CreateExpenseFragment : BindingFragment<FragmentCreateExpenseBinding>() {
     override fun onAttach(context: Context) {
         context.appComponent.inject(this)
         super.onAttach(context)
+        Log.e("МОЁ", "onAttach")
     }
 
     override fun createBinding(
         inflater: LayoutInflater,
         container: ViewGroup?
     ): FragmentCreateExpenseBinding {
+        Log.e("МОЁ", "createBinding")
         return FragmentCreateExpenseBinding.inflate(inflater,container,false)
     }
 
@@ -206,10 +209,15 @@ class CreateExpenseFragment : BindingFragment<FragmentCreateExpenseBinding>() {
                 // Проверка, надо ли сделать кнопку Сохранить активной
                 binding.btnAction!!.isEnabled = enableBtnAction()
                 // Если сумма введена правильно, убираем индикацию ошибки
-                val amount = BigDecimal(binding.etAmount.text.toString()).setScale(2, RoundingMode.HALF_UP)
-                if (amount >= BigDecimal("0.01") && amount <= BigDecimal("999999999999999")) {
-                    errorState(false, binding.etAmount)
-                    binding.amountError!!.isVisible = false
+                if (binding.etAmount.text.isNotEmpty()) {
+                    val amount = BigDecimal(binding.etAmount.text.toString()).setScale(
+                        2,
+                        RoundingMode.HALF_UP
+                    )
+                    if (amount >= BigDecimal("0.01") && amount <= BigDecimal("999999999999999")) {
+                        errorState(false, binding.etAmount)
+                        binding.amountError!!.isVisible = false
+                    }
                 }
             }
         })
@@ -239,9 +247,9 @@ class CreateExpenseFragment : BindingFragment<FragmentCreateExpenseBinding>() {
     }
 
     private fun openCategoryWindow(category: String){
-        Toast.makeText(requireContext(), "Переход к окну Создание категории", Toast.LENGTH_SHORT).show()
+        findNavController().navigate(R.id.action_createExpenseFragment_to_createCategoryFragment)
         // Для отладки создаем категорию ***********************************************************************************
-        val icons = listOf(
+        /*val icons = listOf(
             R.drawable.ic_custom_cat_01,
             R.drawable.ic_custom_cat_02,
             R.drawable.ic_custom_cat_03,
@@ -252,7 +260,7 @@ class CreateExpenseFragment : BindingFragment<FragmentCreateExpenseBinding>() {
         val newCategory = Category(autoCompleteTextView.text.toString(), icons[randomIndex])
         viewModel.addNewCategory(newCategory) {
             updateItems()
-        }
+        }*/
         //********************************************************************************************************************
     }
 
@@ -375,6 +383,30 @@ class CreateExpenseFragment : BindingFragment<FragmentCreateExpenseBinding>() {
         } else {
             requireArguments().getSerializable(EXTRA_EXPENSE) as Expense
         }
+    }
 
+    override fun onStart() {
+        super.onStart()
+        Log.e("МОЁ", "onStart")
+    }
+
+    override fun onResume() {
+        super.onResume()
+        Log.e("МОЁ", "onResume")
+    }
+
+    override fun onPause() {
+        super.onPause()
+        Log.e("МОЁ", "onPause")
+    }
+
+    override fun onStop() {
+        super.onStop()
+        Log.e("МОЁ", "onStop")
+    }
+
+    override fun onDestroyFragment() {
+        super.onDestroyFragment()
+        Log.e("МОЁ", "onDestroyFragment")
     }
 }

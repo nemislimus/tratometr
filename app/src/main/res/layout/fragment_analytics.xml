@@ -8,12 +8,10 @@
     android:background="@android:color/transparent"
     tools:context=".analytics.ui.fragment.AnalyticsFragment">
 
-    <TextView
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:textAlignment="center"
-        android:text="АНАЛИТИКА"
-        android:textSize="24sp"
+    <com.nemislimus.tratometr.common.util.RingChartView
+        android:id="@+id/ring_chart"
+        android:layout_width="130dp"
+        android:layout_height="130dp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
