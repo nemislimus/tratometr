@@ -25,7 +25,7 @@ class DataModule {
 
     @Singleton
     @Provides
-    fun provideDataBaseConverter(): DBConverter = DBConverter()
+    fun provideDataBaseConverter(context: Context): DBConverter = DBConverter(context)
 
     // NETWORK SECTION
     @Singleton
