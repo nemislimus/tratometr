@@ -104,4 +104,5 @@
     <string name="ninth_header">9. Контактная информация</string>
     <string name="ninth_text">По вопросам, связанным с обработкой персональных данных, пользователь может обратиться по адресу: office@spendwise.com\n\n
 Дата последнего обновления: 31.03.2025</string>
+    <string name="sort">Сортировать</string>
 </resources>

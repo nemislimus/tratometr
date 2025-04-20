@@ -84,6 +84,13 @@
         <item name="android:letterSpacing">-0.04</item>
     </style>
 
+    <style name="AppTextAnalyticsAmount">
+        <item name="android:fontFamily">@font/manrope_weight600_semibold</item>
+        <item name="android:textSize">@dimen/text_size_20</item>
+        <item name="android:textAllCaps">false</item>
+        <item name="android:letterSpacing">-0.02</item>
+    </style>
+
     <style name="AppEditTextPrimary" parent="AppTextPrimary">
         <item name="android:textColorHint">?attr/appTextSecondary</item>
         <item name="android:textCursorDrawable">@drawable/blue_cursor</item>

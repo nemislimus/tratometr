@@ -45,7 +45,7 @@ class AnalyticsFragment : BindingFragment<FragmentAnalyticsBinding>() {
             ContextCompat.getColor(context, R.color.chart_color_4),
         )
 
-        binding.ringChart.setData(colorsList, sumList)
+        binding.rcvMainChart.setData(colorsList, sumList)
 
     }
 }

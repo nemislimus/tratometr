@@ -27,6 +27,7 @@ class RingChartView @JvmOverloads constructor(
     private val rect = RectF()
     val data = mutableListOf<BigDecimal>() // Значения для диаграммы
     private val colors = mutableListOf<Int>()
+
     override fun onDraw(canvas: Canvas) {
         super.onDraw(canvas)
         drawRingChart(canvas)
