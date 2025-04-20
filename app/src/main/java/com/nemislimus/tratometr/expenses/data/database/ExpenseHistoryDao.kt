@@ -51,8 +51,8 @@ class ExpenseHistoryDao @Inject constructor(
                 val amount = cursor.getLong(2)
                 val categoryName = cursor.getString(3)
                 val note = cursor.getString(4)
-                val iconResId = cursor.getInt(5)
-                expenses.add(ExpenseEntity(id, date, amount, categoryName, iconResId, note))
+                val iconResString = cursor.getString(5)
+                expenses.add(ExpenseEntity(id, date, amount, categoryName, iconResString, note))
             } while (cursor.moveToNext())
         }
         cursor.close()
@@ -82,8 +82,8 @@ class ExpenseHistoryDao @Inject constructor(
         if (cursor.moveToFirst()) {
             do {
              val categoryName = cursor.getString(0)
-             val iconResId = cursor.getInt(1)
-             categories.add(CategoryEntity(categoryName, iconResId))
+             val iconResString = cursor.getString(1)
+             categories.add(CategoryEntity(categoryName, iconResString))
             } while (cursor.moveToNext())
         }
         cursor.close()
@@ -152,8 +152,8 @@ class ExpenseHistoryDao @Inject constructor(
         if (cursor.moveToFirst()) {
             do {
                 val categoryName = cursor.getString(0)
-                val iconResId = cursor.getInt(1)
-                categories.add(CategoryEntity(categoryName, iconResId))
+                val iconResString = cursor.getString(1)
+                categories.add(CategoryEntity(categoryName, iconResString))
             } while (cursor.moveToNext())
         }
         cursor.close()
@@ -190,7 +190,7 @@ class ExpenseHistoryDao @Inject constructor(
         val db = databaseHelper.writableDatabase
         val contentValues = ContentValues().apply {
             put("CATEGORY_NAME", category.name)
-            put("ICON_RES_ID", category.iconResId)
+            put("ICON_RES_ID", category.iconResString)
         }
         db.insert("CATEGORIES", null, contentValues)
         db.close()

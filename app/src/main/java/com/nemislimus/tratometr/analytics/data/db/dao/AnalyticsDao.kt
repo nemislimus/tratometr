@@ -47,8 +47,8 @@ class AnalyticsDao @Inject constructor(
         if (cursor.moveToFirst()) {
             do {
                 val categoryName = cursor.getString(0)
-                val iconResId = cursor.getInt(1)
-                categories.add(CategoryEntity(categoryName, iconResId))
+                val iconResString = cursor.getString(1)
+                categories.add(CategoryEntity(categoryName, iconResString))
             } while (cursor.moveToNext())
         }
         cursor.close()
