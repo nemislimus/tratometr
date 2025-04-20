@@ -47,6 +47,7 @@ class AutoCompleteAdapter(
         val textAdd: TextView = view.findViewById(R.id.text_add)
 
         textView.text = item.name
+        textView.isVisible = item.name.isNotEmpty()
         if (item.isAdd) {
             textAdd.isVisible = true
             iconImageView.setBackgroundResource(R.drawable.btn_plus_background)
