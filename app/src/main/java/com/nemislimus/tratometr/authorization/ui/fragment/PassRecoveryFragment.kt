@@ -54,16 +54,21 @@ class PassRecoveryFragment : BindingFragment<FragmentPassrecoveryBinding>() {
             lifecycleScope.launch {
                 val response = viewModel.recoverPass(email)
 
-                when(response){
+                when (response) {
                     is Resource.Success -> {
                         showToast(getString(R.string.success))
                         findNavController().navigate(R.id.action_passRecoveryFragment_to_newPassFragment)
                     }
+
                     is Resource.Error -> {
                         showToast(response.message.toString())
                     }
                 }
             }
+        }
+
+        binding.backButton.setOnClickListener {
+            requireActivity().onBackPressedDispatcher.onBackPressed()
         }
     }
 
@@ -74,7 +79,7 @@ class PassRecoveryFragment : BindingFragment<FragmentPassrecoveryBinding>() {
         binding.recoverButton.isEnabled = isEmailValid
     }
 
-    private fun showToast(message: String){
+    private fun showToast(message: String) {
         Toast.makeText(requireContext(), message, Toast.LENGTH_SHORT).show()
     }
 }
