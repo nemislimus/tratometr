@@ -8,9 +8,10 @@ import android.view.ViewGroup
 import android.widget.Toast
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
+import androidx.navigation.fragment.findNavController
+import com.nemislimus.tratometr.R
 import com.nemislimus.tratometr.authorization.domain.models.Resource
 import com.nemislimus.tratometr.authorization.ui.viewmodel.PassRecoveryViewModel
-import com.nemislimus.tratometr.authorization.ui.viewmodel.RegistrationViewModel
 import com.nemislimus.tratometr.common.appComponent
 import com.nemislimus.tratometr.common.util.BindingFragment
 import com.nemislimus.tratometr.common.util.FieldValidator
@@ -55,7 +56,8 @@ class PassRecoveryFragment : BindingFragment<FragmentPassrecoveryBinding>() {
 
                 when(response){
                     is Resource.Success -> {
-                        showToast("Успешно")
+                        showToast(getString(R.string.success))
+                        findNavController().navigate(R.id.action_passRecoveryFragment_to_newPassFragment)
                     }
                     is Resource.Error -> {
                         showToast(response.message.toString())

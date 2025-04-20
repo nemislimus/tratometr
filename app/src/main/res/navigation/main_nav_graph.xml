@@ -50,7 +50,11 @@
         android:id="@+id/passRecoveryFragment"
         android:name="com.nemislimus.tratometr.authorization.ui.fragment.PassRecoveryFragment"
         android:label="fragment_passrecovery"
-        tools:layout="@layout/fragment_passrecovery" />
+        tools:layout="@layout/fragment_passrecovery" >
+        <action
+            android:id="@+id/action_passRecoveryFragment_to_newPassFragment"
+            app:destination="@id/newPassFragment" />
+    </fragment>
 
     <fragment
         android:id="@+id/registrationFragment"
@@ -125,5 +129,17 @@
         android:name="com.nemislimus.tratometr.expenses.ui.fragment.CreateCategoryFragment"
         android:label="fragment_create_category"
         tools:layout="@layout/fragment_create_category" />
+    <fragment
+        android:id="@+id/newPassFragment"
+        android:name="com.nemislimus.tratometr.authorization.ui.fragment.NewPassFragment"
+        android:label="fragment_new_pass"
+        tools:layout="@layout/fragment_new_pass" >
+        <action
+            android:id="@+id/action_newPassFragment_to_authorizationFragment"
+            app:destination="@id/authorizationFragment" />
+        <action
+            android:id="@+id/action_newPassFragment_to_expensesFragment"
+            app:destination="@id/expensesFragment" />
+    </fragment>
 
 </navigation>

@@ -116,5 +116,10 @@
     <string name="recover_password">Восстановить пароль</string>
     <string name="recovery_text">Введите адрес, указаный при регистрации. На него придет код восстановления</string>
     <string name="send">Отправить</string>
+    <string name="new_password">Новый пароль</string>
+    <string name="confirm">Подтвердить</string>
+    <string name="return_to_auth">Вернуться на экран авторизации</string>
+    <string name="success">Успешно</string>
+    <string name="new_pass_is_set">Новый пароль установлен(нет)</string>
 
 </resources>
