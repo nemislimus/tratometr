@@ -7,7 +7,6 @@ import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
 import android.text.format.DateFormat
-import android.util.Log
 import android.util.TypedValue
 import android.view.LayoutInflater
 import android.view.View
@@ -15,7 +14,6 @@ import android.view.ViewGroup
 import android.widget.AutoCompleteTextView
 import android.widget.EditText
 import android.widget.ImageView
-import android.widget.Toast
 import androidx.appcompat.content.res.AppCompatResources
 import androidx.core.os.bundleOf
 import androidx.core.view.isVisible
@@ -26,7 +24,6 @@ import com.nemislimus.tratometr.R
 import com.nemislimus.tratometr.common.appComponent
 import com.nemislimus.tratometr.common.util.BindingFragment
 import com.nemislimus.tratometr.databinding.FragmentCreateExpenseBinding
-import com.nemislimus.tratometr.expenses.domain.model.Category
 import com.nemislimus.tratometr.expenses.domain.model.Expense
 import com.nemislimus.tratometr.expenses.ui.model.AutoCompleteItem
 import com.nemislimus.tratometr.expenses.ui.fragment.adpter.AutoCompleteAdapter
@@ -37,7 +34,6 @@ import java.math.RoundingMode
 import java.util.Calendar
 import java.util.TimeZone
 import javax.inject.Inject
-import kotlin.random.Random
 
 class CreateExpenseFragment : BindingFragment<FragmentCreateExpenseBinding>() {
 
@@ -49,6 +45,7 @@ class CreateExpenseFragment : BindingFragment<FragmentCreateExpenseBinding>() {
     }
 
     private var expense: Expense? = null
+    private var iconResId = 0
     private var isAddMode = true                        // Режим true - добавление, false - редактирование
     private lateinit var itemsOriginal: List<AutoCompleteItem>
     private lateinit var items: MutableList<AutoCompleteItem>
@@ -67,14 +64,12 @@ class CreateExpenseFragment : BindingFragment<FragmentCreateExpenseBinding>() {
     override fun onAttach(context: Context) {
         context.appComponent.inject(this)
         super.onAttach(context)
-        Log.e("МОЁ", "onAttach")
     }
 
     override fun createBinding(
         inflater: LayoutInflater,
         container: ViewGroup?
     ): FragmentCreateExpenseBinding {
-        Log.e("МОЁ", "createBinding")
         return FragmentCreateExpenseBinding.inflate(inflater,container,false)
     }
 
@@ -124,6 +119,7 @@ class CreateExpenseFragment : BindingFragment<FragmentCreateExpenseBinding>() {
             val selectedItem = (parent.getItemAtPosition(position) as AutoCompleteItem)
             if (!selectedItem.isAdd) {
                 autoCompleteTextView.setText(selectedItem.name)
+                iconResId = selectedItem.iconResId
                 showIcons(selectedItem.iconResId)
                 // Убираем индикацию ошибки
                 errorState(false, binding.actvCategory)
@@ -235,7 +231,7 @@ class CreateExpenseFragment : BindingFragment<FragmentCreateExpenseBinding>() {
             dateInMilisecond,
             BigDecimal(binding.etAmount.text.toString()),
             binding.actvCategory.text.toString(),
-            0,
+            iconResId,
             binding.etDescription.text.toString()
         )
         if (isAddMode) {
@@ -248,20 +244,6 @@ class CreateExpenseFragment : BindingFragment<FragmentCreateExpenseBinding>() {
 
     private fun openCategoryWindow(category: String){
         findNavController().navigate(R.id.action_createExpenseFragment_to_createCategoryFragment)
-        // Для отладки создаем категорию ***********************************************************************************
-        /*val icons = listOf(
-            R.drawable.ic_custom_cat_01,
-            R.drawable.ic_custom_cat_02,
-            R.drawable.ic_custom_cat_03,
-            R.drawable.ic_custom_cat_04,
-            R.drawable.ic_custom_cat_05
-        )
-        val randomIndex = Random.nextInt(0, 5)
-        val newCategory = Category(autoCompleteTextView.text.toString(), icons[randomIndex])
-        viewModel.addNewCategory(newCategory) {
-            updateItems()
-        }*/
-        //********************************************************************************************************************
     }
 
     private fun showIcons(iconResId: Int?) {
@@ -383,30 +365,5 @@ class CreateExpenseFragment : BindingFragment<FragmentCreateExpenseBinding>() {
         } else {
             requireArguments().getSerializable(EXTRA_EXPENSE) as Expense
         }
-    }
-
-    override fun onStart() {
-        super.onStart()
-        Log.e("МОЁ", "onStart")
-    }
-
-    override fun onResume() {
-        super.onResume()
-        Log.e("МОЁ", "onResume")
-    }
-
-    override fun onPause() {
-        super.onPause()
-        Log.e("МОЁ", "onPause")
-    }
-
-    override fun onStop() {
-        super.onStop()
-        Log.e("МОЁ", "onStop")
-    }
-
-    override fun onDestroyFragment() {
-        super.onDestroyFragment()
-        Log.e("МОЁ", "onDestroyFragment")
     }
 }

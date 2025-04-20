@@ -4,7 +4,7 @@ import android.content.Context
 import android.database.sqlite.SQLiteDatabase
 import android.database.sqlite.SQLiteOpenHelper
 
-class DBHelper (context: Context) :
+class DBHelper (context: Context):
     SQLiteOpenHelper(context, DB_NAME, null, DB_VERSION) {
 
     override fun onCreate(db: SQLiteDatabase) {
@@ -22,7 +22,7 @@ class DBHelper (context: Context) :
         db.execSQL(
             "CREATE TABLE CATEGORIES ("
                     + "CATEGORY_NAME TEXT PRIMARY KEY," // Название категории - первичный ключ
-                    + "ICON_RES_ID INTEGER NOT NULL);"           // id иконки
+                    + "ICON_RES_ID TEXT NOT NULL);"           // id иконки
         )
     }
 
