@@ -1,5 +1,6 @@
 package com.nemislimus.tratometr.expenses.ui.fragment.viewholder
 
+import androidx.core.view.isVisible
 import androidx.recyclerview.widget.RecyclerView
 import com.nemislimus.tratometr.common.util.MoneyConverter
 import com.nemislimus.tratometr.databinding.ItemHistoryExpenseBinding
@@ -17,7 +18,9 @@ class ExpensesViewHolder(private val binding: ItemHistoryExpenseBinding) : Recyc
 
     fun bind(expenseItem: Historical.HistoryContent) {
         item = expenseItem
+        tvCategory.isVisible = expenseItem.expense.category.isNotEmpty()
         tvCategory.text = expenseItem.expense.category
+        tvDescription.isVisible = !expenseItem.expense.description.isNullOrEmpty()
         tvDescription.text = expenseItem.expense.description
         with(binding.flForeground) {
             icon.setImageResource(expenseItem.expense.iconResId)
