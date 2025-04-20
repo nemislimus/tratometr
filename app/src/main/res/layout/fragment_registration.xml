@@ -112,7 +112,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="@dimen/size_32dp"
-            android:text="Какая-то ошибка"
+            tools:text="Какая-то ошибка"
             android:textColor="#d92d20"
             android:visibility="gone" />
 
