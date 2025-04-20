@@ -113,5 +113,8 @@
 <p>По вопросам, связанным с обработкой персональных данных, пользователь может обратиться по адресу: <a href="mailto:office@spendwise.com">office@spendwise.com</a></p>
 <p><b>Дата последнего обновления:</b> 31.03.2025</p>
 ]]></string>
+    <string name="recover_password">Восстановить пароль</string>
+    <string name="recovery_text">Введите адрес, указаный при регистрации. На него придет код восстановления</string>
+    <string name="send">Отправить</string>
 
 </resources>
