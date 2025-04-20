@@ -12,6 +12,8 @@ import com.nemislimus.tratometr.authorization.domain.models.Tokens
 import com.nemislimus.tratometr.settings.domain.GetDarkModeValueUseCase
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
+import okhttp3.Dispatcher
 import javax.inject.Inject
 
 class SplashViewModel (
@@ -23,21 +25,21 @@ class SplashViewModel (
     private val _isDarkMode = MutableLiveData<Boolean>()
     fun isDarkMode(): LiveData<Boolean> = _isDarkMode
 
-    suspend fun checkAccessToken(): Boolean? {
+    suspend fun checkAccessToken(): Boolean? = withContext(Dispatchers.IO) {
         val accessToken = tokensStorageInteractor.getTokens().accessToken
-        return authInteractor.check(accessToken).value == true
+        authInteractor.check(accessToken).value == true
     }
 
-    suspend fun refreshTokens(): Resource<Tokens>{
+    suspend fun refreshTokens(): Resource<Tokens> = withContext(Dispatchers.IO){
         val refreshToken = tokensStorageInteractor.getTokens().refreshToken ?: ""
         val resource = authInteractor.refresh(refreshToken)
         var freshTokens = Tokens(null, null)
         if (resource is Resource.Success){
             freshTokens = resource.value!!
             putTokensToStorage(freshTokens)
-            return resource
+            resource
         } else {
-            return resource
+            resource
         }
     }
 

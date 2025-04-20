@@ -14,7 +14,6 @@ import android.view.ViewGroup
 import android.widget.AutoCompleteTextView
 import android.widget.EditText
 import android.widget.ImageView
-import android.widget.Toast
 import androidx.appcompat.content.res.AppCompatResources
 import androidx.core.os.bundleOf
 import androidx.core.view.isVisible
@@ -25,7 +24,6 @@ import com.nemislimus.tratometr.R
 import com.nemislimus.tratometr.common.appComponent
 import com.nemislimus.tratometr.common.util.BindingFragment
 import com.nemislimus.tratometr.databinding.FragmentCreateExpenseBinding
-import com.nemislimus.tratometr.expenses.domain.model.Category
 import com.nemislimus.tratometr.expenses.domain.model.Expense
 import com.nemislimus.tratometr.expenses.ui.model.AutoCompleteItem
 import com.nemislimus.tratometr.expenses.ui.fragment.adpter.AutoCompleteAdapter
@@ -36,7 +34,6 @@ import java.math.RoundingMode
 import java.util.Calendar
 import java.util.TimeZone
 import javax.inject.Inject
-import kotlin.random.Random
 
 class CreateExpenseFragment : BindingFragment<FragmentCreateExpenseBinding>() {
 
@@ -48,6 +45,7 @@ class CreateExpenseFragment : BindingFragment<FragmentCreateExpenseBinding>() {
     }
 
     private var expense: Expense? = null
+    private var iconResId = 0
     private var isAddMode = true                        // Режим true - добавление, false - редактирование
     private lateinit var itemsOriginal: List<AutoCompleteItem>
     private lateinit var items: MutableList<AutoCompleteItem>
@@ -121,6 +119,7 @@ class CreateExpenseFragment : BindingFragment<FragmentCreateExpenseBinding>() {
             val selectedItem = (parent.getItemAtPosition(position) as AutoCompleteItem)
             if (!selectedItem.isAdd) {
                 autoCompleteTextView.setText(selectedItem.name)
+                iconResId = selectedItem.iconResId
                 showIcons(selectedItem.iconResId)
                 // Убираем индикацию ошибки
                 errorState(false, binding.actvCategory)
@@ -206,10 +205,15 @@ class CreateExpenseFragment : BindingFragment<FragmentCreateExpenseBinding>() {
                 // Проверка, надо ли сделать кнопку Сохранить активной
                 binding.btnAction!!.isEnabled = enableBtnAction()
                 // Если сумма введена правильно, убираем индикацию ошибки
-                val amount = BigDecimal(binding.etAmount.text.toString()).setScale(2, RoundingMode.HALF_UP)
-                if (amount >= BigDecimal("0.01") && amount <= BigDecimal("999999999999999")) {
-                    errorState(false, binding.etAmount)
-                    binding.amountError!!.isVisible = false
+                if (binding.etAmount.text.isNotEmpty()) {
+                    val amount = BigDecimal(binding.etAmount.text.toString()).setScale(
+                        2,
+                        RoundingMode.HALF_UP
+                    )
+                    if (amount >= BigDecimal("0.01") && amount <= BigDecimal("999999999999999")) {
+                        errorState(false, binding.etAmount)
+                        binding.amountError!!.isVisible = false
+                    }
                 }
             }
         })
@@ -227,7 +231,7 @@ class CreateExpenseFragment : BindingFragment<FragmentCreateExpenseBinding>() {
             dateInMilisecond,
             BigDecimal(binding.etAmount.text.toString()),
             binding.actvCategory.text.toString(),
-            0,
+            iconResId,
             binding.etDescription.text.toString()
         )
         if (isAddMode) {
@@ -239,21 +243,7 @@ class CreateExpenseFragment : BindingFragment<FragmentCreateExpenseBinding>() {
     }
 
     private fun openCategoryWindow(category: String){
-        Toast.makeText(requireContext(), "Переход к окну Создание категории", Toast.LENGTH_SHORT).show()
-        // Для отладки создаем категорию ***********************************************************************************
-        val icons = listOf(
-            R.drawable.ic_custom_cat_01,
-            R.drawable.ic_custom_cat_02,
-            R.drawable.ic_custom_cat_03,
-            R.drawable.ic_custom_cat_04,
-            R.drawable.ic_custom_cat_05
-        )
-        val randomIndex = Random.nextInt(0, 5)
-        val newCategory = Category(autoCompleteTextView.text.toString(), icons[randomIndex])
-        viewModel.addNewCategory(newCategory) {
-            updateItems()
-        }
-        //********************************************************************************************************************
+        findNavController().navigate(R.id.action_createExpenseFragment_to_createCategoryFragment)
     }
 
     private fun showIcons(iconResId: Int?) {
@@ -375,6 +365,5 @@ class CreateExpenseFragment : BindingFragment<FragmentCreateExpenseBinding>() {
         } else {
             requireArguments().getSerializable(EXTRA_EXPENSE) as Expense
         }
-
     }
 }

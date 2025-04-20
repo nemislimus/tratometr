@@ -94,9 +94,13 @@ class AuthorizationFragment : BindingFragment<FragmentAuthorizationBinding>() {
     }
 
     private fun updateLoginButtonState() {
-        val isEmailValid = FieldValidator.validateEmail(binding.emailField, binding.emailText)
-        val isPasswordValid =
-            FieldValidator.validatePassword(binding.passwordField, binding.passwordText)
-        binding.loginButton.isEnabled = isEmailValid && isPasswordValid
+        val email = binding.emailText.text.toString()
+        val password = binding.passwordText.text.toString()
+
+        val isEmailValid = FieldValidator.isValidEmail(email)
+        val isPasswordValid = FieldValidator.isValidPassword(password)
+
+        binding.loginButton.isEnabled =
+            isEmailValid && isPasswordValid
     }
 }

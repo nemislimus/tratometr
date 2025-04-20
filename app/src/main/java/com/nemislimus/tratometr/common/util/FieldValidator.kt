@@ -19,32 +19,32 @@ object FieldValidator {
     fun validateEmail(
         emailField: TextInputLayout,
         emailText: TextInputEditText
-    ): Boolean {
+    ) {
         return if (emailText.text.toString().trim().isEmpty()) {
             emailField.error = REQUIRED_FIELD
-            false
+
         } else if (!isValidEmail(emailText.text.toString())) {
             emailField.error = INVALID_EMAIL
-            false
+
         } else {
             emailField.isErrorEnabled = false
-            true
+
         }
     }
 
     fun validatePassword(
         passwordField: TextInputLayout,
         passwordText: TextInputEditText
-    ): Boolean {
+    ) {
         return if (passwordText.text.toString().trim().isEmpty()) {
             passwordField.error = REQUIRED_FIELD
-            false
+
         } else if (passwordText.text.toString().length < MIN_PASSWORD_LENGTH) {
             passwordField.error = SHORT_PASSWORD
-            false
+
         } else {
             passwordField.isErrorEnabled = false
-            true
+
         }
     }
 
@@ -52,25 +52,31 @@ object FieldValidator {
         passwordText: TextInputEditText,
         repeatPasswordField: TextInputLayout,
         repeatPasswordText: TextInputEditText
-    ): Boolean {
+    ) {
         val password = passwordText.text.toString()
         val repeatPassword = repeatPasswordText.text.toString()
 
         return when {
             password.isEmpty() || repeatPassword.isEmpty() -> {
                 repeatPasswordField.error = null
-                false
             }
 
             password != repeatPassword -> {
                 repeatPasswordField.error = NOT_MATCH
-                false
             }
 
             else -> {
                 repeatPasswordField.error = null
-                true
             }
         }
     }
+
+    fun isFieldNotEmpty(text: String): Boolean = text.trim().isNotEmpty()
+
+    fun isValidPassword(password: String): Boolean =
+        password.length >= MIN_PASSWORD_LENGTH
+
+    fun doPasswordsMatch(password: String, repeatPassword: String): Boolean =
+        password == repeatPassword
+
 }
