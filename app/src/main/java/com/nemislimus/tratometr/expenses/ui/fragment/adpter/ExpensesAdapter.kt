@@ -3,7 +3,6 @@ package com.nemislimus.tratometr.expenses.ui.fragment.adpter
 import android.annotation.SuppressLint
 import android.text.TextUtils
 import android.view.LayoutInflater
-import android.view.MotionEvent
 import android.view.ViewGroup
 import android.view.animation.AnimationUtils
 import android.widget.TextView
@@ -15,15 +14,10 @@ import com.nemislimus.tratometr.expenses.ui.fragment.ExpensesFragment
 import com.nemislimus.tratometr.expenses.ui.fragment.viewholder.ExpensesDateViewHolder
 import com.nemislimus.tratometr.expenses.ui.fragment.viewholder.ExpensesViewHolder
 import com.nemislimus.tratometr.expenses.ui.viewmodel.history_model.Historical
-import kotlin.math.abs
 
 class ExpensesAdapter(private val listener: ExpensesAdapterListener): RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
     var items = mutableListOf<Historical>()
-
-    companion object {
-        const val SWIPE_THRESHOLD = 10
-    }
 
     override fun getItemViewType(position: Int): Int {
         return when (items[position]) {
