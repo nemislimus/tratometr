@@ -109,6 +109,8 @@ class CreateExpenseFragment : BindingFragment<FragmentCreateExpenseBinding>() {
         binding.root.setOnClickListener { requestTouchFocus(binding.root) }
 
         autoCompleteTextView.threshold = 1  // Начинать показывать предложения после ввода 1 символа
+        // Открыть список при клике или получении фокуса
+        autoCompleteTextView.setOnClickListener { autoCompleteTextView.showDropDown() }
         autoCompleteTextView.setOnFocusChangeListener { _, hasFocus ->
             if (hasFocus) autoCompleteTextView.showDropDown() // Открыть список при получении фокуса
         }
