@@ -307,9 +307,9 @@ class CreateExpenseFragment : BindingFragment<FragmentCreateExpenseBinding>() {
             view.setTextColor(typedValue.data)
             view.setBackgroundResource(R.drawable.card_background_error)
         } else {
-            view.setBackgroundResource(R.drawable.card_background_regular)
             requireContext().theme.resolveAttribute(R.attr.appTextPrimary, typedValue, true)
             view.setTextColor(typedValue.data)
+            view.setBackgroundResource(R.drawable.card_background_selector)
         }
         if (view == binding.actvCategory) {
             binding.categoryError!!.isVisible = isError
@@ -352,7 +352,7 @@ class CreateExpenseFragment : BindingFragment<FragmentCreateExpenseBinding>() {
         return if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
             requireArguments().getSerializable(EXTRA_EXPENSE, Expense::class.java)
         } else {
-            requireArguments().getSerializable(EXTRA_EXPENSE) as Expense
+            requireArguments().getSerializable(EXTRA_EXPENSE) as? Expense
         }
     }
 

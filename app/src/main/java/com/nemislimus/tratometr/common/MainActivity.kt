@@ -24,6 +24,9 @@ class MainActivity : AppCompatActivity() {
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
+        val navHostFragment = supportFragmentManager.findFragmentById(R.id.mainFragmentContainer) as NavHostFragment
+        val navController = navHostFragment.navController
+
         expensesBackPressedCallback = object : OnBackPressedCallback(true) {
             override fun handleOnBackPressed() {
                 if (isBackPressedOnce) {
@@ -40,9 +43,6 @@ class MainActivity : AppCompatActivity() {
             }
         }
         onBackPressedDispatcher.addCallback(this, expensesBackPressedCallback)
-
-        val navHostFragment = supportFragmentManager.findFragmentById(R.id.mainFragmentContainer) as NavHostFragment
-        val navController = navHostFragment.navController
 
         navController.addOnDestinationChangedListener { _, destination, _ ->
             expensesBackPressedCallback.isEnabled = destination.id == R.id.expensesFragment

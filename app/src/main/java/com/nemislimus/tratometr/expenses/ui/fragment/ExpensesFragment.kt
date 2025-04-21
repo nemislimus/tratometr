@@ -294,11 +294,9 @@ class ExpensesFragment : BindingFragment<FragmentExpensesBinding>(), ExpenseFilt
         scrollJob.cancel()
         scrollJob = lifecycleScope.launch {
             delay(1200)
-            val fadeOutAnimator = ObjectAnimator.ofFloat(binding.ivBtnScroll, "alpha", 0.7f, 0f)
-            fadeOutAnimator.duration = 300
-            fadeOutAnimator.start()
-            delay(300)
-            binding.ivBtnScroll.isVisible = false
+            if (binding.ivBtnScroll != null) {
+                binding.ivBtnScroll.isVisible = false
+            }
         }
     }
 }
