@@ -46,6 +46,7 @@
     <string name="category_list_placeholder_text">Добавьте новые категории расходов.\nДля этого нажмите на кнопку\n\"Новая категория\"</string>
     <string name="authorization">Авторизация</string>
     <string name="registration">Регистрация</string>
+    <string name="text_exit">Нажмите еще раз, чтобы выйти</string>
 
     <string name="agreement_check">Нажимая кнопку, вы соглашаетесь с Политикой конфиденциальности и обработки персональных данных</string>
     <string name="register">Зарегистрироваться</string>

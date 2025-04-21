@@ -4,7 +4,6 @@ import android.annotation.SuppressLint
 import android.content.Context
 import android.content.res.ColorStateList
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -62,8 +61,6 @@ class ExpensesFragment : BindingFragment<FragmentExpensesBinding>(), ExpenseFilt
         recycler = binding.recycler
         initializingRecyclerView()  // Создание рециклера
 
-        // Подписываемся на наблюдение за фильтром
-        ExpenseFilter.addExpenseFilterListener(this)
         // Подписываемся на наблюдение за данными из БД
         viewModel.getExpensesLiveData().observe(viewLifecycleOwner) { state ->
             binding.progressBar.isVisible = false
@@ -135,11 +132,15 @@ class ExpensesFragment : BindingFragment<FragmentExpensesBinding>(), ExpenseFilt
             requestFocusToCalendar()
             false
         }
+    }
 
+    override fun onStart() {
+        super.onStart()
+        // Подписываемся на наблюдение за фильтром
+        ExpenseFilter.addExpenseFilterListener(this)
     }
 
     override fun onFilterChanged(expenseFilter: ExpenseFilter) {
-        Log.e("МОЁ", expenseFilter.category.toString())
         // Заполняем поле период
         binding.tvRange.text = DateRangeHelper.convertDatesInRange(
             requireContext(),
@@ -244,8 +245,8 @@ class ExpensesFragment : BindingFragment<FragmentExpensesBinding>(), ExpenseFilt
         }
     }
 
-    override fun onDestroyView() {
-        super.onDestroyView()
+    override fun onStop() {
+        super.onStop()
         // Удаляем текущий фрагмент как наблюдателя
         ExpenseFilter.removeExpenseFilterListener(this)
     }
