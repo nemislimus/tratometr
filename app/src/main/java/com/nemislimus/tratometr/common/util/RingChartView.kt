@@ -3,19 +3,14 @@ package com.nemislimus.tratometr.common.util
 import android.annotation.SuppressLint
 import android.content.Context
 import android.graphics.Canvas
-import android.graphics.Color
 import android.graphics.Paint
 import android.graphics.RectF
-import android.graphics.drawable.Drawable
 import android.util.AttributeSet
 import android.util.TypedValue
 import android.view.View
-import androidx.core.content.ContextCompat
 import com.nemislimus.tratometr.R
 import java.math.BigDecimal
 import java.math.RoundingMode
-import kotlin.math.cos
-import kotlin.math.sin
 
 class RingChartView @JvmOverloads constructor(
     context: Context,

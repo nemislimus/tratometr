@@ -5,6 +5,8 @@ import com.nemislimus.tratometr.analytics.ui.fragment.AnalyticsFragment
 import com.nemislimus.tratometr.settings.domain.api.SettingsRepository
 import com.nemislimus.tratometr.settings.ui.fragment.SettingsFragment
 import com.nemislimus.tratometr.authorization.ui.fragment.AuthorizationFragment
+import com.nemislimus.tratometr.authorization.ui.fragment.NewPassFragment
+import com.nemislimus.tratometr.authorization.ui.fragment.PassRecoveryFragment
 import com.nemislimus.tratometr.authorization.ui.fragment.RegistrationFragment
 import com.nemislimus.tratometr.authorization.ui.fragment.SplashFragment
 import com.nemislimus.tratometr.expenses.ui.fragment.CreateCategoryFragment
@@ -27,6 +29,8 @@ interface AppComponent {
     fun inject(fragment: CreateCategoryFragment)
     fun inject(fragment: SelectCategoryFragment)
     fun inject(fragment: AnalyticsFragment)
+    fun inject(fragment: PassRecoveryFragment)
+    fun inject(fragment: NewPassFragment)
 
     fun getSettingsRepository(): SettingsRepository
 

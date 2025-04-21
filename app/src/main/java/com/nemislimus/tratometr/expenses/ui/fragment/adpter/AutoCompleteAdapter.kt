@@ -1,13 +1,6 @@
 package com.nemislimus.tratometr.expenses.ui.fragment.adpter
 
 import android.content.Context
-import android.content.res.ColorStateList
-import android.os.Build
-import android.text.Html
-import android.text.Spannable
-import android.text.SpannableStringBuilder
-import android.text.style.ForegroundColorSpan
-import android.util.TypedValue
 import android.widget.Filter
 import android.view.LayoutInflater
 import android.view.View
@@ -15,10 +8,7 @@ import android.view.ViewGroup
 import android.widget.ArrayAdapter
 import android.widget.ImageView
 import android.widget.TextView
-import androidx.annotation.RequiresApi
-import androidx.core.content.ContextCompat
 import androidx.core.view.isVisible
-import androidx.core.view.setPadding
 import com.nemislimus.tratometr.R
 import com.nemislimus.tratometr.expenses.ui.model.AutoCompleteItem
 
@@ -47,6 +37,7 @@ class AutoCompleteAdapter(
         val textAdd: TextView = view.findViewById(R.id.text_add)
 
         textView.text = item.name
+        textView.isVisible = item.name.isNotEmpty()
         if (item.isAdd) {
             textAdd.isVisible = true
             iconImageView.setBackgroundResource(R.drawable.btn_plus_background)

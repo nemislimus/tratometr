@@ -14,7 +14,7 @@ class ExpensesDateViewHolder(private val binding: ItemHistoryDateBinding) : Recy
         val dateFormat = SimpleDateFormat("dd.MM.yy", Locale.getDefault())
         val currentDate = Date()
         val today = dateFormat.format(currentDate)
-        if (item.date.equals(today)) {
+        if (item.date == today) {
             binding.tvDate.setText(R.string.today)
         } else {
             binding.tvDate.text = item.date

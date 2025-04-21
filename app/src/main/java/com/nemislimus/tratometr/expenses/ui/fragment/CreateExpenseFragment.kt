@@ -85,52 +85,47 @@ class CreateExpenseFragment : BindingFragment<FragmentCreateExpenseBinding>() {
             dateInMilisecond = savedInstanceState.getLong("Date", System.currentTimeMillis())
             binding.tvDate.text = DateFormat.format("dd.MM.yyyy", dateInMilisecond).toString()
         } else {
-            // Получаем расход
-            expense = getExpense()
-
+            expense = getExpense()  // Получаем расход
             dateInMilisecond = today()
         }
 
-        isAddMode = expense == null
-        // Настройка экрана
-        if (isAddMode) showAddMode() else showEditMode()
 
         autoCompleteTextView = binding.actvCategory
         ivIcon = binding.ivIcon
         scale = requireContext().resources.displayMetrics.density // Получаем плотность экрана
         autoCompleteTextView.dropDownVerticalOffset = 25        // Отступ списка вниз от поля
         typedValue = TypedValue()
+        items = mutableListOf()
+        adapter = AutoCompleteAdapter(requireContext(), items)
+        autoCompleteTextView.setAdapter(adapter)
+        updateItems()                       // Получаем список категорий
+        isAddMode = expense == null
+        if (isAddMode) showAddMode() else showEditMode()
 
         binding.tvTitle.setOnClickListener {
             findNavController().popBackStack()
         }
 
-        items = mutableListOf()
+        binding.root.setOnClickListener { requestTouchFocus(binding.root) }
 
-        adapter = AutoCompleteAdapter(requireContext(), items)
-        autoCompleteTextView.setAdapter(adapter)
-        // Получаем список категорий
-        updateItems()
-
-
-        autoCompleteTextView.threshold = 1 // Начинать показывать предложения после ввода 1 символа
-
+        autoCompleteTextView.threshold = 1  // Начинать показывать предложения после ввода 1 символа
+        // Открыть список при клике или получении фокуса
+        autoCompleteTextView.setOnClickListener { autoCompleteTextView.showDropDown() }
+        autoCompleteTextView.setOnFocusChangeListener { _, hasFocus ->
+            if (hasFocus) autoCompleteTextView.showDropDown() // Открыть список при получении фокуса
+        }
         autoCompleteTextView.setOnItemClickListener { parent, _, position, _ ->
             val selectedItem = (parent.getItemAtPosition(position) as AutoCompleteItem)
             if (!selectedItem.isAdd) {
                 autoCompleteTextView.setText(selectedItem.name)
-                iconResId = selectedItem.iconResId
                 showIcons(selectedItem.iconResId)
                 // Убираем индикацию ошибки
-                errorState(false, binding.actvCategory)
-                binding.categoryError!!.isVisible = false
+                errorState(false, autoCompleteTextView)
             } else {
                 autoCompleteTextView.setText(currentText)
                 openCategoryWindow(autoCompleteTextView.text.toString())
             }
         }
-
-
         autoCompleteTextView.addTextChangedListener(object : TextWatcher {
             override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
                 currentText = s.toString()
@@ -140,12 +135,9 @@ class CreateExpenseFragment : BindingFragment<FragmentCreateExpenseBinding>() {
                 if (itemsOriginal.any { it.name == currentStr}) {
                     if (items[0].isAdd) {
                         items.removeAt(0)
-                        val foundItem = itemsOriginal.find { it.name == currentStr }
-                        showIcons(foundItem?.iconResId)
                         autoCompleteTextView.dismissDropDown() // Скрываем список
                         // Убираем индикацию ошибки
                         errorState(false, autoCompleteTextView)
-                        binding.categoryError!!.isVisible = false
                     }
                 } else {
                     showIcons(null)
@@ -165,6 +157,7 @@ class CreateExpenseFragment : BindingFragment<FragmentCreateExpenseBinding>() {
         })
 
         binding.tvDate.setOnClickListener {
+            requestTouchFocus(binding.tvDate)
             val datePicker = MaterialDatePicker.Builder.datePicker()
                 .setTitleText(R.string.select_date_expense)
                 .build()
@@ -196,7 +189,6 @@ class CreateExpenseFragment : BindingFragment<FragmentCreateExpenseBinding>() {
                     if (amount >= BigDecimal("0.01") && amount <= BigDecimal("999999999999999")) {
                         // Убираем индикацию ошибки
                         errorState(false, binding.etAmount)
-                        binding.amountError!!.isVisible = false
                     }
                 }
             }
@@ -206,13 +198,9 @@ class CreateExpenseFragment : BindingFragment<FragmentCreateExpenseBinding>() {
                 binding.btnAction!!.isEnabled = enableBtnAction()
                 // Если сумма введена правильно, убираем индикацию ошибки
                 if (binding.etAmount.text.isNotEmpty()) {
-                    val amount = BigDecimal(binding.etAmount.text.toString()).setScale(
-                        2,
-                        RoundingMode.HALF_UP
-                    )
+                    val amount = BigDecimal(binding.etAmount.text.toString()).setScale(2, RoundingMode.HALF_UP)
                     if (amount >= BigDecimal("0.01") && amount <= BigDecimal("999999999999999")) {
                         errorState(false, binding.etAmount)
-                        binding.amountError!!.isVisible = false
                     }
                 }
             }
@@ -254,12 +242,12 @@ class CreateExpenseFragment : BindingFragment<FragmentCreateExpenseBinding>() {
             (16 * scale + 0.5f).toInt(),
             (12 * scale + 0.5f).toInt()
         )
-
         ivIcon.isVisible = iconResId != null
         if (iconResId != null) {
             ivIcon.setImageDrawable(
                 AppCompatResources.getDrawable(requireContext(), iconResId)
             )
+            this.iconResId = iconResId
         }
     }
 
@@ -267,6 +255,7 @@ class CreateExpenseFragment : BindingFragment<FragmentCreateExpenseBinding>() {
     private fun showEditMode() {
         binding.tvTitle.setText(R.string.edit_expense)
         binding.btnAction?.setText(R.string.btn_save)
+        showIcons(expense!!.iconResId)
         binding.actvCategory.setText(expense!!.category)
         binding.tvDate.text = DateFormat.format("dd.MM.yyyy", expense!!.date).toString()
         binding.etAmount.setText(expense!!.amount.toString())
@@ -290,11 +279,9 @@ class CreateExpenseFragment : BindingFragment<FragmentCreateExpenseBinding>() {
     private fun errorInCaregory(): Boolean {
         if (items.any { it.name == autoCompleteTextView.text.toString() }) {
             errorState(false, autoCompleteTextView)
-            binding.categoryError!!.isVisible = false
             return false
         } else {
             errorState(true, autoCompleteTextView)
-            binding.categoryError!!.isVisible = true
             return true
         }
     }
@@ -303,15 +290,12 @@ class CreateExpenseFragment : BindingFragment<FragmentCreateExpenseBinding>() {
         val amount = BigDecimal(binding.etAmount.text.toString()).setScale(2, RoundingMode.HALF_UP)
         if (amount >= BigDecimal("0.01") && amount <= BigDecimal("999999999999999")) {
             errorState(false, binding.etAmount)
-            binding.amountError!!.isVisible = false
             return false
         } else {
             errorState(true, binding.etAmount)
-            binding.amountError!!.isVisible = true
             return true
         }
     }
-
 
     private fun enableBtnAction(): Boolean {
         return (binding.actvCategory.text.isNotEmpty() && binding.etAmount.text.isNotEmpty())
@@ -326,6 +310,11 @@ class CreateExpenseFragment : BindingFragment<FragmentCreateExpenseBinding>() {
             view.setBackgroundResource(R.drawable.card_background_regular)
             requireContext().theme.resolveAttribute(R.attr.appTextPrimary, typedValue, true)
             view.setTextColor(typedValue.data)
+        }
+        if (view == binding.actvCategory) {
+            binding.categoryError!!.isVisible = isError
+        } else {
+            binding.amountError!!.isVisible = isError
         }
     }
 
@@ -364,6 +353,14 @@ class CreateExpenseFragment : BindingFragment<FragmentCreateExpenseBinding>() {
             requireArguments().getSerializable(EXTRA_EXPENSE, Expense::class.java)
         } else {
             requireArguments().getSerializable(EXTRA_EXPENSE) as Expense
+        }
+    }
+
+    private fun requestTouchFocus(view: View) {
+        with(view) {
+            isFocusableInTouchMode = true
+            requestFocus()
+            isFocusableInTouchMode = false
         }
     }
 }

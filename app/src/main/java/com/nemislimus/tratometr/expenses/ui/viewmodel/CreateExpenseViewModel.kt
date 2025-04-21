@@ -47,15 +47,6 @@ class CreateExpenseViewModel (
         interactor.updateExpense(expense)
     }
 
-    // Для отладки *****************************************************************************************************************
-    fun addNewCategory(category: Category, callback: () -> Unit) {
-        viewModelScope.launch(Dispatchers.IO) {
-            interactor.addNewCategory(category)
-            callback()
-        }
-    }
-    //******************************************************************************************************************************
-
     class Factory @Inject constructor(
         private val interactor: ExpenseHistoryInteractor
     ) : ViewModelProvider.Factory {

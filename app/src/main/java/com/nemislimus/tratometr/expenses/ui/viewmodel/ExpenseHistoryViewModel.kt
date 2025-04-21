@@ -77,9 +77,6 @@ class ExpenseHistoryViewModel (
         interactor.deleteExpense(expenseId)
     }
 
-
-
-
     class Factory @Inject constructor(
         private val interactor: ExpenseHistoryInteractor
     ) : ViewModelProvider.Factory {
