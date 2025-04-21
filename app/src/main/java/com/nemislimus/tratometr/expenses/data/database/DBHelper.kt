@@ -24,6 +24,21 @@ class DBHelper (context: Context):
                     + "CATEGORY_NAME TEXT PRIMARY KEY," // Название категории - первичный ключ
                     + "ICON_RES_ID TEXT NOT NULL);"           // id иконки
         )
+        // Вставка предустановленных записей в таблицу CATEGORIES
+        val insertCategories = arrayOf(
+            "INSERT INTO CATEGORIES (CATEGORY_NAME, ICON_RES_ID) VALUES ('Кафе', 'ic_main_cat_cafe');",
+            "INSERT INTO CATEGORIES (CATEGORY_NAME, ICON_RES_ID) VALUES ('Транспорт', 'ic_main_cat_transport');",
+            "INSERT INTO CATEGORIES (CATEGORY_NAME, ICON_RES_ID) VALUES ('Здоровье', 'ic_main_cat_health');",
+            "INSERT INTO CATEGORIES (CATEGORY_NAME, ICON_RES_ID) VALUES ('Подарки', 'ic_main_cat_gift');",
+            "INSERT INTO CATEGORIES (CATEGORY_NAME, ICON_RES_ID) VALUES ('Образование', 'ic_main_cat_education');",
+            "INSERT INTO CATEGORIES (CATEGORY_NAME, ICON_RES_ID) VALUES ('Дом', 'ic_main_cat_home');",
+            "INSERT INTO CATEGORIES (CATEGORY_NAME, ICON_RES_ID) VALUES ('Продукты', 'ic_main_cat_groceries');",
+            "INSERT INTO CATEGORIES (CATEGORY_NAME, ICON_RES_ID) VALUES ('Спорт', 'ic_main_cat_sports');",
+            "INSERT INTO CATEGORIES (CATEGORY_NAME, ICON_RES_ID) VALUES ('Досуг', 'ic_main_cat_hobby');"
+        )
+        for (query in insertCategories) {
+            db.execSQL(query)
+        }
     }
 
     // Обновление/миграция БД
