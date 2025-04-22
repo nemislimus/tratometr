@@ -1,5 +1,6 @@
 package com.nemislimus.tratometr.authorization.ui.viewmodel
 
+import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -13,7 +14,6 @@ import com.nemislimus.tratometr.settings.domain.GetDarkModeValueUseCase
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
-import okhttp3.Dispatcher
 import javax.inject.Inject
 
 class SplashViewModel (
@@ -27,18 +27,22 @@ class SplashViewModel (
 
     suspend fun checkAccessToken(): Boolean? = withContext(Dispatchers.IO) {
         val accessToken = tokensStorageInteractor.getTokens().accessToken
+        Log.d("Splash ВьюМодель5", accessToken.toString())
         authInteractor.check(accessToken).value == true
     }
 
     suspend fun refreshTokens(): Resource<Tokens> = withContext(Dispatchers.IO){
         val refreshToken = tokensStorageInteractor.getTokens().refreshToken ?: ""
+        Log.d("Splash ВьюМодель4", refreshToken.toString())
         val resource = authInteractor.refresh(refreshToken)
-        var freshTokens = Tokens(null, null)
         if (resource is Resource.Success){
-            freshTokens = resource.value!!
+            val freshTokens = resource.value!!
             putTokensToStorage(freshTokens)
+            Log.d("Splash ВьюМодель", "Успешно")
+            Log.d("Splash ВьюМодель1", freshTokens.refreshToken.toString())
             resource
         } else {
+            Log.d("Splash ВьюМодель2", "Ошибка")
             resource
         }
     }
