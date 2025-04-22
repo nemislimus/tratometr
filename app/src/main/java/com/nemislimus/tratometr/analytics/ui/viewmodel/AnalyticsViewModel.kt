@@ -4,12 +4,12 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
+import com.nemislimus.tratometr.analytics.domain.usecase.GetAllCategoriesFractionsUseCase
 import com.nemislimus.tratometr.analytics.ui.model.AnalyticsState
-import com.nemislimus.tratometr.expenses.domain.api.ExpenseHistoryInteractor
 import javax.inject.Inject
 
 class AnalyticsViewModel(
-    private val interactor: ExpenseHistoryInteractor
+    private val getFractionsUseCase: GetAllCategoriesFractionsUseCase
 ) : ViewModel() {
 
     private val state = MutableLiveData<AnalyticsState>()
@@ -17,13 +17,13 @@ class AnalyticsViewModel(
 
 
     class Factory @Inject constructor(
-        private val expenseInteractor: ExpenseHistoryInteractor
+        private val useCase: GetAllCategoriesFractionsUseCase
     ) : ViewModelProvider.Factory {
 
         @Suppress("UNCHECKED_CAST")
         override fun <T : ViewModel> create(modelClass: Class<T>): T {
             require(modelClass == AnalyticsViewModel::class.java)
-            return AnalyticsViewModel(expenseInteractor) as T
+            return AnalyticsViewModel(useCase) as T
         }
     }
 }

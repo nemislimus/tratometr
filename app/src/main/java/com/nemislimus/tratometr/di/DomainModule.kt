@@ -1,6 +1,9 @@
 package com.nemislimus.tratometr.di
 
 import android.content.Context
+import com.nemislimus.tratometr.analytics.data.db.dao.AnalyticsDao
+import com.nemislimus.tratometr.analytics.data.db.dao.AnalyticsRepositoryImpl
+import com.nemislimus.tratometr.analytics.domain.api.AnalyticsRepository
 import com.nemislimus.tratometr.authorization.data.AuthRepositoryImpl
 import com.nemislimus.tratometr.authorization.data.TokensStorageRepositoryImpl
 import com.nemislimus.tratometr.authorization.data.network.NetworkClient
@@ -49,6 +52,12 @@ class DomainModule {
     @Provides
     fun provideExpenseHistoryRepository(expenseHistoryDao: ExpenseHistoryDao, dbConverter: DBConverter): ExpenseHistoryRepository {
         return ExpenseHistoryRepositoryImpl(expenseHistoryDao, dbConverter)
+    }
+
+    @Singleton
+    @Provides
+    fun provideAnalyticsRepository(analyticsDao: AnalyticsDao, dbConverter: DBConverter): AnalyticsRepository {
+        return AnalyticsRepositoryImpl(analyticsDao, dbConverter)
     }
 
     ///////////////////////////// REPOSITORY SECTION end

@@ -1,5 +1,6 @@
 package com.nemislimus.tratometr.analytics.data.db.dao
 
+import android.database.sqlite.SQLiteDatabase
 import com.nemislimus.tratometr.expenses.data.database.DBHelper
 import com.nemislimus.tratometr.expenses.data.database.entities.CategoryEntity
 import javax.inject.Inject
@@ -16,8 +17,24 @@ class AnalyticsDao @Inject constructor(
         WHERE (((EXPENSES.Date)>=500 And (EXPENSES.Date)<1555) AND ((EXPENSES.CATEGORY)="Еда"))
         ORDER BY EXPENSES.CATEGORY;
     */
+
+    private var dataBase: SQLiteDatabase? = null
+
+    private fun getOrOpenDatabase(): SQLiteDatabase {
+        if (dataBase == null || !dataBase!!.isOpen) {
+            dataBase = databaseHelper.readableDatabase
+        }
+        return dataBase!!
+    }
+
+    fun closeDatabase() {
+        dataBase?.close()
+        dataBase = null
+    }
+
     fun getCategoriesListWithIconsFilter(startDate: Long?, endDate: Long?, category: String?): List<CategoryEntity> {
-        val db = databaseHelper.readableDatabase
+        val db = getOrOpenDatabase()
+
         val categories = mutableListOf<CategoryEntity>()
         // Начинаем строить базовый запрос
         val queryBuilder =
@@ -52,7 +69,6 @@ class AnalyticsDao @Inject constructor(
             } while (cursor.moveToNext())
         }
         cursor.close()
-        db.close()
         return categories
     }
 
@@ -63,7 +79,8 @@ class AnalyticsDao @Inject constructor(
         WHERE (((EXPENSES.Date)>=500 And (EXPENSES.Date)<1555) AND ((EXPENSES.CATEGORY)="Еда"));
     */
     fun getExpenseAmountsListByCategoryFilter(startDate: Long?, endDate: Long?, category: String?): List<Long> {
-        val db = databaseHelper.readableDatabase
+        val db = getOrOpenDatabase()
+
         val amounts = mutableListOf<Long>()
         // Начинаем строить базовый запрос
         val queryBuilder =
@@ -95,7 +112,6 @@ class AnalyticsDao @Inject constructor(
             } while (cursor.moveToNext())
         }
         cursor.close()
-        db.close()
         return amounts
     }
 }

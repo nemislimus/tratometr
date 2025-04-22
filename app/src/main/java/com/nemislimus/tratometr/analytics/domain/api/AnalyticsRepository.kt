@@ -9,4 +9,6 @@ interface AnalyticsRepository {
 
     // Список сумм расходов по категории с фильтром (период, категория)
     fun getExpenseAmountsListByCategoryFilter(startDate: Long?, endDate: Long?, category: String?): List<BigDecimal>
+
+    fun closeDatabaseForAnalytics()
 }

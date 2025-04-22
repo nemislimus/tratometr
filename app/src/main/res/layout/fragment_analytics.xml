@@ -172,10 +172,10 @@
         android:layout_width="0dp"
         android:layout_height="0dp"
         app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
-        tools:listitem="@layout/item_category_list"
+        tools:listitem="@layout/item_analytics_category_list"
         android:layout_marginStart="@dimen/size_16dp"
         android:layout_marginEnd="@dimen/size_16dp"
-        android:layout_marginBottom="@dimen/size_16dp"
+        android:layout_marginBottom="@dimen/size_12dp"
         android:layout_marginTop="@dimen/size_8dp"
         android:visibility="visible"
         app:layout_constraintStart_toStartOf="parent"
@@ -190,7 +190,7 @@
         android:layout_gravity="center"
         android:indeterminateTint="?attr/appAccentColor"
         android:indeterminate="true"
-        android:visibility="visible"
+        android:visibility="gone"
         android:layout_marginTop="@dimen/size_12dp"
         android:layout_marginBottom="@dimen/size_16dp"
         app:layout_constraintStart_toStartOf="parent"
@@ -242,7 +242,7 @@
         android:id="@+id/grAnalyticsContent"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:visibility="gone"
+        android:visibility="visible"
         app:constraint_referenced_tags="sorting, analytics_list"/>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

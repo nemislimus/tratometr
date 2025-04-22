@@ -16,15 +16,6 @@
         <action
             android:id="@+id/action_splashFragment_to_expensesFragment"
             app:destination="@id/expensesFragment" />
-        <action
-            android:id="@+id/action_splashFragment_to_settingsFragment"
-            app:destination="@id/settingsFragment" />
-        <action
-            android:id="@+id/action_splashFragment_to_selectCategoryFragment"
-            app:destination="@id/selectCategoryFragment" />
-        <action
-            android:id="@+id/action_splashFragment_to_analyticsFragment"
-            app:destination="@id/analyticsFragment" />
     </fragment>
 
     <fragment
