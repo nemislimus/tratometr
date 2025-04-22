@@ -17,6 +17,7 @@ import android.widget.ImageView
 import androidx.appcompat.content.res.AppCompatResources
 import androidx.core.os.bundleOf
 import androidx.core.view.isVisible
+import androidx.fragment.app.setFragmentResultListener
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import com.google.android.material.datepicker.MaterialDatePicker
@@ -227,11 +228,18 @@ class CreateExpenseFragment : BindingFragment<FragmentCreateExpenseBinding>() {
         } else {
             viewModel.updateExpense(newExpense)
         }
-        findNavController().popBackStack()
+        findNavController().navigateUp()
     }
 
     private fun openCategoryWindow(category: String){
-        findNavController().navigate(R.id.action_createExpenseFragment_to_createCategoryFragment)
+
+        setFragmentResultListener(CreateCategoryFragment.RESULT_KEY) {_, bundle ->
+            val categoryName = bundle.getString(CreateCategoryFragment.STRING_KEY) ?: ""
+            binding.actvCategory.setText(categoryName)
+        }
+
+        val direction = CreateExpenseFragmentDirections.actionCreateExpenseFragmentToCreateCategoryFragment(category)
+        findNavController().navigate(direction)
     }
 
     private fun showIcons(iconResId: Int?) {

@@ -12,7 +12,7 @@ class AnalyticsViewModel(
     private val getFractionsUseCase: GetAllCategoriesFractionsUseCase
 ) : ViewModel() {
 
-    private val state = MutableLiveData<AnalyticsState>()
+    private val state = MutableLiveData<AnalyticsState>(AnalyticsState.Loading)
     fun observeState(): LiveData<AnalyticsState> = state
 
 

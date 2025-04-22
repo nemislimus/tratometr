@@ -1,6 +1,5 @@
 package com.nemislimus.tratometr.expenses.ui.fragment
 
-import android.animation.ObjectAnimator
 import android.annotation.SuppressLint
 import android.content.Context
 import android.content.res.ColorStateList
@@ -292,7 +291,7 @@ class ExpensesFragment : BindingFragment<FragmentExpensesBinding>(), ExpenseFilt
             }
         }
         scrollJob.cancel()
-        scrollJob = lifecycleScope.launch {
+        scrollJob = viewLifecycleOwner.lifecycleScope.launch {
             delay(1200)
             if (binding.ivBtnScroll != null) {
                 binding.ivBtnScroll.isVisible = false

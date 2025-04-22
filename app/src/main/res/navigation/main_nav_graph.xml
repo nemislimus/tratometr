@@ -86,7 +86,11 @@
         android:id="@+id/analyticsFragment"
         android:name="com.nemislimus.tratometr.analytics.ui.fragment.AnalyticsFragment"
         android:label="fragment_analytics"
-        tools:layout="@layout/fragment_analytics" />
+        tools:layout="@layout/fragment_analytics" >
+        <action
+            android:id="@+id/action_analyticsFragment_to_settingsFragment"
+            app:destination="@id/settingsFragment" />
+    </fragment>
 
     <fragment
         android:id="@+id/createExpenseFragment"
@@ -122,7 +126,12 @@
         android:id="@+id/createCategoryFragment"
         android:name="com.nemislimus.tratometr.expenses.ui.fragment.CreateCategoryFragment"
         android:label="fragment_create_category"
-        tools:layout="@layout/fragment_create_category" />
+        tools:layout="@layout/fragment_create_category" >
+        <argument
+            android:name="category_name"
+            app:argType="string"
+            android:defaultValue="" />
+    </fragment>
     <fragment
         android:id="@+id/newPassFragment"
         android:name="com.nemislimus.tratometr.authorization.ui.fragment.NewPassFragment"
