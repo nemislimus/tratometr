@@ -1,10 +1,10 @@
 package com.nemislimus.tratometr.expenses.ui.fragment
 
+import android.animation.ObjectAnimator
 import android.annotation.SuppressLint
 import android.content.Context
 import android.content.res.ColorStateList
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -12,9 +12,11 @@ import android.widget.TextView
 import androidx.core.content.ContextCompat
 import androidx.core.view.isVisible
 import androidx.fragment.app.viewModels
+import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.RecyclerView
+import com.a2t.myapplication.main.ui.activity.recycler.model.ScrollState
 import com.google.android.material.datepicker.MaterialDatePicker
 import com.nemislimus.tratometr.R
 import com.nemislimus.tratometr.common.appComponent
@@ -28,12 +30,17 @@ import com.nemislimus.tratometr.databinding.FragmentExpensesBinding
 import com.nemislimus.tratometr.expenses.ui.fragment.adpter.ExpensesAdapter
 import com.nemislimus.tratometr.expenses.ui.fragment.adpter.ExpensesAdapterListener
 import com.nemislimus.tratometr.expenses.ui.fragment.recycler.ExpensesRecyclerView
+import com.nemislimus.tratometr.expenses.ui.fragment.recycler.ExpensesScrollListener
+import com.nemislimus.tratometr.expenses.ui.fragment.recycler.OnScrollStateChangedListener
 import com.nemislimus.tratometr.expenses.ui.fragment.viewholder.ExpensesViewHolder
 import com.nemislimus.tratometr.expenses.ui.viewmodel.ExpenseHistoryViewModel
 import com.nemislimus.tratometr.expenses.ui.viewmodel.history_model.Historical
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 import javax.inject.Inject
 
-class ExpensesFragment : BindingFragment<FragmentExpensesBinding>(), ExpenseFilterCallback, ExpensesAdapterListener {
+class ExpensesFragment : BindingFragment<FragmentExpensesBinding>(), ExpenseFilterCallback, ExpensesAdapterListener,
+    OnScrollStateChangedListener {
 
     @Inject
     lateinit var vmFactory: ExpenseHistoryViewModel.Factory
@@ -42,6 +49,8 @@ class ExpensesFragment : BindingFragment<FragmentExpensesBinding>(), ExpenseFilt
     private val adapter = ExpensesAdapter(this)
     private var mIth: ItemTouchHelper? = null
     private lateinit var recycler: RecyclerView
+    private var scrollState = ScrollState.STOPPED
+    private var scrollJob = lifecycleScope.launch {}
 
     override fun onAttach(context: Context) {
         context.appComponent.inject(this)
@@ -62,8 +71,6 @@ class ExpensesFragment : BindingFragment<FragmentExpensesBinding>(), ExpenseFilt
         recycler = binding.recycler
         initializingRecyclerView()  // Создание рециклера
 
-        // Подписываемся на наблюдение за фильтром
-        ExpenseFilter.addExpenseFilterListener(this)
         // Подписываемся на наблюдение за данными из БД
         viewModel.getExpensesLiveData().observe(viewLifecycleOwner) { state ->
             binding.progressBar.isVisible = false
@@ -73,6 +80,17 @@ class ExpensesFragment : BindingFragment<FragmentExpensesBinding>(), ExpenseFilt
             binding.placeholder.isVisible = empty
             updateRecyclerView(state.expenses)
 
+        }
+
+        // ПРОКРУТКА
+        recycler.addOnScrollListener(ExpensesScrollListener(this))
+
+        binding.ivBtnScroll.setOnClickListener {
+            when(scrollState) {
+                ScrollState.DOWN -> recycler.smoothScrollToPosition(adapter.itemCount - 1)
+                ScrollState.UP -> recycler.smoothScrollToPosition(0)
+                else -> {}
+            }
         }
 
         binding.ivSettings.setOnClickListener {
@@ -135,11 +153,15 @@ class ExpensesFragment : BindingFragment<FragmentExpensesBinding>(), ExpenseFilt
             requestFocusToCalendar()
             false
         }
+    }
 
+    override fun onStart() {
+        super.onStart()
+        // Подписываемся на наблюдение за фильтром
+        ExpenseFilter.addExpenseFilterListener(this)
     }
 
     override fun onFilterChanged(expenseFilter: ExpenseFilter) {
-        Log.e("МОЁ", expenseFilter.category.toString())
         // Заполняем поле период
         binding.tvRange.text = DateRangeHelper.convertDatesInRange(
             requireContext(),
@@ -244,9 +266,37 @@ class ExpensesFragment : BindingFragment<FragmentExpensesBinding>(), ExpenseFilt
         }
     }
 
-    override fun onDestroyView() {
-        super.onDestroyView()
+    override fun onStop() {
+        super.onStop()
         // Удаляем текущий фрагмент как наблюдателя
         ExpenseFilter.removeExpenseFilterListener(this)
+    }
+
+    // Отслеживание состояния прокрутки
+    override fun onScrollStateChanged(scrollState: ScrollState) {
+        when (scrollState) {
+            ScrollState.DOWN -> {           // Прокрутка вниз
+                this.scrollState = scrollState
+                binding.ivBtnScroll.setImageResource(R.drawable.ic_scroll_down)
+                binding.ivBtnScroll.isVisible = true
+                binding.ivBtnScroll.alpha = 0.7f
+            }
+            ScrollState.UP -> {             // Прокрутка вверх
+                this.scrollState = scrollState
+                binding.ivBtnScroll.setImageResource(R.drawable.ic_scroll_up)
+                binding.ivBtnScroll.isVisible = true
+                binding.ivBtnScroll.alpha = 0.7f
+            }
+            ScrollState.STOPPED -> {        // Прокрутка остановлена
+                this.scrollState = scrollState
+            }
+        }
+        scrollJob.cancel()
+        scrollJob = lifecycleScope.launch {
+            delay(1200)
+            if (binding.ivBtnScroll != null) {
+                binding.ivBtnScroll.isVisible = false
+            }
+        }
     }
 }

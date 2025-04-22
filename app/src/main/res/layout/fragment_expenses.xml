@@ -190,18 +190,35 @@
             android:indeterminate="true"
             android:visibility="gone"/>
 
-
-        <ImageView
-            android:id="@+id/btn_add_expense"
-            android:layout_width="@dimen/size_48dp"
-            android:layout_height="@dimen/size_48dp"
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
             android:layout_gravity="bottom|end"
+            android:gravity="center_horizontal"
             android:layout_marginEnd="@dimen/size_16dp"
-            android:layout_marginBottom="@dimen/size_48dp"
-            android:padding="8dp"
-            android:background="@drawable/btn_background_enabled"
-            android:src="@drawable/ic_plus"
-            tools:ignore="contentDescription"/>
+            android:layout_marginBottom="@dimen/size_48dp">
 
+            <!-- Кнопка прпокрутки -->
+            <ImageView
+                android:id="@+id/iv_btn_scroll"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="20dp"
+                android:background="@drawable/circle_create_category_icon_item"
+                android:padding="12dp"
+                android:src="@drawable/ic_scroll_down"
+                android:visibility="gone"
+                tools:ignore="contentDescription" />
+
+            <ImageView
+                android:id="@+id/btn_add_expense"
+                android:layout_width="@dimen/size_48dp"
+                android:layout_height="@dimen/size_48dp"
+                android:padding="8dp"
+                android:background="@drawable/btn_background_enabled"
+                android:src="@drawable/ic_plus"
+                tools:ignore="contentDescription"/>
+        </LinearLayout>
     </FrameLayout>
 </LinearLayout>

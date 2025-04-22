@@ -1,6 +1,5 @@
 package com.nemislimus.tratometr.expenses.data.database.entities
 
-
 data class ExpenseEntity(
     val id: Long,
     val date: Long,
