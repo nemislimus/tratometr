@@ -1,5 +1,6 @@
 package com.nemislimus.tratometr.authorization.ui.fragment
 
+import android.util.Log
 import android.animation.Animator
 import android.animation.AnimatorListenerAdapter
 import android.content.Context
@@ -7,7 +8,6 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.fragment.app.FragmentTransaction.TRANSIT_FRAGMENT_OPEN
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
@@ -21,7 +21,6 @@ import com.nemislimus.tratometr.authorization.ui.viewmodel.SplashViewModel.Compa
 import com.nemislimus.tratometr.common.appComponent
 import com.nemislimus.tratometr.common.util.BindingFragment
 import com.nemislimus.tratometr.databinding.FragmentSplashBinding
-import com.nemislimus.tratometr.expenses.ui.fragment.CreateExpenseFragment
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -78,10 +77,10 @@ class SplashFragment : BindingFragment<FragmentSplashBinding>() {
        lifecycleScope.launch {
            //viewModel.clearTokens() //Добавил его тут для тестирования
            delay(FOUR_SECONDS)
-            val freshToken = viewModel.checkAccessToken()
-
+           val freshToken = viewModel.checkAccessToken()
+           Log.d("СплэшФрагментЧекТокен", freshToken.toString())
             if (freshToken!!) {
-               findNavController().navigate(R.id.action_splashFragment_to_expensesFragment)
+                findNavController().navigate(R.id.action_splashFragment_to_expensesFragment)
             } else {
 
                 val resource = viewModel.refreshTokens()
