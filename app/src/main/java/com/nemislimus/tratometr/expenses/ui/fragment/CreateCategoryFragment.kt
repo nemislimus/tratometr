@@ -10,9 +10,12 @@ import android.view.ViewGroup
 import android.view.inputmethod.InputMethodManager
 import androidx.annotation.DrawableRes
 import androidx.core.content.ContextCompat
+import androidx.core.os.bundleOf
+import androidx.fragment.app.setFragmentResult
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
+import androidx.navigation.fragment.navArgs
 import com.nemislimus.tratometr.R
 import com.nemislimus.tratometr.common.appComponent
 import com.nemislimus.tratometr.common.util.BindingFragment
@@ -33,6 +36,8 @@ class CreateCategoryFragment : BindingFragment<FragmentCreateCategoryBinding>() 
         setSelectedIconRes(iconResId)
         hideKeyboardAndClearFocus()
     }
+
+    private val fragmentsArgs by navArgs<CreateCategoryFragmentArgs>()
 
     @DrawableRes
     private var selectedIconRes: Int = R.drawable.ic_star
@@ -56,6 +61,8 @@ class CreateCategoryFragment : BindingFragment<FragmentCreateCategoryBinding>() 
         adapter.setItems(viewModel.getIconsItems())
         installTextWatcher()
 
+        binding.etTitleOfCategory.setText(fragmentsArgs.categoryName)
+
         binding.tbCreateCategory.setOnClickListener { findNavController().navigateUp() }
 
         binding.btnCategorySave.setOnClickListener {
@@ -66,6 +73,10 @@ class CreateCategoryFragment : BindingFragment<FragmentCreateCategoryBinding>() 
                         selectedIconRes
                     )
                 }
+                setFragmentResult(
+                    RESULT_KEY,
+                    bundleOf(STRING_KEY to binding.etTitleOfCategory.text.toString())
+                )
                 findNavController().popBackStack()
             }
         }
@@ -115,6 +126,12 @@ class CreateCategoryFragment : BindingFragment<FragmentCreateCategoryBinding>() 
             ?.hideSoftInputFromWindow(binding.etTitleOfCategory.windowToken, 0)
 
         binding.etTitleOfCategory.clearFocus()
+    }
+
+    companion object {
+        const val RESULT_KEY = "result_key"
+        const val STRING_KEY = "string_key"
+
     }
 
 }

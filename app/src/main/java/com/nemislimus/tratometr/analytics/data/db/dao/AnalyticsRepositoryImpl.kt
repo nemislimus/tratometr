@@ -11,7 +11,7 @@ class AnalyticsRepositoryImpl @Inject constructor(
     private val analyticsDao: AnalyticsDao,
     private val dbConverter: DBConverter
 ): AnalyticsRepository {
-    // Список категорий с иконками и фильтром(период, категория)
+    // Список категорий с иконками и фильтром (период, категория - для аналитики ставим null)
     override fun getCategoriesListWithIconsFilter(startDate: Long?, endDate: Long?, category: String?): List<Category> {
         val expenses = analyticsDao.getCategoriesListWithIconsFilter(startDate, endDate, category)
         return(convertFromExpenseEntity(expenses))
@@ -29,5 +29,9 @@ class AnalyticsRepositoryImpl @Inject constructor(
 
     private fun convertFromLongToBigDecimal(amounts: List<Long>): List<BigDecimal> {
         return amounts.map { amount -> dbConverter.map(amount) }
+    }
+
+    override fun closeDatabaseForAnalytics() {
+        analyticsDao.closeDatabase()
     }
 }

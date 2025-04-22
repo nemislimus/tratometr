@@ -22,6 +22,7 @@ class RingChartView @JvmOverloads constructor(
     private val rect = RectF()
     val data = mutableListOf<BigDecimal>() // Значения для диаграммы
     private val colors = mutableListOf<Int>()
+
     override fun onDraw(canvas: Canvas) {
         super.onDraw(canvas)
         drawRingChart(canvas)
@@ -30,7 +31,7 @@ class RingChartView @JvmOverloads constructor(
     @SuppressLint("DefaultLocale")
     private fun drawRingChart(canvas: Canvas) {
         val total = data.sumOf { it }
-        var startAngle = 0f                 // Начальный угол
+        var startAngle = -90f                 // Начальный угол
         val halfOffset = 2.5f                 // Отступы между секторами 5 градусов
         val ratio = 0.12f                   // Толщина диаграммы 0,16 от диаметра
         // Прямоугольник, в который вписывается внутренний круг диаграммы

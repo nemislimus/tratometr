@@ -62,18 +62,6 @@ class SplashFragment : BindingFragment<FragmentSplashBinding>() {
             }
         })
 
-        binding.btnSettings.setOnClickListener {
-            findNavController().navigate(
-                R.id.action_splashFragment_to_settingsFragment
-            )
-        }
-
-        binding.btnSelectCategory.setOnClickListener {
-            findNavController().navigate(
-                R.id.action_splashFragment_to_selectCategoryFragment
-            )
-        }
-
        lifecycleScope.launch {
            //viewModel.clearTokens() //Добавил его тут для тестирования
            delay(FOUR_SECONDS)

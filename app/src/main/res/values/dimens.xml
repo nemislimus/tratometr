@@ -21,5 +21,6 @@
     <dimen name="size_0dp">0dp</dimen>
     <dimen name="size_92dp">92dp</dimen>
     <dimen name="size_56dp">56dp</dimen>
+    <dimen name="chart_size">130dp</dimen>
 
 </resources>

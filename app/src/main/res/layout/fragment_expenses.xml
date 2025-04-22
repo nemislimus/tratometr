@@ -13,6 +13,7 @@
         android:layout_height="wrap_content"
         android:orientation="horizontal"
         android:gravity="center_vertical"
+        android:layout_marginTop="@dimen/size_16dp"
         android:paddingHorizontal="@dimen/size_16dp">
 
         <ImageView
@@ -74,20 +75,20 @@
 
         <TextView
             android:id="@+id/tv_day"
-            style="@style/AppTextSecondary"
-            android:textColor="?attr/appTextPrimary"
+            style="@style/AppTextSecondaryBold"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_weight="1"
             android:layout_marginEnd="10dp"
-            android:paddingVertical="4dp"
-            android:gravity="center"
+            android:layout_weight="1"
             android:background="@drawable/btn_white_background_r6"
-            android:text="@string/day"/>
+            android:gravity="center"
+            android:paddingVertical="4dp"
+            android:text="@string/day"
+            android:textColor="?attr/appTextPrimary" />
 
         <TextView
             android:id="@+id/tv_week"
-            style="@style/AppTextSecondary"
+            style="@style/AppTextSecondaryBold"
             android:textColor="?attr/appTextPrimary"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
@@ -100,7 +101,7 @@
 
         <TextView
             android:id="@+id/tv_month"
-            style="@style/AppTextSecondary"
+            style="@style/AppTextSecondaryBold"
             android:textColor="?attr/appTextPrimary"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
@@ -113,7 +114,7 @@
 
         <TextView
             android:id="@+id/tv_year"
-            style="@style/AppTextSecondary"
+            style="@style/AppTextSecondaryBold"
             android:textColor="?attr/appTextPrimary"
             android:layout_width="0dp"
             android:layout_height="wrap_content"

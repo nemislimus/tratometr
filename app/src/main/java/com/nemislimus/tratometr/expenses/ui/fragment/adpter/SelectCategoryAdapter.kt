@@ -70,7 +70,7 @@ class SelectCategoryAdapter(
     ) : RecyclerView.ViewHolder(binding.root) {
 
         fun bind(model: SelectCategoryItem) {
-            val iconDrawable = ContextCompat.getDrawable(itemView.context, model.iconResId)?.mutate()
+            val iconDrawable = ContextCompat.getDrawable(itemView.context, model.iconResId)
             binding.ivCategoryIcon.setImageDrawable(iconDrawable)
             binding.tvCategoryName.text = model.name
             binding.ivCategoryCheckbox.isVisible = model.isSelected

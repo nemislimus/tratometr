@@ -1,6 +1,7 @@
 package com.nemislimus.tratometr.di
 
 import android.content.Context
+import com.nemislimus.tratometr.analytics.ui.fragment.AnalyticsFragment
 import com.nemislimus.tratometr.settings.domain.api.SettingsRepository
 import com.nemislimus.tratometr.settings.ui.fragment.SettingsFragment
 import com.nemislimus.tratometr.authorization.ui.fragment.AuthorizationFragment
@@ -27,6 +28,7 @@ interface AppComponent {
     fun inject(fragment: SettingsFragment)
     fun inject(fragment: CreateCategoryFragment)
     fun inject(fragment: SelectCategoryFragment)
+    fun inject(fragment: AnalyticsFragment)
     fun inject(fragment: PassRecoveryFragment)
     fun inject(fragment: NewPassFragment)
 

@@ -14,6 +14,8 @@ class SelectCategoryViewModel(
     private val interactor: ExpenseHistoryInteractor
 ) : ViewModel() {
 
+    var selectedCategoryName: String? = null
+
     private val state = MutableLiveData<CategoryListState>()
     fun observeState(): LiveData<CategoryListState> = state
 
