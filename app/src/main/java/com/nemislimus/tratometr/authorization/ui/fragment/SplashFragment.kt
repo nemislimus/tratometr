@@ -1,5 +1,6 @@
 package com.nemislimus.tratometr.authorization.ui.fragment
 
+import android.util.Log
 import android.animation.Animator
 import android.animation.AnimatorListenerAdapter
 import android.content.Context
@@ -76,10 +77,10 @@ class SplashFragment : BindingFragment<FragmentSplashBinding>() {
        lifecycleScope.launch {
            //viewModel.clearTokens() //Добавил его тут для тестирования
            delay(FOUR_SECONDS)
-            val freshToken = viewModel.checkAccessToken()
-
+           val freshToken = viewModel.checkAccessToken()
+           Log.d("СплэшФрагментЧекТокен", freshToken.toString())
             if (freshToken!!) {
-               findNavController().navigate(R.id.action_splashFragment_to_expensesFragment)
+                findNavController().navigate(R.id.action_splashFragment_to_expensesFragment)
             } else {
 
                 val resource = viewModel.refreshTokens()
