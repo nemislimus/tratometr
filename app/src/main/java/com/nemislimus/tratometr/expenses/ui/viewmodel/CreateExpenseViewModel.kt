@@ -39,12 +39,22 @@ class CreateExpenseViewModel (
         }
     }
 
-    fun addNewExpense(expense: Expense) {
-        interactor.addNewExpense(expense)
+    fun addNewExpense(expense: Expense, callback: () -> Unit) {
+        viewModelScope.launch(Dispatchers.IO) {
+            interactor.addNewExpense(expense)
+            withContext(Dispatchers.Main) {
+                callback()
+            }
+        }
     }
 
-    fun updateExpense(expense: Expense) {
-        interactor.updateExpense(expense)
+    fun updateExpense(expense: Expense, callback: () -> Unit) {
+        viewModelScope.launch(Dispatchers.IO) {
+            interactor.updateExpense(expense)
+            withContext(Dispatchers.Main) {
+                callback()
+            }
+        }
     }
 
     class Factory @Inject constructor(

@@ -46,15 +46,11 @@ class ExpenseHistoryRepositoryImpl @Inject constructor(
     }
     // Добавление нового расхода
     override fun addNewExpense(expense: Expense) {
-        CoroutineScope(Dispatchers.IO).launch {
-            expenseHistoryDao.addNewExpense(dbConverter.map(expense))
-        }
+        expenseHistoryDao.addNewExpense(dbConverter.map(expense))
     }
     // Обновление расхода
     override fun updateExpense(expense: Expense) {
-        CoroutineScope(Dispatchers.IO).launch {
-            expenseHistoryDao.updateExpense(dbConverter.map(expense))
-        }
+        expenseHistoryDao.updateExpense(dbConverter.map(expense))
     }
 
     // ################   ЗАПРОСЫ ДЛЯ ОКНА ВЫБОР КАТЕГОРИИ   ########################################################################################

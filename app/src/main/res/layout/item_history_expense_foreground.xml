@@ -8,9 +8,7 @@
     android:layout_height="wrap_content"
     android:layout_marginVertical="4dp"
     android:paddingHorizontal="@dimen/size_16dp"
-    android:clickable="true"
-    android:focusable="true"
-    android:focusableInTouchMode="true">
+    android:clickable="true">
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
@@ -30,6 +28,8 @@
             tools:src="@drawable/ic_custom_cat_02"
             android:background="@drawable/circle_icons"
             tools:ignore="ContentDescription"
+            android:focusable="true"
+            android:focusableInTouchMode="true"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintBottom_toBottomOf="parent"/>

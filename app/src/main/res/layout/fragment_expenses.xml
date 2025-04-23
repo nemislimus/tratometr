@@ -129,14 +129,14 @@
     <TextView
         android:id="@+id/tv_categories"
         style="@style/AppTextPrimary"
-        android:textColor="?attr/appTextPrimary"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="22dp"
         android:layout_marginStart="@dimen/size_16dp"
+        android:layout_marginTop="22dp"
+        android:drawablePadding="4dp"
         android:text="@string/categories"
-        app:drawableStartCompat="@drawable/ic_filters"
-        android:drawablePadding="4dp"/>
+        android:textColor="?attr/appTextPrimary"
+        app:drawableStartCompat="@drawable/ic_filters" />
 
     <FrameLayout
         android:layout_width="match_parent"
