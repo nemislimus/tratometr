@@ -30,13 +30,12 @@
         <TextView
             android:id="@+id/title"
             style="@style/AppTextH1"
-            android:textColor="?attr/appTextPrimary"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginEnd="@dimen/size_16dp"
             android:text="@string/privacy_policy"
             android:textAlignment="textStart"
-            android:textSize="@dimen/text_size_24" />
+            android:textColor="?attr/appTextPrimary" />
 
     </LinearLayout>
 
@@ -55,11 +54,9 @@
             style="@style/AppTextSecondary"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:lineSpacingExtra="4dp"
-            android:padding="16dp"
-            android:textColor="@android:color/black"
-            android:textSize="14sp" />
-
+            android:lineSpacingExtra="@dimen/size_4dp"
+            android:padding="@dimen/size_16dp"
+            android:textColor="?attr/appTextPrimary" />
 
     </androidx.core.widget.NestedScrollView>
 
