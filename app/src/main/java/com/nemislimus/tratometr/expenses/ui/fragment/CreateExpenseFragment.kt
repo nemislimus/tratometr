@@ -16,7 +16,6 @@ import android.widget.AutoCompleteTextView
 import android.widget.EditText
 import android.widget.ImageView
 import androidx.appcompat.content.res.AppCompatResources
-import androidx.core.content.ContextCompat.getSystemService
 import androidx.core.os.bundleOf
 import androidx.core.view.isVisible
 import androidx.fragment.app.setFragmentResultListener
@@ -91,7 +90,6 @@ class CreateExpenseFragment : BindingFragment<FragmentCreateExpenseBinding>() {
             expense = getExpense()  // Получаем расход
         }
 
-
         autoCompleteTextView = binding.actvCategory
         ivIcon = binding.ivIcon
         scale = requireContext().resources.displayMetrics.density // Получаем плотность экрана
@@ -157,9 +155,9 @@ class CreateExpenseFragment : BindingFragment<FragmentCreateExpenseBinding>() {
 
             }
             override fun afterTextChanged(s: Editable?) {
-                // Проверка, надо ли сделать кнопку Сохранить активной
                 val item = itemsOriginal.find { it.name == s.toString() }
                 item?.let { showIcons(it.iconResId) }
+                // Проверка, надо ли сделать кнопку Сохранить активной
                 binding.btnAction!!.isEnabled = enableBtnAction()
             }
         })
@@ -344,17 +342,14 @@ class CreateExpenseFragment : BindingFragment<FragmentCreateExpenseBinding>() {
         outState.putString("Description", binding.etDescription.text.toString())
     }
 
-    override fun onStart() {
-        super.onStart()
-        updateItems()
-    }
-
     private fun updateItems() {
         viewModel.getAllCategories { newItems ->
             itemsOriginal = newItems                // Сохраняем отдельно исходный список
             // Подготовка списка для адаптера
             val sortedItems = newItems.sortedBy { it.name }.toMutableList() // Сортировка списка по алфавиту
             sortedItems.add(0, AutoCompleteItem("", 0, true))
+            val item = itemsOriginal.find { it.name == binding.actvCategory.text.toString() }
+            item?.let { showIcons(it.iconResId) }
             // Смена списка в адаптере
             items.clear()
             items.addAll(sortedItems)
