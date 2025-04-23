@@ -29,12 +29,13 @@
 
         <TextView
             android:id="@+id/title"
+            style="@style/AppTextH1"
+            android:textColor="?attr/appTextPrimary"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
             android:text="@string/registration"
-            android:textAlignment="center"
-            android:textSize="@dimen/text_size_24" />
+            android:textAlignment="center" />
 
     </LinearLayout>
 
@@ -112,9 +113,9 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="@dimen/size_32dp"
-            tools:text="Какая-то ошибка"
             android:textColor="#d92d20"
-            android:visibility="gone" />
+            android:visibility="gone"
+            tools:text="Какая-то ошибка" />
 
     </LinearLayout>
 
@@ -144,29 +145,30 @@
                 android:orientation="vertical">
 
                 <TextView
+                    style="@style/AppTextH3"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="@string/agreement_first" />
+                    android:text="@string/agreement_first"
+                    android:textColor="?attr/appTextPrimary" />
 
                 <TextView
                     android:id="@+id/privacy"
+                    style="@style/AppTextH3"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="@string/agreement_second"
-                    android:textColor="@color/accented" />
+                    android:textColor="?attr/appAccentColor" />
             </LinearLayout>
 
         </LinearLayout>
 
-        <Button
+        <com.google.android.material.button.MaterialButton
             android:id="@+id/registrationButton"
-            android:layout_width="match_parent"
-            android:layout_height="@dimen/size_48dp"
+            style="@style/AppButtonStyle"
             android:layout_marginHorizontal="@dimen/size_16dp"
-            android:layout_marginTop="@dimen/size_16dp"
-            android:background="@drawable/shape_rounded_rectangle"
-            android:enabled="false"
-            android:text="@string/register" />
+            android:text="@string/register"
+            android:textAllCaps="false"
+            app:cornerRadius="@dimen/size_16dp" />
     </LinearLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

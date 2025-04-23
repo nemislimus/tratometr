@@ -19,14 +19,12 @@
 
         <TextView
             android:id="@+id/title"
-            style="@style/AppTextH1"
+            style="@style/AppTextH0"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
             android:text="@string/authorization"
-            android:textAlignment="center"
-            android:textColor="@color/text_primary"
-            android:textSize="@dimen/text_size_24" />
+            android:textAlignment="center" />
 
         <com.google.android.material.textfield.TextInputLayout
             android:id="@+id/emailField"
@@ -45,7 +43,7 @@
                 android:hint="@string/email"
                 android:inputType="textEmailAddress"
                 android:paddingVertical="@dimen/size_4dp"
-                android:textColor="@color/text_primary" />
+                android:textColor="?attr/appTextPrimary" />
 
         </com.google.android.material.textfield.TextInputLayout>
 
@@ -56,6 +54,7 @@
             android:layout_height="wrap_content"
             android:layout_marginHorizontal="@dimen/size_16dp"
             android:layout_marginTop="@dimen/size_16dp"
+            android:textColor="?attr/appTextPrimary"
             app:endIconMode="password_toggle"
 
             app:hintEnabled="false">
@@ -67,30 +66,27 @@
                 android:hint="@string/password"
                 android:inputType="textPassword"
                 android:paddingVertical="@dimen/size_4dp"
-                android:textColor="@color/text_primary"
+                android:textColor="?attr/appTextPrimary"
                 android:textSize="@dimen/text_size_16" />
 
         </com.google.android.material.textfield.TextInputLayout>
 
         <TextView
             android:id="@+id/forgotPassword"
+            style="@style/AppTextH3"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
             android:layout_marginTop="@dimen/size_16dp"
             android:text="@string/forgot_password"
-            android:textColor="@color/accented" />
+            android:textColor="?attr/appAccentColor" />
 
         <com.google.android.material.button.MaterialButton
             android:id="@+id/loginButton"
-            android:layout_width="match_parent"
-            android:layout_height="@dimen/size_48dp"
+            style="@style/AppButtonStyle"
             android:layout_marginHorizontal="@dimen/size_16dp"
-            android:layout_marginTop="@dimen/size_16dp"
-            android:enabled="false"
-            android:insetTop="@dimen/size_0dp"
-            android:insetBottom="@dimen/size_0dp"
             android:text="@string/login"
+            android:textAllCaps="false"
             app:cornerRadius="@dimen/size_16dp" />
 
     </LinearLayout>
@@ -105,6 +101,7 @@
 
         <TextView
             android:id="@+id/firstTime"
+            style="@style/AppTextH3"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginBottom="@dimen/size_16dp"
@@ -112,6 +109,7 @@
 
         <TextView
             android:id="@+id/createAccount"
+            style="@style/AppTextH3"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="@dimen/size_4dp"

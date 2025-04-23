@@ -14,6 +14,7 @@
         <item name="appAccentColor">@color/dark_accented</item>
         <item name="appCategoryIconBackground">@color/dark_category_ic_background</item>
         <item name="materialTimePickerTheme">@style/ThemeOverlay.Tratometr.AppTimePicker</item>
+        <item name="appButtonColor">@color/cards</item>
 
         <item name="colorPrimary">@color/accented</item>
 

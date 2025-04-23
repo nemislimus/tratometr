@@ -10,6 +10,7 @@
     <attr name="appErrorColor" format="color"/>
     <attr name="appAccentColor" format="color"/>
     <attr name="appCategoryIconBackground" format="color"/>
+    <attr name="appButtonColor" format="color"/>
 
     <!-- Base application theme. -->
     <style name="Base.Theme.Tratometr" parent="Theme.Material3.DayNight.NoActionBar">
@@ -26,12 +27,20 @@
         <item name="appAccentColor">@color/accented</item>
         <item name="appCategoryIconBackground">@color/category_ic_background</item>
         <item name="materialTimePickerTheme">@style/ThemeOverlay.Tratometr.AppTimePicker</item>
+        <item name="appButtonColor">@color/cards</item>
 
         <item name="colorPrimary">@color/accented</item>
 
     </style>
 
     <style name="Theme.Tratometr" parent="Base.Theme.Tratometr"/>
+
+    <style name="AppTextH0">
+        <item name="android:fontFamily">@font/manrope_weight700_bold</item>
+        <item name="android:textSize">@dimen/text_size_24</item>
+        <item name="android:textAllCaps">false</item>
+        <item name="android:letterSpacing">-0.02</item>
+    </style>
 
     <style name="AppTextH1">
         <item name="android:fontFamily">@font/manrope_weight600_semibold</item>
@@ -43,6 +52,13 @@
     <style name="AppTextH2">
         <item name="android:fontFamily">@font/manrope_weight600_semibold</item>
         <item name="android:textSize">@dimen/text_size_16</item>
+        <item name="android:textAllCaps">false</item>
+        <item name="android:letterSpacing">0</item>
+    </style>
+
+    <style name="AppTextH3">
+        <item name="android:fontFamily">@font/manrope_weight600_semibold</item>
+        <item name="android:textSize">@dimen/text_size_14</item>
         <item name="android:textAllCaps">false</item>
         <item name="android:letterSpacing">0</item>
     </style>
