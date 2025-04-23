@@ -22,4 +22,16 @@
         <item name="cursorColor">?attr/appAccentColor</item>
     </style>
 
+    <style name="AppButtonStyle" parent="Widget.MaterialComponents.Button">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">@dimen/size_48dp</item>
+        <item name="android:layout_marginTop">@dimen/size_16dp</item>
+        <item name="android:enabled">false</item>
+        <item name="android:insetTop">@dimen/size_0dp</item>
+        <item name="android:insetBottom">@dimen/size_0dp</item>
+        <item name="android:textColor">@color/btn_text_selector</item>
+        <item name="android:backgroundTint">@color/btn_background_selector</item>
+
+    </style>
+
 </resources>
