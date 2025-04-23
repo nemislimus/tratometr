@@ -1,5 +1,8 @@
 package com.nemislimus.tratometr.common.util
 
+import android.content.Context
+import android.content.res.Configuration
+import android.util.TypedValue
 import androidx.core.content.ContentProviderCompat.requireContext
 import androidx.core.content.ContextCompat
 import com.google.android.material.textfield.TextInputEditText
@@ -83,14 +86,29 @@ object FieldValidator {
     }
 
     private fun setValidColor(text: TextInputEditText, isValid: Boolean){
-        val validColor = ContextCompat.getColor(text.context, R.color.text_primary)
-        val errorColor = ContextCompat.getColor(text.context, R.color.error)
+
+        val isDarkTheme = (text.context.resources.configuration.uiMode and
+                Configuration.UI_MODE_NIGHT_MASK) == Configuration.UI_MODE_NIGHT_YES
+
+        val validColor = if (isDarkTheme){
+            ContextCompat.getColor(text.context, R.color.dark_text_primary)
+        } else {
+            ContextCompat.getColor(text.context, R.color.text_primary)
+        }
+
+        val errorColor = if (isDarkTheme){
+            ContextCompat.getColor(text.context, R.color.dark_error)
+        } else {
+            ContextCompat.getColor(text.context, R.color.error)
+        }
+
         if (isValid){
             text.setTextColor(validColor)
         } else {
             text.setTextColor(errorColor)
         }
     }
+
 
     fun isValidPassword(password: String): Boolean =
         password.length >= MIN_PASSWORD_LENGTH
