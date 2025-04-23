@@ -18,6 +18,7 @@
         <item name="materialTimePickerTheme">@style/ThemeOverlay.Tratometr.AppTimePicker</item>
 
         <item name="colorPrimary">@color/accented</item>
+        <item name="android:colorBackground">@color/dark_background</item>
 
     </style>
 
