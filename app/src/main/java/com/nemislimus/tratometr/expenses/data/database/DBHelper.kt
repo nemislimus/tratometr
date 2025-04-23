@@ -34,7 +34,8 @@ class DBHelper (context: Context):
             "INSERT INTO CATEGORIES (CATEGORY_NAME, ICON_RES_ID) VALUES ('Дом', 'ic_main_cat_home');",
             "INSERT INTO CATEGORIES (CATEGORY_NAME, ICON_RES_ID) VALUES ('Продукты', 'ic_main_cat_groceries');",
             "INSERT INTO CATEGORIES (CATEGORY_NAME, ICON_RES_ID) VALUES ('Спорт', 'ic_main_cat_sports');",
-            "INSERT INTO CATEGORIES (CATEGORY_NAME, ICON_RES_ID) VALUES ('Досуг', 'ic_main_cat_hobby');"
+            "INSERT INTO CATEGORIES (CATEGORY_NAME, ICON_RES_ID) VALUES ('Досуг', 'ic_main_cat_hobby');",
+            "INSERT INTO CATEGORIES (CATEGORY_NAME, ICON_RES_ID) VALUES ('Семья', 'ic_main_cat_family');"
         )
         for (query in insertCategories) {
             db.execSQL(query)

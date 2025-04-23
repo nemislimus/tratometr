@@ -59,7 +59,11 @@ class ExpensesAdapter(private val listener: ExpensesAdapterListener): RecyclerVi
             }
         }
 
-        holder.flForeground.setOnFocusChangeListener { _, hasFocus ->
+        holder.flForeground.setOnClickListener{
+            holder.icon.requestFocus()
+        }
+
+        holder.icon.setOnFocusChangeListener { _, hasFocus ->
             if (hasFocus) {
                 makeTextViewMultiline(holder.tvCategory)
                 makeTextViewMultiline(holder.tvDescription)
