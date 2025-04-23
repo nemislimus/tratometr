@@ -21,7 +21,9 @@ class CreateExpenseViewModel (
         viewModelScope.launch(Dispatchers.IO) {
             val categories = getAllCategoriesListWithIcons()
             val items = convertCategoriesToAutoCompleteItems(categories)
-            callback(items)
+            withContext(Dispatchers.Main) {
+                callback(items)
+            }
         }
     }
 

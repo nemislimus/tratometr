@@ -10,6 +10,7 @@ import com.nemislimus.tratometr.expenses.domain.model.Category
 import com.nemislimus.tratometr.expenses.ui.model.CreateCategoryItem
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import javax.inject.Inject
 
 class CreateCategoryViewModel(
@@ -40,8 +41,13 @@ class CreateCategoryViewModel(
             .toSet()
     }
 
-    suspend fun saveCategory(name: String, @DrawableRes resId: Int) {
-        interactor.addNewCategory(Category(name, resId))
+    fun saveCategory(name: String, @DrawableRes resId: Int, callback: () -> Unit) {
+        viewModelScope.launch(Dispatchers.IO) {
+            interactor.addNewCategory(Category(name, resId))
+            withContext(Dispatchers.Main) {
+                callback()
+            }
+        }
     }
 
     class Factory @Inject constructor(
