@@ -1,7 +1,10 @@
 package com.nemislimus.tratometr.common.util
 
+import androidx.core.content.ContentProviderCompat.requireContext
+import androidx.core.content.ContextCompat
 import com.google.android.material.textfield.TextInputEditText
 import com.google.android.material.textfield.TextInputLayout
+import com.nemislimus.tratometr.R
 
 object FieldValidator {
 
@@ -22,12 +25,15 @@ object FieldValidator {
     ) {
         return if (emailText.text.toString().trim().isEmpty()) {
             emailField.error = REQUIRED_FIELD
+            setValidColor(emailText, false)
 
         } else if (!isValidEmail(emailText.text.toString())) {
             emailField.error = INVALID_EMAIL
+            setValidColor(emailText, false)
 
         } else {
             emailField.isErrorEnabled = false
+            setValidColor(emailText, true)
 
         }
     }
@@ -38,13 +44,15 @@ object FieldValidator {
     ) {
         return if (passwordText.text.toString().trim().isEmpty()) {
             passwordField.error = REQUIRED_FIELD
+            setValidColor(passwordText, false)
 
         } else if (passwordText.text.toString().length < MIN_PASSWORD_LENGTH) {
             passwordField.error = SHORT_PASSWORD
+            setValidColor(passwordText, false)
 
         } else {
             passwordField.isErrorEnabled = false
-
+            setValidColor(passwordText, true)
         }
     }
 
@@ -59,19 +67,30 @@ object FieldValidator {
         return when {
             password.isEmpty() || repeatPassword.isEmpty() -> {
                 repeatPasswordField.error = null
+                setValidColor(repeatPasswordText, false)
             }
 
             password != repeatPassword -> {
                 repeatPasswordField.error = NOT_MATCH
+                setValidColor(repeatPasswordText, false)
             }
 
             else -> {
                 repeatPasswordField.error = null
+                setValidColor(repeatPasswordText, true)
             }
         }
     }
 
-    fun isFieldNotEmpty(text: String): Boolean = text.trim().isNotEmpty()
+    private fun setValidColor(text: TextInputEditText, isValid: Boolean){
+        val validColor = ContextCompat.getColor(text.context, R.color.text_primary)
+        val errorColor = ContextCompat.getColor(text.context, R.color.error)
+        if (isValid){
+            text.setTextColor(validColor)
+        } else {
+            text.setTextColor(errorColor)
+        }
+    }
 
     fun isValidPassword(password: String): Boolean =
         password.length >= MIN_PASSWORD_LENGTH

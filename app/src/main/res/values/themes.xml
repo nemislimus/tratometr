@@ -33,6 +33,13 @@
 
     <style name="Theme.Tratometr" parent="Base.Theme.Tratometr"/>
 
+    <style name="AppTextH0">
+        <item name="android:fontFamily">@font/manrope_weight700_bold</item>
+        <item name="android:textSize">@dimen/text_size_24</item>
+        <item name="android:textAllCaps">false</item>
+        <item name="android:letterSpacing">-0.02</item>
+    </style>
+
     <style name="AppTextH1">
         <item name="android:fontFamily">@font/manrope_weight600_semibold</item>
         <item name="android:textSize">@dimen/text_size_20</item>
