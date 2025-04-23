@@ -11,10 +11,12 @@ import android.util.TypedValue
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.view.inputmethod.InputMethodManager
 import android.widget.AutoCompleteTextView
 import android.widget.EditText
 import android.widget.ImageView
 import androidx.appcompat.content.res.AppCompatResources
+import androidx.core.content.ContextCompat.getSystemService
 import androidx.core.os.bundleOf
 import androidx.core.view.isVisible
 import androidx.fragment.app.setFragmentResultListener
@@ -87,7 +89,6 @@ class CreateExpenseFragment : BindingFragment<FragmentCreateExpenseBinding>() {
             binding.tvDate.text = DateFormat.format("dd.MM.yyyy", dateInMilisecond).toString()
         } else {
             expense = getExpense()  // Получаем расход
-            dateInMilisecond = today()
         }
 
 
@@ -107,7 +108,11 @@ class CreateExpenseFragment : BindingFragment<FragmentCreateExpenseBinding>() {
             findNavController().popBackStack()
         }
 
-        binding.root.setOnClickListener { requestTouchFocus(binding.root) }
+        binding.root.setOnClickListener {
+            requestTouchFocus(binding.root)
+            val imm = requireActivity().getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+            imm.hideSoftInputFromWindow(view.windowToken, 0)
+        }
 
         autoCompleteTextView.threshold = 1  // Начинать показывать предложения после ввода 1 символа
         // Открыть список при клике или получении фокуса
@@ -133,7 +138,7 @@ class CreateExpenseFragment : BindingFragment<FragmentCreateExpenseBinding>() {
             }
             override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
                 val currentStr = s.toString()
-                if (itemsOriginal.any { it.name == currentStr}) {
+                if (itemsOriginal.any { it.name == currentStr }) {
                     if (items[0].isAdd) {
                         items.removeAt(0)
                         autoCompleteTextView.dismissDropDown() // Скрываем список
@@ -153,6 +158,8 @@ class CreateExpenseFragment : BindingFragment<FragmentCreateExpenseBinding>() {
             }
             override fun afterTextChanged(s: Editable?) {
                 // Проверка, надо ли сделать кнопку Сохранить активной
+                val item = itemsOriginal.find { it.name == s.toString() }
+                item?.let { showIcons(it.iconResId) }
                 binding.btnAction!!.isEnabled = enableBtnAction()
             }
         })
@@ -224,20 +231,21 @@ class CreateExpenseFragment : BindingFragment<FragmentCreateExpenseBinding>() {
             binding.etDescription.text.toString()
         )
         if (isAddMode) {
-            viewModel.addNewExpense(newExpense)
+            viewModel.addNewExpense(newExpense) {
+                findNavController().navigateUp()
+            }
         } else {
-            viewModel.updateExpense(newExpense)
+            viewModel.updateExpense(newExpense) {
+                findNavController().navigateUp()
+            }
         }
-        findNavController().navigateUp()
     }
 
     private fun openCategoryWindow(category: String){
-
         setFragmentResultListener(CreateCategoryFragment.RESULT_KEY) {_, bundle ->
             val categoryName = bundle.getString(CreateCategoryFragment.STRING_KEY) ?: ""
             binding.actvCategory.setText(categoryName)
         }
-
         val direction = CreateExpenseFragmentDirections.actionCreateExpenseFragmentToCreateCategoryFragment(category)
         findNavController().navigate(direction)
     }
@@ -261,11 +269,12 @@ class CreateExpenseFragment : BindingFragment<FragmentCreateExpenseBinding>() {
 
     @SuppressLint("SetTextI18n")
     private fun showEditMode() {
+        dateInMilisecond = expense!!.date
         binding.tvTitle.setText(R.string.edit_expense)
         binding.btnAction?.setText(R.string.btn_save)
         showIcons(expense!!.iconResId)
         binding.actvCategory.setText(expense!!.category)
-        binding.tvDate.text = DateFormat.format("dd.MM.yyyy", expense!!.date).toString()
+        binding.tvDate.text = DateFormat.format("dd.MM.yyyy", dateInMilisecond).toString()
         binding.etAmount.setText(expense!!.amount.toString())
         expense!!.description?.let { binding.etDescription.setText(expense!!.description) }
         // Проверка, надо ли сделать кнопку Сохранить активной
@@ -273,6 +282,7 @@ class CreateExpenseFragment : BindingFragment<FragmentCreateExpenseBinding>() {
     }
 
     private fun showAddMode() {
+        dateInMilisecond = today()
         binding.tvTitle.setText(R.string.add_expense)
         binding.btnAction?.setText(R.string.btn_add)
         binding.tvDate.text = DateFormat.format("dd.MM.yyyy", dateInMilisecond).toString()
@@ -332,6 +342,11 @@ class CreateExpenseFragment : BindingFragment<FragmentCreateExpenseBinding>() {
         outState.putLong("Date", dateInMilisecond)
         outState.putString("Amount", binding.etAmount.text.toString())
         outState.putString("Description", binding.etDescription.text.toString())
+    }
+
+    override fun onStart() {
+        super.onStart()
+        updateItems()
     }
 
     private fun updateItems() {

@@ -169,9 +169,17 @@ class ExpensesFragment : BindingFragment<FragmentExpensesBinding>(), ExpenseFilt
         )
         // Выделяем нужную кнопку фильтра
         accentOnButton(expenseFilter.presetButton)
+
+        // Выделяем Категорию, если выбрана
+        val color = if(expenseFilter.category != null) {
+            ContextCompat.getColor(requireContext(), R.color.accented)
+        } else {
+            binding.tvSum.currentTextColor
+        }
+        binding.tvCategories.setTextColor(color)
+
         // Запрос на получение списка найденых расходов
         binding.progressBar.isVisible = true
-
         viewModel.getExpenseListFilter(
             expenseFilter.startDate,
             expenseFilter.endDate,
@@ -200,7 +208,7 @@ class ExpensesFragment : BindingFragment<FragmentExpensesBinding>(), ExpenseFilt
     }
 
     private fun changeBtnFilterBackground (v: View, isAccent: Boolean) {
-        val currentTextColor = binding.tvCategories.currentTextColor
+        val currentTextColor = binding.tvSum.currentTextColor
         if (v is TextView) {
             val res = if(isAccent) R.drawable.btn_blue_background_r6 else R.drawable.btn_white_background_r6
             val color = if(isAccent) ContextCompat.getColor(requireContext(), R.color.button_text) else currentTextColor
@@ -214,7 +222,6 @@ class ExpensesFragment : BindingFragment<FragmentExpensesBinding>(), ExpenseFilt
             }
             binding.ivCalendar.imageTintList = ColorStateList.valueOf(color)
         }
-
     }
 
     private fun initializingRecyclerView() {

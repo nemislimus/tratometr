@@ -13,6 +13,7 @@ class ExpensesViewHolder(private val binding: ItemHistoryExpenseBinding) : Recyc
     val flForeground = binding.flForeground.flForeground
     val tvCategory = binding.flForeground.tvCategory
     val tvDescription = binding.flForeground.tvDescription
+    val icon = binding.flForeground.icon
 
     lateinit var item: Historical.HistoryContent
 
