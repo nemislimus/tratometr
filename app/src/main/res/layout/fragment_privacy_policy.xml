@@ -22,14 +22,15 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="@dimen/size_16dp"
-            android:layout_marginEnd="@dimen/size_8dp"
             android:layout_marginTop="@dimen/size_16dp"
+            android:layout_marginEnd="@dimen/size_8dp"
             android:src="@drawable/ic_arrows_back"
             tools:ignore="ContentDescription" />
 
         <TextView
             android:id="@+id/title"
             style="@style/AppTextH1"
+            android:textColor="?attr/appTextPrimary"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginEnd="@dimen/size_16dp"
@@ -51,13 +52,13 @@
 
         <TextView
             android:id="@+id/privacyTextView"
+            style="@style/AppTextSecondary"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:padding="16dp"
-            android:textSize="14sp"
             android:lineSpacingExtra="4dp"
-            android:textColor="@android:color/black" />
-
+            android:padding="16dp"
+            android:textColor="@android:color/black"
+            android:textSize="14sp" />
 
 
     </androidx.core.widget.NestedScrollView>
