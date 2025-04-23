@@ -10,13 +10,6 @@ class AnalyticsDao @Inject constructor(
     private val databaseHelper: DBHelper
 ) {
 // ################   ЗАПРОСЫ ДЛЯ ОКНА АНАЛИТИКА   #########################################################################################
-    // Список категорий с иконками и фильтром(период, категория)
-    /*  Образец запроса
-        SELECT EXPENSES.CATEGORY, CATEGORIES.ICON_RES_ID
-        FROM EXPENSES LEFT JOIN CATEGORIES ON EXPENSES.CATEGORY = CATEGORIES.CATEGORY_NAME
-        WHERE (((EXPENSES.Date)>=500 And (EXPENSES.Date)<1555) AND ((EXPENSES.CATEGORY)="Еда"))
-        ORDER BY EXPENSES.CATEGORY;
-    */
 
     private var dataBase: SQLiteDatabase? = null
 
@@ -32,7 +25,15 @@ class AnalyticsDao @Inject constructor(
         dataBase = null
     }
 
-    fun getCategoriesListWithIconsFilter(startDate: Long?, endDate: Long?, category: String?): List<CategoryEntity> {
+    // Список категорий с иконками и фильтром(период, категория)
+    /*  Образец запроса
+    SELECT EXPENSES.CATEGORY, CATEGORIES.ICON_RES_ID
+    FROM EXPENSES LEFT JOIN CATEGORIES ON EXPENSES.CATEGORY = CATEGORIES.CATEGORY_NAME
+    WHERE (((EXPENSES.Date)>=500 And (EXPENSES.Date)<2500))
+    GROUP BY EXPENSES.CATEGORY, CATEGORIES.ICON_RES_ID
+    ORDER BY EXPENSES.CATEGORY;
+    */
+    fun getCategoriesListWithIconsFilter(startDate: Long?, endDate: Long?): List<CategoryEntity> {
         val db = getOrOpenDatabase()
 
         val categories = mutableListOf<CategoryEntity>()
@@ -40,7 +41,7 @@ class AnalyticsDao @Inject constructor(
         val queryBuilder =
             StringBuilder("SELECT EXPENSES.CATEGORY, CATEGORIES.ICON_RES_ID ")
         queryBuilder.append("FROM EXPENSES LEFT JOIN CATEGORIES ON EXPENSES.CATEGORY = CATEGORIES.CATEGORY_NAME ")
-        queryBuilder.append("WHERE  1=1")
+        queryBuilder.append("WHERE 1=1")
         val args = mutableListOf<String>()
         // Добавляем условия для дат, если они заданы
         if (startDate != null) {
@@ -51,11 +52,8 @@ class AnalyticsDao @Inject constructor(
             queryBuilder.append(" AND EXPENSES.DATE < ?")
             args.add(endDate.toString())
         }
-        // Добавляем условие для категории, если она задана
-        if (category != null) {
-            queryBuilder.append(" AND EXPENSES.CATEGORY = ?")
-            args.add("%$category%")
-        }
+        // Добавляем группировку
+        queryBuilder.append(" GROUP BY EXPENSES.CATEGORY, CATEGORIES.ICON_RES_ID")
         // Добавляем сортировку
         queryBuilder.append(" ORDER BY EXPENSES.CATEGORY;")
         // Выполняем запрос
@@ -100,7 +98,7 @@ class AnalyticsDao @Inject constructor(
         // Добавляем условие для категории, если она задана
         if (category != null) {
             queryBuilder.append(" AND EXPENSES.CATEGORY = ?")
-            args.add("%$category%")
+            args.add("category")
         }
         // Выполняем запрос
         val cursor = db.rawQuery(queryBuilder.toString(), args.toTypedArray())
