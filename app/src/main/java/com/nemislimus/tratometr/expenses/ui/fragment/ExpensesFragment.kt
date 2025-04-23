@@ -14,6 +14,7 @@ import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.ItemTouchHelper
+import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.a2t.myapplication.main.ui.activity.recycler.model.ScrollState
 import com.google.android.material.datepicker.MaterialDatePicker
@@ -51,6 +52,10 @@ class ExpensesFragment : BindingFragment<FragmentExpensesBinding>(), ExpenseFilt
     private var scrollState = ScrollState.STOPPED
     private var scrollJob = lifecycleScope.launch {}
 
+    companion object {
+        const val SCROLL_POSITION = "scroll_position"
+    }
+
     override fun onAttach(context: Context) {
         context.appComponent.inject(this)
         super.onAttach(context)
@@ -74,10 +79,14 @@ class ExpensesFragment : BindingFragment<FragmentExpensesBinding>(), ExpenseFilt
         viewModel.getExpensesLiveData().observe(viewLifecycleOwner) { state ->
             binding.progressBar.isVisible = false
             binding.tvSum.text = MoneyConverter.convertBigDecimalToRublesString(requireContext(),state.sum)
-            val empty = state.expenses.isEmpty()
-            binding.recycler.isVisible = !empty
-            binding.placeholder.isVisible = empty
+            val emptyList = state.expenses.isEmpty()
+            binding.recycler.isVisible = !emptyList
+            binding.placeholder.isVisible = emptyList
             updateRecyclerView(state.expenses)
+            if (!emptyList && savedInstanceState != null) {
+                    val scrollPosition = savedInstanceState.getInt(SCROLL_POSITION, 0)
+                    recycler.scrollToPosition(scrollPosition)
+            }
 
         }
 
@@ -299,10 +308,21 @@ class ExpensesFragment : BindingFragment<FragmentExpensesBinding>(), ExpenseFilt
         }
         scrollJob.cancel()
         scrollJob = viewLifecycleOwner.lifecycleScope.launch {
-            delay(1200)
-            if (binding.ivBtnScroll != null) {
-                binding.ivBtnScroll.isVisible = false
-            }
+            delay(1000)
+            binding.ivBtnScroll?.isVisible = false
         }
+    }
+
+    override fun onSaveInstanceState(outState: Bundle) {
+        super.onSaveInstanceState(outState)
+        // Получаем текущую позицию прокрутки
+        val layoutManager = recycler.layoutManager as LinearLayoutManager
+        val scrollPosition = layoutManager.findFirstVisibleItemPosition()
+        outState.putInt(SCROLL_POSITION, scrollPosition)
+    }
+
+    override fun onDestroyView() {
+        scrollJob.cancel()
+        super.onDestroyView()
     }
 }

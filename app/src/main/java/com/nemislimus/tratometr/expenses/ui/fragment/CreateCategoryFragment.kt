@@ -13,7 +13,6 @@ import androidx.core.content.ContextCompat
 import androidx.core.os.bundleOf
 import androidx.fragment.app.setFragmentResult
 import androidx.fragment.app.viewModels
-import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import com.nemislimus.tratometr.R
@@ -22,9 +21,6 @@ import com.nemislimus.tratometr.common.util.BindingFragment
 import com.nemislimus.tratometr.databinding.FragmentCreateCategoryBinding
 import com.nemislimus.tratometr.expenses.ui.fragment.adpter.CreateCategoryAdapter
 import com.nemislimus.tratometr.expenses.ui.viewmodel.CreateCategoryViewModel
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
 import javax.inject.Inject
 
 class CreateCategoryFragment : BindingFragment<FragmentCreateCategoryBinding>() {
@@ -66,13 +62,10 @@ class CreateCategoryFragment : BindingFragment<FragmentCreateCategoryBinding>() 
         binding.tbCreateCategory.setOnClickListener { findNavController().navigateUp() }
 
         binding.btnCategorySave.setOnClickListener {
-            viewLifecycleOwner.lifecycleScope.launch {
-                withContext(Dispatchers.IO) {
-                    viewModel.saveCategory(
-                        binding.etTitleOfCategory.text.toString().trim(),
-                        selectedIconRes
-                    )
-                }
+            viewModel.saveCategory(
+                binding.etTitleOfCategory.text.toString().trim(),
+                selectedIconRes
+            ) {
                 setFragmentResult(
                     RESULT_KEY,
                     bundleOf(STRING_KEY to binding.etTitleOfCategory.text.toString())
