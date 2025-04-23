@@ -194,9 +194,9 @@
         <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:orientation="vertical"
+            android:orientation="horizontal"
             android:layout_gravity="bottom|end"
-            android:gravity="center_horizontal"
+            android:gravity="center_vertical"
             android:animateLayoutChanges="true"
             android:layout_marginEnd="@dimen/size_16dp"
             android:layout_marginBottom="@dimen/size_48dp">
@@ -206,7 +206,7 @@
                 android:id="@+id/iv_btn_scroll"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginBottom="20dp"
+                android:layout_marginEnd="20dp"
                 android:background="@drawable/circle_create_category_icon_item"
                 android:padding="12dp"
                 android:src="@drawable/ic_scroll_down"
