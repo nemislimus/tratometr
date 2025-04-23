@@ -30,6 +30,7 @@
         <item name="appButtonColor">@color/cards</item>
 
         <item name="colorPrimary">@color/accented</item>
+        <item name="android:colorBackground">@color/background</item>
 
     </style>
 
