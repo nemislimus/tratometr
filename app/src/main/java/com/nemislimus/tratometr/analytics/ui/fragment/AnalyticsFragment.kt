@@ -2,28 +2,44 @@ package com.nemislimus.tratometr.analytics.ui.fragment
 
 import android.content.Context
 import android.os.Bundle
+import android.util.TypedValue
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ImageView
+import android.widget.TextView
+import androidx.annotation.AttrRes
 import androidx.fragment.app.viewModels
 import com.nemislimus.tratometr.analytics.ui.viewmodel.AnalyticsViewModel
 import com.nemislimus.tratometr.common.appComponent
 import androidx.core.content.ContextCompat
 import androidx.core.view.isVisible
+import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
+import com.google.android.material.datepicker.MaterialDatePicker
 import com.nemislimus.tratometr.R
 import com.nemislimus.tratometr.analytics.domain.model.CategoryFraction
+import com.nemislimus.tratometr.analytics.ui.fragment.adapter.AnalyticsAdapter
 import com.nemislimus.tratometr.analytics.ui.model.AnalyticsState
 import com.nemislimus.tratometr.common.util.BindingFragment
+import com.nemislimus.tratometr.common.util.DateRangeHelper
+import com.nemislimus.tratometr.common.util.ExpenseFilter
+import com.nemislimus.tratometr.common.util.ExpenseFilterCallback
+import com.nemislimus.tratometr.common.util.TimePresetManager
 import com.nemislimus.tratometr.databinding.FragmentAnalyticsBinding
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 import javax.inject.Inject
 import java.math.BigDecimal
 
-class AnalyticsFragment : BindingFragment<FragmentAnalyticsBinding>() {
+class AnalyticsFragment : BindingFragment<FragmentAnalyticsBinding>(), ExpenseFilterCallback {
 
     @Inject
     lateinit var vmFactory: AnalyticsViewModel.Factory
     private val viewModel: AnalyticsViewModel by viewModels { vmFactory }
+
+//    private val adapter = AnalyticsAdapter()
+    private val datePresetViews = arrayOfNulls<View>(5)
 
 
     override fun onAttach(context: Context) {
@@ -43,7 +59,6 @@ class AnalyticsFragment : BindingFragment<FragmentAnalyticsBinding>() {
 
         setUiConfigurations()
 
-
         val context = requireContext()
         val sumList = mutableListOf<BigDecimal>(BigDecimal("500"), BigDecimal("300"), BigDecimal("100"), BigDecimal("50")) // Значения для диаграммы
         val colorsList = mutableListOf<Int>(
@@ -58,20 +73,33 @@ class AnalyticsFragment : BindingFragment<FragmentAnalyticsBinding>() {
 
     override fun onStart() {
         super.onStart()
+
         viewModel.observeState().observe(viewLifecycleOwner) { state ->
             stateProcessing(state)
         }
+
+        ExpenseFilter.addExpenseFilterListener(this)
     }
 
-    private fun setUiConfigurations() {
-        binding.btnSettings.setOnClickListener {
-            findNavController().navigate(
-                R.id.action_analyticsFragment_to_settingsFragment
-            )
-        }
+    override fun onStop() {
+        ExpenseFilter.removeExpenseFilterListener(this)
+        super.onStop()
+    }
 
-        binding.btnHistory.setOnClickListener {
-            findNavController().navigateUp()
+    override fun onFilterChanged(expenseFilter: ExpenseFilter) {
+        binding.tvDateRange.text = DateRangeHelper.convertDatesInRange(
+            requireContext(),
+            expenseFilter.startDate,
+            expenseFilter.endDate
+        )
+
+        setDatePresetChipsColors(datePresetViews, expenseFilter.presetButton?.index)
+
+        viewLifecycleOwner.lifecycleScope.launch(Dispatchers.Default) {
+            viewModel.getFractionsByFilter(
+                expenseFilter.startDate,
+                expenseFilter.endDate
+            )
         }
     }
 
@@ -83,8 +111,122 @@ class AnalyticsFragment : BindingFragment<FragmentAnalyticsBinding>() {
         }
     }
 
-    private fun showContent(fractions: List<CategoryFraction>) {
+    private fun setDatePresetChipsColors (presetViews: Array<View?>, presetIndex: Int?) {
+        presetIndex?.let {
+            val defaultTextColor = getThemeAttrColor(R.attr.appTextPrimary)
+            val selectedIconColor = getThemeAttrColor(R.attr.appAccentColor)
+            val selectedTextColor = ContextCompat.getColor(requireContext(), R.color.button_text)
 
+            presetViews.forEachIndexed { index, view ->
+                view?.let {
+                    if (view is TextView) {
+                        if (index == presetIndex) {
+                            view.setTextColor(selectedTextColor)
+                            view.setBackgroundResource(R.drawable.btn_blue_background_r6)
+                        } else {
+                            view.setTextColor(defaultTextColor)
+                            view.setBackgroundResource(R.drawable.btn_white_background_r6)
+                        }
+                    } else if(view is ImageView){
+                        if (index == presetIndex) {
+                            view.setColorFilter(selectedIconColor)
+                        } else {
+                            view.clearColorFilter()
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    private fun getThemeAttrColor(@AttrRes resId: Int): Int {
+        val themeResourceValue = TypedValue()
+        val theme = requireContext().theme
+        theme.resolveAttribute(resId, themeResourceValue, true)
+        return themeResourceValue.data
+    }
+
+    private fun setUiConfigurations() {
+//        binding.rvAnalyticsList.adapter = adapter
+
+        binding.btnSettings.setOnClickListener {
+            findNavController().navigate(R.id.action_analyticsFragment_to_settingsFragment)
+        }
+
+        binding.btnHistory.setOnClickListener {
+            findNavController().navigateUp()
+        }
+
+        setDatePresetViewsArray()
+        setDatePresetListeners()
+    }
+
+    private fun setDatePresetListeners() {
+        binding.ivCalendarPreset.setOnClickListener {
+            val dateRangePicker = MaterialDatePicker.Builder.dateRangePicker()
+                .setTitleText(R.string.select_range)
+                .build()
+
+            dateRangePicker.addOnPositiveButtonClickListener { selection ->
+                ExpenseFilter.setDateInterval(
+                    selection.first,
+                    selection.second + DAY_GAP,
+                    TimePresetManager.PERIOD
+                )
+            }
+
+            dateRangePicker.show(parentFragmentManager, DATE_RANGE_PICKER)
+        }
+
+        binding.tvDayPreset.setOnClickListener {
+            val dayInterval = DateRangeHelper.getCurrentDay()
+            ExpenseFilter.setDateInterval(
+                dayInterval.first,
+                dayInterval.second,
+                TimePresetManager.DAY
+            )
+        }
+
+        binding.tvWeekPreset.setOnClickListener {
+            val weekInterval = DateRangeHelper.getCurrentWeek()
+            ExpenseFilter.setDateInterval(
+                weekInterval.first,
+                weekInterval.second,
+                TimePresetManager.WEEK
+            )
+        }
+
+        binding.tvMonthPreset.setOnClickListener {
+            val monthInterval = DateRangeHelper.getCurrentMonth()
+            ExpenseFilter.setDateInterval(
+                monthInterval.first,
+                monthInterval.second,
+                TimePresetManager.MONTH
+            )
+        }
+
+        binding.tvYearPreset.setOnClickListener {
+            val yearInterval = DateRangeHelper.getCurrentYear()
+            ExpenseFilter.setDateInterval(
+                yearInterval.first,
+                yearInterval.second,
+                TimePresetManager.YEAR
+            )
+        }
+    }
+
+    private fun setDatePresetViewsArray() {
+        with(binding) {
+            datePresetViews[0] = ivCalendarPreset
+            datePresetViews[1] = tvDayPreset
+            datePresetViews[2] = tvWeekPreset
+            datePresetViews[3] = tvMonthPreset
+            datePresetViews[4] = tvYearPreset
+        }
+    }
+
+    private fun showContent(fractions: List<CategoryFraction>) {
+//        adapter.setFractions(fractions)
     }
 
     private fun showPlaceholder() {
@@ -102,4 +244,10 @@ class AnalyticsFragment : BindingFragment<FragmentAnalyticsBinding>() {
 
         //Обработать отображение диаграммы и суммы
     }
+
+    companion object {
+        const val DATE_RANGE_PICKER = "date_range_picker"
+        const val DAY_GAP: Long = 24 * 60 * 60 * 1000
+    }
+
 }

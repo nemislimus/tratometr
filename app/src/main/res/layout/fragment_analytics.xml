@@ -35,7 +35,7 @@
         app:layout_constraintEnd_toEndOf="parent"/>
 
     <TextView
-        android:id="@+id/tvTimeRange"
+        android:id="@+id/tvDateRange"
         style="@style/AppTextH2"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
@@ -190,7 +190,7 @@
         android:layout_gravity="center"
         android:indeterminateTint="?attr/appAccentColor"
         android:indeterminate="true"
-        android:visibility="gone"
+        android:visibility="visible"
         android:layout_marginTop="@dimen/size_12dp"
         android:layout_marginBottom="@dimen/size_16dp"
         app:layout_constraintStart_toStartOf="parent"
@@ -242,7 +242,7 @@
         android:id="@+id/grAnalyticsContent"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:visibility="visible"
+        android:visibility="gone"
         app:constraint_referenced_tags="sorting, analytics_list"/>
 
 </androidx.constraintlayout.widget.ConstraintLayout>
