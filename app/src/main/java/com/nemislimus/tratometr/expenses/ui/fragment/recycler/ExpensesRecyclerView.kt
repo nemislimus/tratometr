@@ -20,20 +20,6 @@ class ExpensesRecyclerView(
 
     fun setupRecyclerView() {
         recycler.adapter = adapter
-        recycler.setLayoutManager(object : LinearLayoutManager(expensesFragment.requireContext()) {
-            // Отменяем скольжение в режиме сдвига
-            override fun requestChildRectangleOnScreen(
-                parent: RecyclerView,
-                child: View,
-                rect: Rect,
-                immediate: Boolean,
-                focusedChildVisible: Boolean
-            ): Boolean {
-                if (expensesFragment.requireActivity().currentFocus is ImageView)
-                    super.requestChildRectangleOnScreen(parent, child, rect, immediate, focusedChildVisible)
-                return false
-            }
-        })
         recycler.itemAnimator = DefaultItemAnimator().apply {
             removeDuration = 150
         }
