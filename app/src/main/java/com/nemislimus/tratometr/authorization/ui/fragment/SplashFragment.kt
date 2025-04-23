@@ -28,7 +28,7 @@ import javax.inject.Inject
 class SplashFragment : BindingFragment<FragmentSplashBinding>() {
 
     companion object {
-        private const val FOUR_SECONDS = 300L
+        private const val FOUR_SECONDS = 4000L
     }
 
     @Inject
