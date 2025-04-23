@@ -17,7 +17,7 @@ class GetAllCategoriesFractionsUseCase @Inject constructor(
         var totalMoneySpend = BigDecimal("0")
 
         val allCategoriesList = withContext(Dispatchers.IO) {
-            repository.getCategoriesListWithIconsFilter(startDate, endDate, null)
+            repository.getCategoriesListWithIconsFilter(startDate, endDate)
         }
 
         if (allCategoriesList.isNotEmpty()) {

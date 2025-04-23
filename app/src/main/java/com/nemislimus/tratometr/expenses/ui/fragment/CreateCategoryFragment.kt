@@ -124,7 +124,5 @@ class CreateCategoryFragment : BindingFragment<FragmentCreateCategoryBinding>() 
     companion object {
         const val RESULT_KEY = "result_key"
         const val STRING_KEY = "string_key"
-
     }
-
 }

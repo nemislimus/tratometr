@@ -4,17 +4,91 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
+import com.nemislimus.tratometr.analytics.domain.model.CategoryFraction
 import com.nemislimus.tratometr.analytics.domain.usecase.GetAllCategoriesFractionsUseCase
 import com.nemislimus.tratometr.analytics.ui.model.AnalyticsState
+import java.math.BigDecimal
 import javax.inject.Inject
 
 class AnalyticsViewModel(
     private val getFractionsUseCase: GetAllCategoriesFractionsUseCase
 ) : ViewModel() {
 
-    private val state = MutableLiveData<AnalyticsState>(AnalyticsState.Loading)
+    private var sortedByDesc = true
+    private var withOthersCategories = false
+    private var originRequestedFractions: List<CategoryFraction> = listOf()
+
+    private val state = MutableLiveData<AnalyticsState>()
     fun observeState(): LiveData<AnalyticsState> = state
 
+    suspend fun getFractionsByFilter(startDate: Long?, endDate: Long?) {
+        setState(AnalyticsState.Loading)
+
+        val fractionsFromDatabase = getFractionsUseCase.execute(startDate, endDate)
+
+        if (fractionsFromDatabase.isNotEmpty()) {
+            originRequestedFractions = fractionsFromDatabase
+            setState(AnalyticsState.Content(generateFractionList(), sortedByDesc))
+        } else {
+            setState(AnalyticsState.Empty)
+        }
+    }
+
+    fun getFractionsForChart(list: List<CategoryFraction>, byDesc: Boolean): List<BigDecimal> {
+        return if (byDesc) {
+            list.take(NUMB_OF_COLORS).map { fraction -> fraction.categorySumAmount }
+        } else {
+            list.takeLast(NUMB_OF_COLORS).reversed().map { fraction -> fraction.categorySumAmount }
+        }
+    }
+
+    private fun generateFractionList(
+        byDesc: Boolean = sortedByDesc,
+        withOthers: Boolean = withOthersCategories
+    ): List<CategoryFraction> {
+
+        val list: List<CategoryFraction>
+
+        if (byDesc) {
+            val sortedList = originRequestedFractions.sortedByDescending { it.categorySumAmount }
+            val coloredList: List<CategoryFraction> = sortedList.take(NUMB_OF_COLORS - 1)
+            val othersFractions = sortedList.drop(NUMB_OF_COLORS - 1)
+            val otherFractionInstance = createOtherFractionInstance(othersFractions)
+
+            list = if (withOthers) {
+                coloredList + otherFractionInstance + othersFractions
+            } else {
+                coloredList + otherFractionInstance
+            }
+
+        } else {
+            val sortedList = originRequestedFractions.sortedBy { it.categorySumAmount }
+            val coloredList: List<CategoryFraction> = sortedList.takeLast(NUMB_OF_COLORS - 1)
+            val othersFractions = sortedList.dropLast(NUMB_OF_COLORS - 1)
+            val otherFractionInstance = createOtherFractionInstance(othersFractions)
+
+            list = if (withOthers) {
+                othersFractions + otherFractionInstance + coloredList
+            } else {
+                listOf(otherFractionInstance) + coloredList
+            }
+        }
+
+        return list
+    }
+
+    private fun createOtherFractionInstance(otherFractions: List<CategoryFraction>): CategoryFraction {
+        return CategoryFraction(
+            "",
+            0,
+            otherFractions.sumOf { it.fractionPercentValue },
+            otherFractions.sumOf { it.categorySumAmount }
+        )
+    }
+
+    private fun setState(newState: AnalyticsState) {
+        state.postValue(newState)
+    }
 
     class Factory @Inject constructor(
         private val useCase: GetAllCategoriesFractionsUseCase
@@ -25,5 +99,9 @@ class AnalyticsViewModel(
             require(modelClass == AnalyticsViewModel::class.java)
             return AnalyticsViewModel(useCase) as T
         }
+    }
+
+    companion object {
+        const val NUMB_OF_COLORS = 8
     }
 }

@@ -10,18 +10,29 @@
     android:background="@drawable/card_background_regular">
 
     <ImageView
-        android:id="@+id/ivCategoryIconAnalytic"
+        android:id="@+id/ivCategoryIconBackAnalytic"
         android:layout_width="@dimen/size_32dp"
         android:layout_height="@dimen/size_32dp"
         android:layout_marginStart="@dimen/size_16dp"
-        android:padding="6dp"
-        app:tint="@color/cards"
-        tools:src="@drawable/ic_custom_cat_02"
-        android:background="@drawable/circle_icons"
+        android:src="@drawable/circle_icons"
         tools:ignore="ContentDescription"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintBottom_toBottomOf="parent"/>
+
+    <ImageView
+        android:id="@+id/ivCategoryIconAnalytic"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:padding="6dp"
+        app:tint="@color/button_text"
+        tools:src="@drawable/ic_custom_cat_02"
+        android:background="@android:color/transparent"
+        tools:ignore="ContentDescription"
+        app:layout_constraintStart_toStartOf="@id/ivCategoryIconBackAnalytic"
+        app:layout_constraintTop_toTopOf="@id/ivCategoryIconBackAnalytic"
+        app:layout_constraintBottom_toBottomOf="@id/ivCategoryIconBackAnalytic"
+        app:layout_constraintEnd_toEndOf="@id/ivCategoryIconBackAnalytic"/>
 
     <TextView
         android:id="@+id/tvCategoryNameAnalytic"

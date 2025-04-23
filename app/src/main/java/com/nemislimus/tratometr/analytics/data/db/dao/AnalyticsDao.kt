@@ -98,7 +98,7 @@ class AnalyticsDao @Inject constructor(
         // Добавляем условие для категории, если она задана
         if (category != null) {
             queryBuilder.append(" AND EXPENSES.CATEGORY = ?")
-            args.add("category")
+            args.add(category)
         }
         // Выполняем запрос
         val cursor = db.rawQuery(queryBuilder.toString(), args.toTypedArray())
