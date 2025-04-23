@@ -1,22 +1,23 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    xmlns:tools="http://schemas.android.com/tools"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     tools:context=".authorization.ui.fragment.NewPassFragment">
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        app:layout_constraintTop_toTopOf="parent"
+        android:orientation="vertical"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        android:orientation="vertical">
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
 
         <TextView
             android:id="@+id/title"
+            style="@style/AppTextH0"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
@@ -64,27 +65,26 @@
 
         </com.google.android.material.textfield.TextInputLayout>
 
-        <Button
+        <com.google.android.material.button.MaterialButton
             android:id="@+id/confirm_buttonButton"
-            android:layout_width="match_parent"
-            android:layout_height="@dimen/size_48dp"
+            style="@style/AppButtonStyle"
             android:layout_marginHorizontal="@dimen/size_16dp"
-            android:layout_marginTop="@dimen/size_16dp"
-            android:background="@drawable/shape_rounded_rectangle"
             android:enabled="false"
-            android:text="@string/confirm" />
+            android:text="@string/confirm"
+            android:textAllCaps="false"
+            app:cornerRadius="@dimen/size_16dp" />
 
         <TextView
             android:id="@+id/backButton"
+            style="@style/AppTextButton"
             android:layout_width="wrap_content"
             android:layout_height="@dimen/size_48dp"
             android:layout_gravity="center"
-            android:gravity="center"
             android:layout_marginTop="@dimen/size_16dp"
-            android:fontFamily="@font/manrope_weight400_regular"
-            android:textSize="@dimen/text_size_16"
+            android:gravity="center"
             android:text="@string/return_to_auth"
-            android:textColor="@color/accented" />
+            android:textColor="?attr/appAccentColor"
+            />
 
     </LinearLayout>
 
