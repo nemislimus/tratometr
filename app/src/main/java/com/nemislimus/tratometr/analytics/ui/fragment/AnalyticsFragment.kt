@@ -38,7 +38,7 @@ class AnalyticsFragment : BindingFragment<FragmentAnalyticsBinding>(), ExpenseFi
     lateinit var vmFactory: AnalyticsViewModel.Factory
     private val viewModel: AnalyticsViewModel by viewModels { vmFactory }
 
-//    private val adapter = AnalyticsAdapter()
+    private val adapter = AnalyticsAdapter()
     private val datePresetViews = arrayOfNulls<View>(5)
 
 
@@ -75,7 +75,7 @@ class AnalyticsFragment : BindingFragment<FragmentAnalyticsBinding>(), ExpenseFi
         super.onStart()
 
         viewModel.observeState().observe(viewLifecycleOwner) { state ->
-            stateProcessing(state)
+            listStateProcessing(state)
         }
 
         ExpenseFilter.addExpenseFilterListener(this)
@@ -103,7 +103,7 @@ class AnalyticsFragment : BindingFragment<FragmentAnalyticsBinding>(), ExpenseFi
         }
     }
 
-    private fun stateProcessing(state: AnalyticsState) {
+    private fun listStateProcessing(state: AnalyticsState) {
         when(state) {
             is AnalyticsState.Content -> showContent(state.fractions)
             AnalyticsState.Empty -> showPlaceholder()
@@ -147,7 +147,7 @@ class AnalyticsFragment : BindingFragment<FragmentAnalyticsBinding>(), ExpenseFi
     }
 
     private fun setUiConfigurations() {
-//        binding.rvAnalyticsList.adapter = adapter
+        binding.rvAnalyticsList.adapter = adapter
 
         binding.btnSettings.setOnClickListener {
             findNavController().navigate(R.id.action_analyticsFragment_to_settingsFragment)
@@ -155,6 +155,10 @@ class AnalyticsFragment : BindingFragment<FragmentAnalyticsBinding>(), ExpenseFi
 
         binding.btnHistory.setOnClickListener {
             findNavController().navigateUp()
+        }
+
+        binding.tvSortCategories.setOnClickListener {
+            // TO DO
         }
 
         setDatePresetViewsArray()
@@ -226,7 +230,11 @@ class AnalyticsFragment : BindingFragment<FragmentAnalyticsBinding>(), ExpenseFi
     }
 
     private fun showContent(fractions: List<CategoryFraction>) {
-//        adapter.setFractions(fractions)
+        binding.pbAnalyticsProgressBar.isVisible = false
+        binding.grPlaceholderAnalytics.isVisible = false
+        binding.grAnalyticsContent.isVisible = true
+
+        adapter.setFractions(fractions)
     }
 
     private fun showPlaceholder() {

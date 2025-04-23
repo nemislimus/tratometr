@@ -9,6 +9,7 @@ sealed interface AnalyticsState {
     data object Empty : AnalyticsState
 
     data class Content(
-        val fractions: List<CategoryFraction>
+        val fractions: List<CategoryFraction>,
+        val byDescent: Boolean
     ) : AnalyticsState
 }
