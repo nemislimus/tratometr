@@ -6,6 +6,8 @@ import android.util.TypedValue
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.view.animation.Animation
+import android.view.animation.AnimationUtils
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.annotation.AttrRes
@@ -41,9 +43,12 @@ class AnalyticsFragment : BindingFragment<FragmentAnalyticsBinding>(), ExpenseFi
     private val adapter = AnalyticsAdapter { clickOnOtherCategoryFraction() }
     private val datePresetViews = arrayOfNulls<View>(5)
 
+    private lateinit var animationFadeIn: Animation
+
 
     override fun onAttach(context: Context) {
         requireActivity().appComponent.inject(this)
+        animationFadeIn = AnimationUtils.loadAnimation(context, R.anim.fade_in)
         super.onAttach(context)
     }
 
@@ -56,11 +61,8 @@ class AnalyticsFragment : BindingFragment<FragmentAnalyticsBinding>(), ExpenseFi
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        setUiConfigurations()
 
-//        val sumList = mutableListOf<BigDecimal>(BigDecimal("500"), BigDecimal("300"), BigDecimal("100"), BigDecimal("50"))
-//
-//        binding.rcvMainChart.setData(sumList)
+        setUiConfigurations()
     }
 
     override fun onStart() {
@@ -93,24 +95,20 @@ class AnalyticsFragment : BindingFragment<FragmentAnalyticsBinding>(), ExpenseFi
                 expenseFilter.endDate
             )
         }
+
+        binding.tvTotalAmount.startAnimation(animationFadeIn)
+        binding.tvDateRange.startAnimation(animationFadeIn)
+        binding.rcvMainChart.startAnimation(animationFadeIn)
     }
 
     private fun stateProcessing(state: AnalyticsState) {
         when(state) {
             is AnalyticsState.Content -> showContent(state.fractions, state.byDescent)
             AnalyticsState.Empty -> showPlaceholder()
-            AnalyticsState.Loading -> showLoading()
         }
     }
 
     private fun showContent(fractions: List<CategoryFraction>, sortByDesc: Boolean) {
-        if (!binding.grAnalyticsContent.isVisible) {
-            binding.pbAnalyticsProgressBar.isVisible = false
-            binding.grPlaceholderAnalytics.isVisible = false
-            binding.grAnalyticsContent.isVisible = true
-        }
-
-        setSortIcon(sortByDesc)
         adapter.setFractions(fractions, sortByDesc)
 
         if (fractions.size > AnalyticsViewModel.NUMB_OF_COLORS) {
@@ -121,25 +119,21 @@ class AnalyticsFragment : BindingFragment<FragmentAnalyticsBinding>(), ExpenseFi
             }
         }
 
+        setSortIcon(sortByDesc)
         setRingChartData(fractions, sortByDesc)
+
+        if (!binding.grAnalyticsContent.isVisible) {
+            binding.pbAnalyticsProgressBar.isVisible = false
+            binding.grPlaceholderAnalytics.isVisible = false
+            binding.grAnalyticsContent.isVisible = true
+        }
     }
 
     private fun showPlaceholder() {
+        setRingChartData()
         binding.grAnalyticsContent.isVisible = false
         binding.pbAnalyticsProgressBar.isVisible = false
         binding.grPlaceholderAnalytics.isVisible = true
-
-        //Обработать отображение диаграммы и суммы
-        setRingChartData()
-    }
-
-    private fun showLoading() {
-        binding.grAnalyticsContent.isVisible = false
-        binding.grPlaceholderAnalytics.isVisible = false
-        binding.pbAnalyticsProgressBar.isVisible = true
-
-        //Обработать отображение диаграммы и суммы
-        setRingChartData()
     }
 
     private fun setSortIcon(byDesc: Boolean) {

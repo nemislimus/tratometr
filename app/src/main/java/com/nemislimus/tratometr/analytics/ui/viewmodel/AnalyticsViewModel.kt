@@ -22,7 +22,6 @@ class AnalyticsViewModel(
     fun observeState(): LiveData<AnalyticsState> = state
 
     suspend fun getFractionsByFilter(startDate: Long?, endDate: Long?) {
-        setState(AnalyticsState.Loading)
         val fractionsFromDatabase = getFractionsUseCase.execute(startDate, endDate)
         if (fractionsFromDatabase.isNotEmpty()) {
             originRequestedFractions = fractionsFromDatabase
