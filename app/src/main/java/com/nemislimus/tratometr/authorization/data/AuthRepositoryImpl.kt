@@ -1,5 +1,6 @@
 package com.nemislimus.tratometr.authorization.data
 
+import android.util.Log
 import com.nemislimus.tratometr.authorization.data.dto.AuthRequest
 import com.nemislimus.tratometr.authorization.data.dto.AuthResponse
 import com.nemislimus.tratometr.authorization.data.dto.CheckTokenRequest
@@ -23,10 +24,12 @@ class AuthRepositoryImpl @Inject constructor(
         private const val ERROR_EMAIL_EXISTS = "Пользователь с таким e-mail уже существует"
         private const val ERROR_TOKEN_EXPIRED = "Токен просрочен"
         private const val ERROR_UNKNOWN = "Неизвестная ошибка"
+        private const val ERROR_INCORRECT_EMAIL = "Некорректный e-mail"
 
         private const val SUCCESS_CODE = 200
         private const val CREATED_CODE = 201
         private const val BAD_REQUEST_CODE = 400
+        private const val INCORRECT_EMAIL = 401
         private const val NOT_FOUND_CODE = 404
         private const val CONFLICT_CODE = 409
         private const val NETWORK_ERROR_CODE = -1
@@ -62,6 +65,7 @@ class AuthRepositoryImpl @Inject constructor(
 
     override suspend fun login(email: String, password: String): Resource<Tokens> {
         val response = client.doAuthRequest(AuthRequest.LoginRequest(email, password))
+        Log.d("АутРепозиторийЛогин", response.resultCode.toString())
 
         return when (response.resultCode) {
             NETWORK_ERROR_CODE -> {
@@ -70,6 +74,10 @@ class AuthRepositoryImpl @Inject constructor(
 
             SUCCESS_CODE -> with(response as AuthResponse) {
                 Resource.Success<Tokens>(Tokens(accessToken, refreshToken))
+            }
+
+            INCORRECT_EMAIL -> {
+                Resource.Error<Tokens>(ERROR_INCORRECT_EMAIL)
             }
 
             BAD_REQUEST_CODE -> {
@@ -113,6 +121,7 @@ class AuthRepositoryImpl @Inject constructor(
             }
 
             else -> {
+                Log.d("АутРепозиторийЧек", response.resultCode.toString())
                 Resource.Error<Boolean>(ERROR_UNKNOWN, false)
             }
         }
