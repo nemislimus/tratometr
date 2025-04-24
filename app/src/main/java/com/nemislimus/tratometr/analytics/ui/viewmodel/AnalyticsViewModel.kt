@@ -23,15 +23,23 @@ class AnalyticsViewModel(
 
     suspend fun getFractionsByFilter(startDate: Long?, endDate: Long?) {
         setState(AnalyticsState.Loading)
-
         val fractionsFromDatabase = getFractionsUseCase.execute(startDate, endDate)
-
         if (fractionsFromDatabase.isNotEmpty()) {
             originRequestedFractions = fractionsFromDatabase
             setState(AnalyticsState.Content(generateFractionList(), sortedByDesc))
         } else {
             setState(AnalyticsState.Empty)
         }
+    }
+
+    fun sortingFractions() {
+        sortedByDesc = !sortedByDesc
+        setState(AnalyticsState.Content(generateFractionList(), sortedByDesc))
+    }
+
+    fun getFractionsWithOthers() {
+        withOthersCategories = !withOthersCategories
+        setState(AnalyticsState.Content(generateFractionList(), sortedByDesc))
     }
 
     fun getFractionsForChart(list: List<CategoryFraction>, byDesc: Boolean): List<BigDecimal> {

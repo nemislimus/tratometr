@@ -38,7 +38,7 @@ class AnalyticsFragment : BindingFragment<FragmentAnalyticsBinding>(), ExpenseFi
     lateinit var vmFactory: AnalyticsViewModel.Factory
     private val viewModel: AnalyticsViewModel by viewModels { vmFactory }
 
-    private val adapter = AnalyticsAdapter()
+    private val adapter = AnalyticsAdapter { clickOnOtherCategoryFraction() }
     private val datePresetViews = arrayOfNulls<View>(5)
 
 
@@ -104,6 +104,59 @@ class AnalyticsFragment : BindingFragment<FragmentAnalyticsBinding>(), ExpenseFi
         }
     }
 
+    private fun showContent(fractions: List<CategoryFraction>, sortByDesc: Boolean) {
+        if (!binding.grAnalyticsContent.isVisible) {
+            binding.pbAnalyticsProgressBar.isVisible = false
+            binding.grPlaceholderAnalytics.isVisible = false
+            binding.grAnalyticsContent.isVisible = true
+        }
+
+        setSortIcon(sortByDesc)
+        adapter.setFractions(fractions, sortByDesc)
+
+        if (fractions.size > AnalyticsAdapter.NUMB_OF_COLORS) {
+            if (sortByDesc) {
+                binding.rvAnalyticsList.smoothScrollToPosition(fractions.size)
+            } else {
+                binding.rvAnalyticsList.smoothScrollToPosition(0)
+            }
+        }
+    }
+
+    private fun showPlaceholder() {
+        binding.grAnalyticsContent.isVisible = false
+        binding.pbAnalyticsProgressBar.isVisible = false
+        binding.grPlaceholderAnalytics.isVisible = true
+
+        //Обработать отображение диаграммы и суммы
+    }
+
+    private fun showLoading() {
+        binding.grAnalyticsContent.isVisible = false
+        binding.grPlaceholderAnalytics.isVisible = false
+        binding.pbAnalyticsProgressBar.isVisible = true
+
+        //Обработать отображение диаграммы и суммы
+    }
+
+    private fun setSortIcon(byDesc: Boolean) {
+        if (byDesc) {
+            binding.tvSortCategories
+                .setCompoundDrawablesRelativeWithIntrinsicBounds(R.drawable.ic_sort_down, 0, 0, 0)
+        } else {
+            binding.tvSortCategories
+                .setCompoundDrawablesRelativeWithIntrinsicBounds(R.drawable.ic_sort_up, 0, 0, 0)
+        }
+    }
+
+    private fun clickOnSortButton() {
+        viewModel.sortingFractions()
+    }
+
+    private fun clickOnOtherCategoryFraction() {
+        viewModel.getFractionsWithOthers()
+    }
+
     private fun setDatePresetChipsColors (presetViews: Array<View?>, presetIndex: Int?) {
         presetIndex?.let {
             val defaultTextColor = getThemeAttrColor(R.attr.appTextPrimary)
@@ -151,11 +204,21 @@ class AnalyticsFragment : BindingFragment<FragmentAnalyticsBinding>(), ExpenseFi
         }
 
         binding.tvSortCategories.setOnClickListener {
-            // TO DO
+            clickOnSortButton()
         }
 
         setDatePresetViewsArray()
         setDatePresetListeners()
+    }
+
+    private fun setDatePresetViewsArray() {
+        with(binding) {
+            datePresetViews[0] = ivCalendarPreset
+            datePresetViews[1] = tvDayPreset
+            datePresetViews[2] = tvWeekPreset
+            datePresetViews[3] = tvMonthPreset
+            datePresetViews[4] = tvYearPreset
+        }
     }
 
     private fun setDatePresetListeners() {
@@ -210,41 +273,6 @@ class AnalyticsFragment : BindingFragment<FragmentAnalyticsBinding>(), ExpenseFi
                 TimePresetManager.YEAR
             )
         }
-    }
-
-    private fun setDatePresetViewsArray() {
-        with(binding) {
-            datePresetViews[0] = ivCalendarPreset
-            datePresetViews[1] = tvDayPreset
-            datePresetViews[2] = tvWeekPreset
-            datePresetViews[3] = tvMonthPreset
-            datePresetViews[4] = tvYearPreset
-        }
-    }
-
-    private fun showContent(fractions: List<CategoryFraction>, sortByDesc: Boolean) {
-        binding.pbAnalyticsProgressBar.isVisible = false
-        binding.grPlaceholderAnalytics.isVisible = false
-        binding.grAnalyticsContent.isVisible = true
-
-        adapter.setFractions(fractions, sortByDesc)
-
-    }
-
-    private fun showPlaceholder() {
-        binding.grAnalyticsContent.isVisible = false
-        binding.pbAnalyticsProgressBar.isVisible = false
-        binding.grPlaceholderAnalytics.isVisible = true
-
-        //Обработать отображение диаграммы и суммы
-    }
-
-    private fun showLoading() {
-        binding.grAnalyticsContent.isVisible = false
-        binding.grPlaceholderAnalytics.isVisible = false
-        binding.pbAnalyticsProgressBar.isVisible = true
-
-        //Обработать отображение диаграммы и суммы
     }
 
     companion object {

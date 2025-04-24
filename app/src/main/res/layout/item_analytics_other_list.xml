@@ -10,7 +10,7 @@
     android:background="@drawable/card_background_regular">
 
     <ImageView
-        android:id="@+id/ivCategoryIconBackAnalytic"
+        android:id="@+id/ivOtherIconBackAnalytic"
         android:layout_width="@dimen/size_32dp"
         android:layout_height="@dimen/size_32dp"
         android:layout_marginStart="@dimen/size_56dp"
@@ -23,7 +23,7 @@
         app:layout_constraintBottom_toBottomOf="parent"/>
 
     <ImageView
-        android:id="@+id/ivCategoryIconAnalytic"
+        android:id="@+id/ivOtherIconAnalytic"
         android:layout_width="0dp"
         android:layout_height="0dp"
         android:padding="6dp"
@@ -31,13 +31,13 @@
         tools:src="@drawable/ic_custom_cat_02"
         android:background="@android:color/transparent"
         tools:ignore="ContentDescription"
-        app:layout_constraintStart_toStartOf="@id/ivCategoryIconBackAnalytic"
-        app:layout_constraintTop_toTopOf="@id/ivCategoryIconBackAnalytic"
-        app:layout_constraintBottom_toBottomOf="@id/ivCategoryIconBackAnalytic"
-        app:layout_constraintEnd_toEndOf="@id/ivCategoryIconBackAnalytic"/>
+        app:layout_constraintStart_toStartOf="@id/ivOtherIconBackAnalytic"
+        app:layout_constraintTop_toTopOf="@id/ivOtherIconBackAnalytic"
+        app:layout_constraintBottom_toBottomOf="@id/ivOtherIconBackAnalytic"
+        app:layout_constraintEnd_toEndOf="@id/ivOtherIconBackAnalytic"/>
 
     <TextView
-        android:id="@+id/tvCategoryNameAnalytic"
+        android:id="@+id/tvOtherNameAnalytic"
         style="@style/AppTextPrimary"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
@@ -47,14 +47,14 @@
         android:gravity="start"
         android:singleLine="true"
         android:textColor="?attr/appTextPrimary"
-        app:layout_constraintEnd_toStartOf="@id/tvAmountAnalytics"
-        app:layout_constraintStart_toEndOf="@id/ivCategoryIconBackAnalytic"
-        app:layout_constraintTop_toTopOf="@id/ivCategoryIconBackAnalytic"
-        app:layout_constraintBottom_toBottomOf="@id/ivCategoryIconBackAnalytic"
+        app:layout_constraintEnd_toStartOf="@id/tvOtherAmountAnalytics"
+        app:layout_constraintStart_toEndOf="@id/ivOtherIconBackAnalytic"
+        app:layout_constraintTop_toTopOf="@id/ivOtherIconBackAnalytic"
+        app:layout_constraintBottom_toBottomOf="@id/ivOtherIconBackAnalytic"
         tools:text="Название категории очень длинное" />
 
     <TextView
-        android:id="@+id/tvAmountAnalytics"
+        android:id="@+id/tvOtherAmountAnalytics"
         style="@style/AppTextPrimary"
         android:textColor="?attr/appTextPrimary"
         android:layout_width="wrap_content"
