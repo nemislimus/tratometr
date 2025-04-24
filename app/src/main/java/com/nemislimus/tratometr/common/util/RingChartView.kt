@@ -33,23 +33,31 @@ class RingChartView @JvmOverloads constructor(
     private fun drawRingChart(canvas: Canvas) {
         val total = data.sumOf { it }
         var startAngle = -90f
-        val halfOffset = 2.5f
+        var sweepAngle: Float
         val ratio = 0.12f
-        // Прямоугольник, в который вписывается внутренний круг диаграммы
         val rectInternal = createInnerRectF(rect, width.toFloat() * ratio, height.toFloat() * ratio)
+        val halfOffset: Float
 
-        for (i in data.indices) {
-            val sweepAngle = data[i].divide(total, 5, RoundingMode.HALF_UP).multiply(BigDecimal("360")).toFloat()     // Вычисление угла сегмента
-            paint.color = colors[i]
-            canvas.drawArc(rect, startAngle + halfOffset, sweepAngle - halfOffset, true, paint) // Рисуем сегмент
-            startAngle += sweepAngle                    // Обновляем начальный угол для следующего сегмента
+        if (data.isEmpty()) {
+            sweepAngle = 360f
+            halfOffset = 0f
+            paint.color = getAppNotActiveColor(context)
+            canvas.drawArc(rect, startAngle + halfOffset, sweepAngle - halfOffset, true, paint)
+        } else if (data.size == 1) {
+            sweepAngle = 360f
+            halfOffset = 0f
+            paint.color = colors[0]
+            canvas.drawArc(rect, startAngle + halfOffset, sweepAngle - halfOffset, true, paint)
+        } else {
+            halfOffset = 2.5f
+            for (i in data.indices) {
+                sweepAngle = data[i].divide(total, 5, RoundingMode.HALF_UP).multiply(BigDecimal("360")).toFloat()
+                paint.color = colors[i]
+                canvas.drawArc(rect, startAngle + halfOffset, sweepAngle - halfOffset, true, paint)
+                startAngle += sweepAngle
+            }
         }
-
-        // Рисуем отверстие в центре
-        val color = getAppBackgroundColor(context)
-        paint.color = color
-        paint.style = Paint.Style.FILL
-        canvas.drawArc(rectInternal, 0f, 360f, true, paint) // Рисуем
+        drawInternalCircle(canvas, rectInternal)
     }
 
     override fun onSizeChanged(w: Int, h: Int, oldw: Int, oldh: Int) {
@@ -64,6 +72,13 @@ class RingChartView @JvmOverloads constructor(
         val top = outerRect.top + offsetVertical
         val bottom = outerRect.bottom - offsetVertical
         return RectF(left, top, right, bottom)
+    }
+
+    private fun drawInternalCircle(canvas: Canvas, innerRect: RectF) {
+        val color = getAppBackgroundColor(context)
+        paint.color = color
+        paint.style = Paint.Style.FILL
+        canvas.drawArc(innerRect, 0f, 360f, true, paint)
     }
 
     private fun getAppBackgroundColor(context: Context): Int {

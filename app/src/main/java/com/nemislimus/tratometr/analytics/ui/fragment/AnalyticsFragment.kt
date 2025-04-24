@@ -25,12 +25,12 @@ import com.nemislimus.tratometr.common.util.BindingFragment
 import com.nemislimus.tratometr.common.util.DateRangeHelper
 import com.nemislimus.tratometr.common.util.ExpenseFilter
 import com.nemislimus.tratometr.common.util.ExpenseFilterCallback
+import com.nemislimus.tratometr.common.util.MoneyConverter
 import com.nemislimus.tratometr.common.util.TimePresetManager
 import com.nemislimus.tratometr.databinding.FragmentAnalyticsBinding
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import javax.inject.Inject
-import java.math.BigDecimal
 
 class AnalyticsFragment : BindingFragment<FragmentAnalyticsBinding>(), ExpenseFilterCallback {
 
@@ -56,12 +56,11 @@ class AnalyticsFragment : BindingFragment<FragmentAnalyticsBinding>(), ExpenseFi
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-
         setUiConfigurations()
 
-        val sumList = mutableListOf<BigDecimal>(BigDecimal("500"), BigDecimal("300"), BigDecimal("100"), BigDecimal("50"))
-
-        binding.rcvMainChart.setData(sumList)
+//        val sumList = mutableListOf<BigDecimal>(BigDecimal("500"), BigDecimal("300"), BigDecimal("100"), BigDecimal("50"))
+//
+//        binding.rcvMainChart.setData(sumList)
     }
 
     override fun onStart() {
@@ -114,13 +113,15 @@ class AnalyticsFragment : BindingFragment<FragmentAnalyticsBinding>(), ExpenseFi
         setSortIcon(sortByDesc)
         adapter.setFractions(fractions, sortByDesc)
 
-        if (fractions.size > AnalyticsAdapter.NUMB_OF_COLORS) {
+        if (fractions.size > AnalyticsViewModel.NUMB_OF_COLORS) {
             if (sortByDesc) {
                 binding.rvAnalyticsList.smoothScrollToPosition(fractions.size)
             } else {
                 binding.rvAnalyticsList.smoothScrollToPosition(0)
             }
         }
+
+        setRingChartData(fractions, sortByDesc)
     }
 
     private fun showPlaceholder() {
@@ -129,6 +130,7 @@ class AnalyticsFragment : BindingFragment<FragmentAnalyticsBinding>(), ExpenseFi
         binding.grPlaceholderAnalytics.isVisible = true
 
         //Обработать отображение диаграммы и суммы
+        setRingChartData()
     }
 
     private fun showLoading() {
@@ -137,6 +139,7 @@ class AnalyticsFragment : BindingFragment<FragmentAnalyticsBinding>(), ExpenseFi
         binding.pbAnalyticsProgressBar.isVisible = true
 
         //Обработать отображение диаграммы и суммы
+        setRingChartData()
     }
 
     private fun setSortIcon(byDesc: Boolean) {
@@ -147,6 +150,20 @@ class AnalyticsFragment : BindingFragment<FragmentAnalyticsBinding>(), ExpenseFi
             binding.tvSortCategories
                 .setCompoundDrawablesRelativeWithIntrinsicBounds(R.drawable.ic_sort_up, 0, 0, 0)
         }
+    }
+
+    private fun setRingChartData(
+        fractions: List<CategoryFraction> = listOf(),
+        byDesc: Boolean = false
+    ) {
+        val chartList = viewModel.getFractionsForChart(fractions, byDesc)
+        val totalAmount = MoneyConverter.convertBigDecimalToRublesString(
+            requireContext(),
+            chartList.sumOf { it }
+        )
+
+        binding.tvTotalAmount.text = totalAmount
+        binding.rcvMainChart.setData(chartList)
     }
 
     private fun clickOnSortButton() {
