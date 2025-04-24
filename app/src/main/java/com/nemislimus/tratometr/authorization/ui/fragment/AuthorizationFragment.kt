@@ -82,7 +82,7 @@ class AuthorizationFragment : BindingFragment<FragmentAuthorizationBinding>() {
                                 R.color.error
                             )
                         )
-                        binding.emailField.error = FieldValidator.INVALID_EMAIL
+                        binding.emailField.error = response.message
                     }
                 }
             }
