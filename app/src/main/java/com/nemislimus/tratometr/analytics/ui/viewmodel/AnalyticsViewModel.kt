@@ -56,9 +56,17 @@ class AnalyticsViewModel(
             val otherFractionInstance = createOtherFractionInstance(othersFractions)
 
             list = if (withOthers) {
-                coloredList + otherFractionInstance + othersFractions
+                if (othersFractions.isNotEmpty()) {
+                    coloredList + otherFractionInstance + othersFractions
+                } else {
+                    coloredList
+                }
             } else {
-                coloredList + otherFractionInstance
+                if (othersFractions.isNotEmpty()) {
+                    coloredList + otherFractionInstance
+                } else {
+                    coloredList
+                }
             }
 
         } else {
@@ -68,9 +76,17 @@ class AnalyticsViewModel(
             val otherFractionInstance = createOtherFractionInstance(othersFractions)
 
             list = if (withOthers) {
-                othersFractions + otherFractionInstance + coloredList
+                if (othersFractions.isNotEmpty()) {
+                    othersFractions + otherFractionInstance + coloredList
+                } else {
+                    coloredList
+                }
             } else {
-                listOf(otherFractionInstance) + coloredList
+                if (othersFractions.isNotEmpty()) {
+                    listOf(otherFractionInstance) + coloredList
+                } else {
+                    coloredList
+                }
             }
         }
 

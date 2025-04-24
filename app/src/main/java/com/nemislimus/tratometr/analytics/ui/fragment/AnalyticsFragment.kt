@@ -59,23 +59,16 @@ class AnalyticsFragment : BindingFragment<FragmentAnalyticsBinding>(), ExpenseFi
 
         setUiConfigurations()
 
-        val context = requireContext()
-        val sumList = mutableListOf<BigDecimal>(BigDecimal("500"), BigDecimal("300"), BigDecimal("100"), BigDecimal("50")) // Значения для диаграммы
-        val colorsList = mutableListOf<Int>(
-            ContextCompat.getColor(context, R.color.chart_color_1),
-            ContextCompat.getColor(context, R.color.chart_color_2),
-            ContextCompat.getColor(context, R.color.chart_color_3),
-            ContextCompat.getColor(context, R.color.chart_color_4),
-        )
+        val sumList = mutableListOf<BigDecimal>(BigDecimal("500"), BigDecimal("300"), BigDecimal("100"), BigDecimal("50"))
 
-        binding.rcvMainChart.setData(colorsList, sumList)
+        binding.rcvMainChart.setData(sumList)
     }
 
     override fun onStart() {
         super.onStart()
 
         viewModel.observeState().observe(viewLifecycleOwner) { state ->
-            listStateProcessing(state)
+            stateProcessing(state)
         }
 
         ExpenseFilter.addExpenseFilterListener(this)
@@ -103,9 +96,9 @@ class AnalyticsFragment : BindingFragment<FragmentAnalyticsBinding>(), ExpenseFi
         }
     }
 
-    private fun listStateProcessing(state: AnalyticsState) {
+    private fun stateProcessing(state: AnalyticsState) {
         when(state) {
-            is AnalyticsState.Content -> showContent(state.fractions)
+            is AnalyticsState.Content -> showContent(state.fractions, state.byDescent)
             AnalyticsState.Empty -> showPlaceholder()
             AnalyticsState.Loading -> showLoading()
         }
@@ -229,12 +222,13 @@ class AnalyticsFragment : BindingFragment<FragmentAnalyticsBinding>(), ExpenseFi
         }
     }
 
-    private fun showContent(fractions: List<CategoryFraction>) {
+    private fun showContent(fractions: List<CategoryFraction>, sortByDesc: Boolean) {
         binding.pbAnalyticsProgressBar.isVisible = false
         binding.grPlaceholderAnalytics.isVisible = false
         binding.grAnalyticsContent.isVisible = true
 
-        adapter.setFractions(fractions)
+        adapter.setFractions(fractions, sortByDesc)
+
     }
 
     private fun showPlaceholder() {

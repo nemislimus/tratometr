@@ -14,13 +14,14 @@ import com.nemislimus.tratometr.databinding.ItemAnalyticsCategoryListBinding
 class AnalyticsAdapter : RecyclerView.Adapter<AnalyticsAdapter.AnalyticsViewHolder>() {
 
     private val fractionsOrigin: ArrayList<CategoryFraction> = arrayListOf()
+    private var sortByDescending = true
 
-    fun setFractions(items: List<CategoryFraction>) {
+    fun setFractions(items: List<CategoryFraction>, byDesc: Boolean) {
         fractionsOrigin.clear()
         fractionsOrigin.addAll(items)
+        sortByDescending = byDesc
         notifyDataSetChanged()
     }
-
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): AnalyticsViewHolder {
         val layoutInflater = LayoutInflater.from(parent.context)
@@ -32,6 +33,18 @@ class AnalyticsAdapter : RecyclerView.Adapter<AnalyticsAdapter.AnalyticsViewHold
     }
 
     override fun getItemCount(): Int = fractionsOrigin.size
+
+    override fun getItemViewType(position: Int): Int {
+        return if (sortByDescending) {
+            if (position <= NUMB_OF_COLORS - 1) FRACTION else OTHER_FRACTION
+        } else {
+            if (fractionsOrigin.size <= NUMB_OF_COLORS) {
+                FRACTION
+            } else {
+                if (position < fractionsOrigin.size - NUMB_OF_COLORS) OTHER_FRACTION else FRACTION
+            }
+        }
+    }
 
 
     inner class AnalyticsViewHolder(
@@ -46,7 +59,13 @@ class AnalyticsAdapter : RecyclerView.Adapter<AnalyticsAdapter.AnalyticsViewHold
             val name: String
             val iconBackColor: Int
 
-            if (elementPosition == NUMB_OF_COLORS - 1) {
+            val otherCategoryFractionPosition = if (sortByDescending) {
+                NUMB_OF_COLORS - 1
+            } else {
+                fractionsOrigin.size - NUMB_OF_COLORS
+            }
+
+            if (elementPosition == otherCategoryFractionPosition) {
                 iconDrawable = ContextCompat.getDrawable(itemView.context, R.drawable.ic_main_cat_other)
                 percentText = "${model.fractionPercentValue}%"
                 money = MoneyConverter.convertBigDecimalToRublesString(itemView.context, model.categorySumAmount)
@@ -70,5 +89,7 @@ class AnalyticsAdapter : RecyclerView.Adapter<AnalyticsAdapter.AnalyticsViewHold
 
     companion object {
         const val NUMB_OF_COLORS = 8
+        private const val FRACTION = 0
+        private const val OTHER_FRACTION = 1
     }
 }

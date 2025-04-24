@@ -8,6 +8,7 @@ import android.graphics.RectF
 import android.util.AttributeSet
 import android.util.TypedValue
 import android.view.View
+import androidx.core.content.ContextCompat
 import com.nemislimus.tratometr.R
 import java.math.BigDecimal
 import java.math.RoundingMode
@@ -20,7 +21,7 @@ class RingChartView @JvmOverloads constructor(
 
     private val paint = Paint()
     private val rect = RectF()
-    val data = mutableListOf<BigDecimal>() // Значения для диаграммы
+    val data = mutableListOf<BigDecimal>()
     private val colors = mutableListOf<Int>()
 
     override fun onDraw(canvas: Canvas) {
@@ -31,9 +32,9 @@ class RingChartView @JvmOverloads constructor(
     @SuppressLint("DefaultLocale")
     private fun drawRingChart(canvas: Canvas) {
         val total = data.sumOf { it }
-        var startAngle = -90f                 // Начальный угол
-        val halfOffset = 2.5f                 // Отступы между секторами 5 градусов
-        val ratio = 0.12f                   // Толщина диаграммы 0,16 от диаметра
+        var startAngle = -90f
+        val halfOffset = 2.5f
+        val ratio = 0.12f
         // Прямоугольник, в который вписывается внутренний круг диаграммы
         val rectInternal = createInnerRectF(rect, width.toFloat() * ratio, height.toFloat() * ratio)
 
@@ -71,13 +72,29 @@ class RingChartView @JvmOverloads constructor(
         return typedValue.data
     }
 
-    fun setData(colorsList: List<Int>, sumList: List<BigDecimal> ) {
-        data.clear() // Очистить старые данные
-        colors.clear()
-        data.addAll(sumList) // Добавить новые данные
-        colors.addAll(colorsList)
+    private fun getAppNotActiveColor(context: Context): Int {
+        val typedValue = TypedValue()
+        context.theme.resolveAttribute(R.attr.appNotActiveColor, typedValue, true)
+        return typedValue.data
+    }
+
+    fun setData(sumList: List<BigDecimal>) {
+        data.clear()
+        data.addAll(sumList)
+
+        if (colors.isEmpty()) {
+            attachColorSet()
+        }
+
         invalidate()
     }
 
+    private fun attachColorSet() {
+        RingChartColorsResources.entries.forEach { color ->
+            colors.add(
+                ContextCompat.getColor(context, color.resId)
+            )
+        }
+    }
 
 }
