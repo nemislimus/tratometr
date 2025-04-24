@@ -7,6 +7,7 @@
     <dimen name="text_size_36">36sp</dimen>
 
     <dimen name="size_12dp">12dp</dimen>
+    <dimen name="size_14dp">14dp</dimen>
     <dimen name="size_16dp">16dp</dimen>
     <dimen name="size_24dp">24dp</dimen>
     <dimen name="size_32dp">32dp</dimen>

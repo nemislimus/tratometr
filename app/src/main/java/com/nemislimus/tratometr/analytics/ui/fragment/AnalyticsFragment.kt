@@ -6,6 +6,8 @@ import android.util.TypedValue
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.view.animation.Animation
+import android.view.animation.AnimationUtils
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.annotation.AttrRes
@@ -25,12 +27,12 @@ import com.nemislimus.tratometr.common.util.BindingFragment
 import com.nemislimus.tratometr.common.util.DateRangeHelper
 import com.nemislimus.tratometr.common.util.ExpenseFilter
 import com.nemislimus.tratometr.common.util.ExpenseFilterCallback
+import com.nemislimus.tratometr.common.util.MoneyConverter
 import com.nemislimus.tratometr.common.util.TimePresetManager
 import com.nemislimus.tratometr.databinding.FragmentAnalyticsBinding
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import javax.inject.Inject
-import java.math.BigDecimal
 
 class AnalyticsFragment : BindingFragment<FragmentAnalyticsBinding>(), ExpenseFilterCallback {
 
@@ -38,12 +40,15 @@ class AnalyticsFragment : BindingFragment<FragmentAnalyticsBinding>(), ExpenseFi
     lateinit var vmFactory: AnalyticsViewModel.Factory
     private val viewModel: AnalyticsViewModel by viewModels { vmFactory }
 
-    private val adapter = AnalyticsAdapter()
+    private val adapter = AnalyticsAdapter { clickOnOtherCategoryFraction() }
     private val datePresetViews = arrayOfNulls<View>(5)
+
+    private lateinit var animationFadeIn: Animation
 
 
     override fun onAttach(context: Context) {
         requireActivity().appComponent.inject(this)
+        animationFadeIn = AnimationUtils.loadAnimation(context, R.anim.fade_in)
         super.onAttach(context)
     }
 
@@ -58,24 +63,13 @@ class AnalyticsFragment : BindingFragment<FragmentAnalyticsBinding>(), ExpenseFi
         super.onViewCreated(view, savedInstanceState)
 
         setUiConfigurations()
-
-        val context = requireContext()
-        val sumList = mutableListOf<BigDecimal>(BigDecimal("500"), BigDecimal("300"), BigDecimal("100"), BigDecimal("50")) // Значения для диаграммы
-        val colorsList = mutableListOf<Int>(
-            ContextCompat.getColor(context, R.color.chart_color_1),
-            ContextCompat.getColor(context, R.color.chart_color_2),
-            ContextCompat.getColor(context, R.color.chart_color_3),
-            ContextCompat.getColor(context, R.color.chart_color_4),
-        )
-
-        binding.rcvMainChart.setData(colorsList, sumList)
     }
 
     override fun onStart() {
         super.onStart()
 
         viewModel.observeState().observe(viewLifecycleOwner) { state ->
-            listStateProcessing(state)
+            stateProcessing(state)
         }
 
         ExpenseFilter.addExpenseFilterListener(this)
@@ -101,14 +95,77 @@ class AnalyticsFragment : BindingFragment<FragmentAnalyticsBinding>(), ExpenseFi
                 expenseFilter.endDate
             )
         }
+
+        binding.tvTotalAmount.startAnimation(animationFadeIn)
+        binding.tvDateRange.startAnimation(animationFadeIn)
+        binding.rcvMainChart.startAnimation(animationFadeIn)
     }
 
-    private fun listStateProcessing(state: AnalyticsState) {
+    private fun stateProcessing(state: AnalyticsState) {
         when(state) {
-            is AnalyticsState.Content -> showContent(state.fractions)
+            is AnalyticsState.Content -> showContent(state.fractions, state.byDescent)
             AnalyticsState.Empty -> showPlaceholder()
-            AnalyticsState.Loading -> showLoading()
         }
+    }
+
+    private fun showContent(fractions: List<CategoryFraction>, sortByDesc: Boolean) {
+        adapter.setFractions(fractions, sortByDesc)
+
+        if (fractions.size > AnalyticsViewModel.NUMB_OF_COLORS) {
+            if (sortByDesc) {
+                binding.rvAnalyticsList.smoothScrollToPosition(fractions.size)
+            } else {
+                binding.rvAnalyticsList.smoothScrollToPosition(0)
+            }
+        }
+
+        setSortIcon(sortByDesc)
+        setRingChartData(fractions, sortByDesc)
+
+        if (!binding.grAnalyticsContent.isVisible) {
+            binding.pbAnalyticsProgressBar.isVisible = false
+            binding.grPlaceholderAnalytics.isVisible = false
+            binding.grAnalyticsContent.isVisible = true
+        }
+    }
+
+    private fun showPlaceholder() {
+        setRingChartData()
+        binding.grAnalyticsContent.isVisible = false
+        binding.pbAnalyticsProgressBar.isVisible = false
+        binding.grPlaceholderAnalytics.isVisible = true
+    }
+
+    private fun setSortIcon(byDesc: Boolean) {
+        if (byDesc) {
+            binding.tvSortCategories
+                .setCompoundDrawablesRelativeWithIntrinsicBounds(R.drawable.ic_sort_down, 0, 0, 0)
+        } else {
+            binding.tvSortCategories
+                .setCompoundDrawablesRelativeWithIntrinsicBounds(R.drawable.ic_sort_up, 0, 0, 0)
+        }
+    }
+
+    private fun setRingChartData(
+        fractions: List<CategoryFraction> = listOf(),
+        byDesc: Boolean = false
+    ) {
+        val chartList = viewModel.getFractionsForChart(fractions, byDesc)
+        val totalAmount = MoneyConverter.convertBigDecimalToRublesString(
+            requireContext(),
+            chartList.sumOf { it }
+        )
+
+        binding.tvTotalAmount.text = totalAmount
+        binding.rcvMainChart.setData(chartList)
+    }
+
+    private fun clickOnSortButton() {
+        viewModel.sortingFractions()
+    }
+
+    private fun clickOnOtherCategoryFraction() {
+        viewModel.getFractionsWithOthers()
     }
 
     private fun setDatePresetChipsColors (presetViews: Array<View?>, presetIndex: Int?) {
@@ -158,11 +215,21 @@ class AnalyticsFragment : BindingFragment<FragmentAnalyticsBinding>(), ExpenseFi
         }
 
         binding.tvSortCategories.setOnClickListener {
-            // TO DO
+            clickOnSortButton()
         }
 
         setDatePresetViewsArray()
         setDatePresetListeners()
+    }
+
+    private fun setDatePresetViewsArray() {
+        with(binding) {
+            datePresetViews[0] = ivCalendarPreset
+            datePresetViews[1] = tvDayPreset
+            datePresetViews[2] = tvWeekPreset
+            datePresetViews[3] = tvMonthPreset
+            datePresetViews[4] = tvYearPreset
+        }
     }
 
     private fun setDatePresetListeners() {
@@ -217,40 +284,6 @@ class AnalyticsFragment : BindingFragment<FragmentAnalyticsBinding>(), ExpenseFi
                 TimePresetManager.YEAR
             )
         }
-    }
-
-    private fun setDatePresetViewsArray() {
-        with(binding) {
-            datePresetViews[0] = ivCalendarPreset
-            datePresetViews[1] = tvDayPreset
-            datePresetViews[2] = tvWeekPreset
-            datePresetViews[3] = tvMonthPreset
-            datePresetViews[4] = tvYearPreset
-        }
-    }
-
-    private fun showContent(fractions: List<CategoryFraction>) {
-        binding.pbAnalyticsProgressBar.isVisible = false
-        binding.grPlaceholderAnalytics.isVisible = false
-        binding.grAnalyticsContent.isVisible = true
-
-        adapter.setFractions(fractions)
-    }
-
-    private fun showPlaceholder() {
-        binding.grAnalyticsContent.isVisible = false
-        binding.pbAnalyticsProgressBar.isVisible = false
-        binding.grPlaceholderAnalytics.isVisible = true
-
-        //Обработать отображение диаграммы и суммы
-    }
-
-    private fun showLoading() {
-        binding.grAnalyticsContent.isVisible = false
-        binding.grPlaceholderAnalytics.isVisible = false
-        binding.pbAnalyticsProgressBar.isVisible = true
-
-        //Обработать отображение диаграммы и суммы
     }
 
     companion object {

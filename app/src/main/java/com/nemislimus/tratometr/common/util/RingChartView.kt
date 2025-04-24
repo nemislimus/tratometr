@@ -8,6 +8,7 @@ import android.graphics.RectF
 import android.util.AttributeSet
 import android.util.TypedValue
 import android.view.View
+import androidx.core.content.ContextCompat
 import com.nemislimus.tratometr.R
 import java.math.BigDecimal
 import java.math.RoundingMode
@@ -20,7 +21,7 @@ class RingChartView @JvmOverloads constructor(
 
     private val paint = Paint()
     private val rect = RectF()
-    val data = mutableListOf<BigDecimal>() // Значения для диаграммы
+    val data = mutableListOf<BigDecimal>()
     private val colors = mutableListOf<Int>()
 
     override fun onDraw(canvas: Canvas) {
@@ -31,24 +32,32 @@ class RingChartView @JvmOverloads constructor(
     @SuppressLint("DefaultLocale")
     private fun drawRingChart(canvas: Canvas) {
         val total = data.sumOf { it }
-        var startAngle = -90f                 // Начальный угол
-        val halfOffset = 2.5f                 // Отступы между секторами 5 градусов
-        val ratio = 0.12f                   // Толщина диаграммы 0,16 от диаметра
-        // Прямоугольник, в который вписывается внутренний круг диаграммы
+        var startAngle = -90f
+        var sweepAngle: Float
+        val ratio = 0.12f
         val rectInternal = createInnerRectF(rect, width.toFloat() * ratio, height.toFloat() * ratio)
+        val halfOffset: Float
 
-        for (i in data.indices) {
-            val sweepAngle = data[i].divide(total, 5, RoundingMode.HALF_UP).multiply(BigDecimal("360")).toFloat()     // Вычисление угла сегмента
-            paint.color = colors[i]
-            canvas.drawArc(rect, startAngle + halfOffset, sweepAngle - halfOffset, true, paint) // Рисуем сегмент
-            startAngle += sweepAngle                    // Обновляем начальный угол для следующего сегмента
+        if (data.isEmpty()) {
+            sweepAngle = 360f
+            halfOffset = 0f
+            paint.color = getAppNotActiveColor(context)
+            canvas.drawArc(rect, startAngle + halfOffset, sweepAngle - halfOffset, true, paint)
+        } else if (data.size == 1) {
+            sweepAngle = 360f
+            halfOffset = 0f
+            paint.color = colors[0]
+            canvas.drawArc(rect, startAngle + halfOffset, sweepAngle - halfOffset, true, paint)
+        } else {
+            halfOffset = 2.5f
+            for (i in data.indices) {
+                sweepAngle = data[i].divide(total, 5, RoundingMode.HALF_UP).multiply(BigDecimal("360")).toFloat()
+                paint.color = colors[i]
+                canvas.drawArc(rect, startAngle + halfOffset, sweepAngle - halfOffset, true, paint)
+                startAngle += sweepAngle
+            }
         }
-
-        // Рисуем отверстие в центре
-        val color = getAppBackgroundColor(context)
-        paint.color = color
-        paint.style = Paint.Style.FILL
-        canvas.drawArc(rectInternal, 0f, 360f, true, paint) // Рисуем
+        drawInternalCircle(canvas, rectInternal)
     }
 
     override fun onSizeChanged(w: Int, h: Int, oldw: Int, oldh: Int) {
@@ -65,19 +74,42 @@ class RingChartView @JvmOverloads constructor(
         return RectF(left, top, right, bottom)
     }
 
+    private fun drawInternalCircle(canvas: Canvas, innerRect: RectF) {
+        val color = getAppBackgroundColor(context)
+        paint.color = color
+        paint.style = Paint.Style.FILL
+        canvas.drawArc(innerRect, 0f, 360f, true, paint)
+    }
+
     private fun getAppBackgroundColor(context: Context): Int {
         val typedValue = TypedValue()
         context.theme.resolveAttribute(R.attr.appBackgroundColor, typedValue, true)
         return typedValue.data
     }
 
-    fun setData(colorsList: List<Int>, sumList: List<BigDecimal> ) {
-        data.clear() // Очистить старые данные
-        colors.clear()
-        data.addAll(sumList) // Добавить новые данные
-        colors.addAll(colorsList)
+    private fun getAppNotActiveColor(context: Context): Int {
+        val typedValue = TypedValue()
+        context.theme.resolveAttribute(R.attr.appNotActiveColor, typedValue, true)
+        return typedValue.data
+    }
+
+    fun setData(sumList: List<BigDecimal>) {
+        data.clear()
+        data.addAll(sumList)
+
+        if (colors.isEmpty()) {
+            attachColorSet()
+        }
+
         invalidate()
     }
 
+    private fun attachColorSet() {
+        RingChartColorsResources.entries.forEach { color ->
+            colors.add(
+                ContextCompat.getColor(context, color.resId)
+            )
+        }
+    }
 
 }

@@ -125,4 +125,6 @@
 
     <string name="sort">Сортировать</string>
     <string name="category_other">Остальные</string>
+    <string name="unknown_viewholder_create">Unknown ViewHolder type for create</string>
+    <string name="unknown_viewholder_bind">Unknown ViewHolder type for bind</string>
 </resources>

@@ -22,16 +22,23 @@ class AnalyticsViewModel(
     fun observeState(): LiveData<AnalyticsState> = state
 
     suspend fun getFractionsByFilter(startDate: Long?, endDate: Long?) {
-        setState(AnalyticsState.Loading)
-
         val fractionsFromDatabase = getFractionsUseCase.execute(startDate, endDate)
-
         if (fractionsFromDatabase.isNotEmpty()) {
             originRequestedFractions = fractionsFromDatabase
             setState(AnalyticsState.Content(generateFractionList(), sortedByDesc))
         } else {
             setState(AnalyticsState.Empty)
         }
+    }
+
+    fun sortingFractions() {
+        sortedByDesc = !sortedByDesc
+        setState(AnalyticsState.Content(generateFractionList(), sortedByDesc))
+    }
+
+    fun getFractionsWithOthers() {
+        withOthersCategories = !withOthersCategories
+        setState(AnalyticsState.Content(generateFractionList(), sortedByDesc))
     }
 
     fun getFractionsForChart(list: List<CategoryFraction>, byDesc: Boolean): List<BigDecimal> {
@@ -56,9 +63,17 @@ class AnalyticsViewModel(
             val otherFractionInstance = createOtherFractionInstance(othersFractions)
 
             list = if (withOthers) {
-                coloredList + otherFractionInstance + othersFractions
+                if (othersFractions.isNotEmpty()) {
+                    coloredList + otherFractionInstance + othersFractions
+                } else {
+                    coloredList
+                }
             } else {
-                coloredList + otherFractionInstance
+                if (othersFractions.isNotEmpty()) {
+                    coloredList + otherFractionInstance
+                } else {
+                    coloredList
+                }
             }
 
         } else {
@@ -68,9 +83,17 @@ class AnalyticsViewModel(
             val otherFractionInstance = createOtherFractionInstance(othersFractions)
 
             list = if (withOthers) {
-                othersFractions + otherFractionInstance + coloredList
+                if (othersFractions.isNotEmpty()) {
+                    othersFractions + otherFractionInstance + coloredList
+                } else {
+                    coloredList
+                }
             } else {
-                listOf(otherFractionInstance) + coloredList
+                if (othersFractions.isNotEmpty()) {
+                    listOf(otherFractionInstance) + coloredList
+                } else {
+                    coloredList
+                }
             }
         }
 
