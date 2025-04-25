@@ -36,6 +36,7 @@
             android:id="@+id/etTitleOfCategory"
             style="@style/AppTextInputEditText"
             android:layout_width="match_parent"
+            android:inputType="textCapSentences"
             android:layout_height="@dimen/size_48dp"
             android:hint="@string/title_of_creating_category" />
 
