@@ -28,14 +28,20 @@ import com.nemislimus.tratometr.common.appComponent
 import com.nemislimus.tratometr.common.notificationPermissionDeniedOnCurrentSession
 import com.nemislimus.tratometr.common.util.BindingFragment
 import com.nemislimus.tratometr.databinding.FragmentSettingsBinding
+import com.nemislimus.tratometr.expenses.domain.model.Expense
 import com.nemislimus.tratometr.settings.domain.model.SettingsParams
 import com.nemislimus.tratometr.settings.ui.viewmodel.SettingsFragmentViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
+import kotlinx.coroutines.flow.flowOn
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
+import java.text.DecimalFormat
+import java.text.SimpleDateFormat
 import java.util.Calendar
+import java.util.Date
+import java.util.Locale
 import javax.inject.Inject
 
 class SettingsFragment : BindingFragment<FragmentSettingsBinding>() {
@@ -68,6 +74,20 @@ class SettingsFragment : BindingFragment<FragmentSettingsBinding>() {
             }
         }
 
+    private val csvDocumentLauncher = registerForActivityResult(ActivityResultContracts.CreateDocument()) { uri ->
+        uri?.let {
+            val writeFileStream = requireActivity().contentResolver.openOutputStream(uri)
+            viewLifecycleOwner.lifecycleScope.launch {
+                viewModel.getExpensesFlow().flowOn(Dispatchers.IO).collect { expenses ->
+                    val content = expensesListToCsvString(expenses)
+                    writeFileStream?.write(content.toByteArray())
+                    withContext(Dispatchers.Main) {
+                        showToast("Файл сохранен: $uri")
+                    }
+                }
+            }
+        }
+    }
 
     override fun onAttach(context: Context) {
         requireActivity().appComponent.inject(this)
@@ -121,7 +141,9 @@ class SettingsFragment : BindingFragment<FragmentSettingsBinding>() {
             clickOnThemeSwitch(binding.swTheme.isChecked)
         }
 
-        binding.btnExport.setOnClickListener { }
+        binding.btnExport.setOnClickListener {
+            createCsvFile()
+        }
 
         binding.btnLogOut.setOnClickListener {
             viewModel.logOut()
@@ -299,6 +321,25 @@ class SettingsFragment : BindingFragment<FragmentSettingsBinding>() {
 
     private fun showToast(message: String) {
         Toast.makeText(requireContext(), message, Toast.LENGTH_LONG).show()
+    }
+
+    private fun expensesListToCsvString(expenses: List<Expense>): String {
+        var result = ContextCompat.getString(requireContext(), R.string.csv_header)
+        val decimalFormat = DecimalFormat("#,##0.00")
+        val dateFormat = SimpleDateFormat("dd.MM.yyyy", Locale.getDefault())
+        expenses.forEach { expense ->
+            val dateFormatted = dateFormat.format(Date(expense.date))
+            val amountFormatted = decimalFormat.format(expense.amount)
+            result += "$dateFormatted;${expense.category};$amountFormatted\n"
+        }
+        return result
+    }
+
+    private fun createCsvFile() {
+        val dateFormat = SimpleDateFormat("yyyy_MM_dd", Locale.getDefault())
+        val currentDate = dateFormat.format(Date())
+        val fileName = currentDate + ContextCompat.getString(requireContext(), R.string.csv_name_last_part)
+        csvDocumentLauncher.launch(fileName)
     }
 
     companion object {
