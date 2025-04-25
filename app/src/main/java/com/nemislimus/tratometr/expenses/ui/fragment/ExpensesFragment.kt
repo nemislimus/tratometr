@@ -48,7 +48,7 @@ class ExpensesFragment : BindingFragment<FragmentExpensesBinding>(), ExpenseFilt
 
     private val adapter = ExpensesAdapter(this)
     private var mIth: ItemTouchHelper? = null
-    private lateinit var recycler: RecyclerView
+    private var recycler: RecyclerView? = null
     private var scrollState = ScrollState.STOPPED
     private var scrollJob = lifecycleScope.launch {}
 
@@ -85,18 +85,18 @@ class ExpensesFragment : BindingFragment<FragmentExpensesBinding>(), ExpenseFilt
             updateRecyclerView(state.expenses)
             if (!emptyList && savedInstanceState != null) {
                     val scrollPosition = savedInstanceState.getInt(SCROLL_POSITION, 0)
-                    recycler.scrollToPosition(scrollPosition)
+                    recycler?.scrollToPosition(scrollPosition)
             }
 
         }
 
         // ПРОКРУТКА
-        recycler.addOnScrollListener(ExpensesScrollListener(this))
+        recycler?.addOnScrollListener(ExpensesScrollListener(this))
 
         binding.ivBtnScroll.setOnClickListener {
             when(scrollState) {
-                ScrollState.DOWN -> recycler.smoothScrollToPosition(adapter.itemCount - 1)
-                ScrollState.UP -> recycler.smoothScrollToPosition(0)
+                ScrollState.DOWN -> recycler?.smoothScrollToPosition(adapter.itemCount - 1)
+                ScrollState.UP -> recycler?.smoothScrollToPosition(0)
                 else -> {}
             }
         }
@@ -157,7 +157,7 @@ class ExpensesFragment : BindingFragment<FragmentExpensesBinding>(), ExpenseFilt
             )
         }
 
-        recycler.setOnTouchListener { _, _ ->
+        recycler?.setOnTouchListener { _, _ ->
             requestFocusToCalendar()
             false
         }
@@ -234,7 +234,7 @@ class ExpensesFragment : BindingFragment<FragmentExpensesBinding>(), ExpenseFilt
     }
 
     private fun initializingRecyclerView() {
-        val recyclerView = ExpensesRecyclerView(this, recycler, adapter)
+        val recyclerView = ExpensesRecyclerView(this, recycler!!, adapter)
         recyclerView.setupRecyclerView()
         mIth = recyclerView.createItemTouchHelper()
         mIth!!.attachToRecyclerView(recycler)
@@ -316,8 +316,8 @@ class ExpensesFragment : BindingFragment<FragmentExpensesBinding>(), ExpenseFilt
     override fun onSaveInstanceState(outState: Bundle) {
         super.onSaveInstanceState(outState)
         // Получаем текущую позицию прокрутки
-        val layoutManager = recycler.layoutManager as LinearLayoutManager
-        val scrollPosition = layoutManager.findFirstVisibleItemPosition()
+        val layoutManager = recycler?.layoutManager as? LinearLayoutManager
+        val scrollPosition = layoutManager?.findFirstVisibleItemPosition() ?: 0
         outState.putInt(SCROLL_POSITION, scrollPosition)
     }
 

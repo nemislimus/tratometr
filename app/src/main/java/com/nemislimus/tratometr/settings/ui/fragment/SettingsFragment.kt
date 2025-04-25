@@ -94,11 +94,6 @@ class SettingsFragment : BindingFragment<FragmentSettingsBinding>() {
             checkNotificationPermission()
         }
 
-        binding.btnLogOut.setOnClickListener {
-            viewModel.logOut()
-            findNavController().navigate(R.id.action_settingsFragment_to_authorizationFragment)
-        }
-
     }
 
     override fun onResume() {
@@ -127,7 +122,11 @@ class SettingsFragment : BindingFragment<FragmentSettingsBinding>() {
         }
 
         binding.btnExport.setOnClickListener { }
-        binding.btnLogOut.setOnClickListener { }
+
+        binding.btnLogOut.setOnClickListener {
+            viewModel.logOut()
+            findNavController().navigate(R.id.action_settingsFragment_to_authorizationFragment)
+        }
 
         binding.tbSettings.setOnClickListener {
             findNavController().navigateUp()
