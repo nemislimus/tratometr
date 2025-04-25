@@ -6,7 +6,6 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
-import com.nemislimus.tratometr.authorization.domain.AuthInteractor
 import com.nemislimus.tratometr.authorization.domain.TokensStorageInteractor
 import com.nemislimus.tratometr.common.util.AppNotificationManager
 import com.nemislimus.tratometr.expenses.domain.api.ExpenseHistoryInteractor
@@ -15,7 +14,6 @@ import com.nemislimus.tratometr.settings.domain.api.SettingsRepository
 import com.nemislimus.tratometr.settings.domain.model.SettingsParams
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.flowOn
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 

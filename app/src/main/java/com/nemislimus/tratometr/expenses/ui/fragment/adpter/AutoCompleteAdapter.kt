@@ -69,7 +69,7 @@ class AutoCompleteAdapter(
             }
 
             override fun publishResults(constraint: CharSequence?, results: FilterResults?) {
-                filteredItems = results?.values as List<AutoCompleteItem>
+                filteredItems = results?.values as? List<AutoCompleteItem> ?: originalItems
                 notifyDataSetChanged()
             }
         }
