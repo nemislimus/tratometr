@@ -4,6 +4,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
+import com.nemislimus.tratometr.common.util.ExpenseFilter
 import com.nemislimus.tratometr.expenses.domain.api.ExpenseHistoryInteractor
 import com.nemislimus.tratometr.expenses.domain.model.Category
 import com.nemislimus.tratometr.expenses.ui.model.CategoryListState
@@ -15,6 +16,10 @@ class SelectCategoryViewModel(
 ) : ViewModel() {
 
     var selectedCategoryName: String? = null
+
+    init {
+        selectedCategoryName = ExpenseFilter.category
+    }
 
     private val state = MutableLiveData<CategoryListState>()
     fun observeState(): LiveData<CategoryListState> = state
@@ -32,9 +37,13 @@ class SelectCategoryViewModel(
             SelectCategoryItem(
                 name = cat.name,
                 iconResId = cat.iconResId,
-                false
+                setCategorySelectedStatus(cat.name)
             )
         }
+    }
+
+    private fun setCategorySelectedStatus(name: String): Boolean {
+        return name == selectedCategoryName
     }
 
 
