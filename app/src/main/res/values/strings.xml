@@ -127,4 +127,6 @@
     <string name="category_other">Остальные</string>
     <string name="unknown_viewholder_create">Unknown ViewHolder type for create</string>
     <string name="unknown_viewholder_bind">Unknown ViewHolder type for bind</string>
+    <string name="csv_header">Дата;Категория;Сумма\n</string>
+    <string name="csv_name_last_part">_расходы.csv</string>
 </resources>

@@ -6,18 +6,21 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
-import com.nemislimus.tratometr.authorization.domain.AuthInteractor
 import com.nemislimus.tratometr.authorization.domain.TokensStorageInteractor
 import com.nemislimus.tratometr.common.util.AppNotificationManager
+import com.nemislimus.tratometr.expenses.domain.api.ExpenseHistoryInteractor
+import com.nemislimus.tratometr.expenses.domain.model.Expense
 import com.nemislimus.tratometr.settings.domain.api.SettingsRepository
 import com.nemislimus.tratometr.settings.domain.model.SettingsParams
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 class SettingsFragmentViewModel(
     private val repository: SettingsRepository,
-    private val tokensStorageInteractor: TokensStorageInteractor
+    private val tokensStorageInteractor: TokensStorageInteractor,
+    private val expenseInteractor: ExpenseHistoryInteractor,
 ) : ViewModel() {
 
     private val settingsParams = MutableLiveData<SettingsParams>()
@@ -37,8 +40,12 @@ class SettingsFragmentViewModel(
         settingsParams.postValue(repository.getSettings())
     }
 
-    fun logOut(){
+    fun logOut() {
         tokensStorageInteractor.clearTokens()
+    }
+
+    fun getExpensesFlow(): Flow<List<Expense>> {
+        return expenseInteractor.getExpenseListFilter(null, null, null)
     }
 
     fun correctTimeString(hours: Int, minutes: Int): String {
@@ -57,16 +64,20 @@ class SettingsFragmentViewModel(
         AppNotificationManager.cancelNotification(context)
 
 
-
     class Factory @Inject constructor(
         private val repository: SettingsRepository,
-        private val tokensStorageInteractor: TokensStorageInteractor
+        private val tokensStorageInteractor: TokensStorageInteractor,
+        private val expenseInteractor: ExpenseHistoryInteractor
     ) : ViewModelProvider.Factory {
 
         @Suppress("UNCHECKED_CAST")
         override fun <T : ViewModel> create(modelClass: Class<T>): T {
             require(modelClass == SettingsFragmentViewModel::class.java)
-            return SettingsFragmentViewModel(repository, tokensStorageInteractor) as T
+            return SettingsFragmentViewModel(
+                repository,
+                tokensStorageInteractor,
+                expenseInteractor,
+            ) as T
         }
     }
 

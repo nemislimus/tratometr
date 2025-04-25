@@ -1,9 +1,6 @@
 package com.nemislimus.tratometr.common.util
 
-import android.content.Context
 import android.content.res.Configuration
-import android.util.TypedValue
-import androidx.core.content.ContentProviderCompat.requireContext
 import androidx.core.content.ContextCompat
 import com.google.android.material.textfield.TextInputEditText
 import com.google.android.material.textfield.TextInputLayout
