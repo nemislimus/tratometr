@@ -16,7 +16,6 @@ import android.widget.AutoCompleteTextView
 import android.widget.EditText
 import android.widget.ImageView
 import androidx.appcompat.content.res.AppCompatResources
-import androidx.appcompat.widget.AppCompatAutoCompleteTextView
 import androidx.core.os.bundleOf
 import androidx.core.view.isVisible
 import androidx.fragment.app.setFragmentResultListener
@@ -113,6 +112,10 @@ class CreateExpenseFragment : BindingFragment<FragmentCreateExpenseBinding>() {
             requestTouchFocus(binding.root)
             val imm = requireActivity().getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
             imm.hideSoftInputFromWindow(view.windowToken, 0)
+        }
+
+        binding.ivClear!!.setOnClickListener {
+            autoCompleteTextView.setText("")
         }
 
         autoCompleteTextView.threshold = 0  // Начинать показывать предложения после ввода 1 символа
@@ -239,7 +242,7 @@ class CreateExpenseFragment : BindingFragment<FragmentCreateExpenseBinding>() {
         autoCompleteTextView.setPadding(
             (leftPadding * scale + 0.5f).toInt(),
             (12 * scale + 0.5f).toInt(),
-            (16 * scale + 0.5f).toInt(),
+            (48 * scale + 0.5f).toInt(),
             (12 * scale + 0.5f).toInt()
         )
         ivIcon.isVisible = iconResId != null

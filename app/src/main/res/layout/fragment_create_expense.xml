@@ -27,20 +27,18 @@
         <AutoCompleteTextView
             android:id="@+id/actv_category"
             style="@style/AppEditTextPrimary"
-            android:textColor="?attr/appTextPrimary"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:dropDownHeight="320dp"
             android:layout_marginHorizontal="@dimen/size_16dp"
-            android:paddingStart="16dp"
-            android:paddingEnd="@dimen/size_16dp"
-            android:paddingVertical="12dp"
+            android:background="@drawable/card_background_selector"
+            android:dropDownHeight="320dp"
             android:hint="@string/hint_text_category"
             android:inputType="textCapSentences"
-            android:background="@drawable/card_background_selector"
+            android:paddingVertical="12dp"
+            android:paddingStart="16dp"
+            android:paddingEnd="@dimen/size_48dp"
             android:popupBackground="@drawable/auto_complete_list"
-            app:drawableEndCompat="@drawable/ic_arrows_dropdown"
-            android:drawablePadding="10dp"/>
+            android:textColor="?attr/appTextPrimary" />
 
         <ImageView
             android:id="@+id/iv_icon"
@@ -54,6 +52,16 @@
             android:layout_marginStart="@dimen/size_32dp"
             app:tint="@color/cards"
             android:visibility="gone"/>
+
+        <ImageView
+            android:id="@+id/iv_clear"
+            android:layout_width="@dimen/size_48dp"
+            android:layout_height="@dimen/size_48dp"
+            android:padding="12dp"
+            android:layout_marginEnd="@dimen/size_16dp"
+            android:src="@drawable/ic_close"
+            tools:ignore="contentDescription"
+            android:layout_gravity="center_vertical|end"/>
     </FrameLayout>
 
     <TextView
