@@ -10,7 +10,7 @@
     <string name="btn_save">Сохранить</string>
     <string name="add_category">добавить категорию</string>
     <string name="select_date_expense">Выберите дату расхода</string>
-    <string name="category_error">Введите категорию</string>
+    <string name="category_error">Нет такой категории</string>
     <string name="amount_error">Число 0.01 - 999 999 999 999 999</string>
     <string name="day">День</string>
     <string name="week">Неделя</string>
