@@ -19,9 +19,11 @@ import com.nemislimus.tratometr.expenses.data.database.ExpenseHistoryRepositoryI
 import com.nemislimus.tratometr.expenses.domain.api.ExpenseHistoryInteractor
 import com.nemislimus.tratometr.expenses.domain.api.ExpenseHistoryRepository
 import com.nemislimus.tratometr.expenses.domain.impl.ExpenseHistoryInteractorImpl
+import com.nemislimus.tratometr.settings.data.repository.SettingsRepositoryImpl
+import com.nemislimus.tratometr.settings.data.storage.SettingsStorage
+import com.nemislimus.tratometr.settings.domain.api.SettingsRepository
 import dagger.Module
 import dagger.Provides
-import javax.inject.Named
 import javax.inject.Singleton
 
 @Module
@@ -44,6 +46,12 @@ class DomainModule {
 
     @Singleton
     @Provides
+    fun provideSettingsRepository(storage: SettingsStorage): SettingsRepository {
+        return SettingsRepositoryImpl(storage)
+    }
+
+    @Singleton
+    @Provides
     fun provideAuthRepository(client: NetworkClient): AuthRepository {
         return AuthRepositoryImpl(client)
     }
@@ -60,10 +68,6 @@ class DomainModule {
         return AnalyticsRepositoryImpl(analyticsDao, dbConverter)
     }
 
-    ///////////////////////////// REPOSITORY SECTION end
-
-    ///////////////////////////// STORAGE SECTION
-
     @Singleton
     @Provides
     fun provideTokensStorageRepository(context: Context): TokensStorageRepository {
@@ -76,5 +80,5 @@ class DomainModule {
         return TokensStorageInteractorImpl(repository)
     }
 
-    ///////////////////////////// STORAGE SECTION end
+    ///////////////////////////// REPOSITORY SECTION end
 }
