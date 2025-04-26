@@ -1,6 +1,5 @@
 package com.nemislimus.tratometr.authorization.ui.fragment
 
-import android.util.Log
 import android.animation.Animator
 import android.animation.AnimatorListenerAdapter
 import android.content.Context
@@ -21,11 +20,14 @@ import com.nemislimus.tratometr.authorization.ui.viewmodel.SplashViewModel.Compa
 import com.nemislimus.tratometr.common.appComponent
 import com.nemislimus.tratometr.common.util.BindingFragment
 import com.nemislimus.tratometr.databinding.FragmentSplashBinding
+import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 class SplashFragment : BindingFragment<FragmentSplashBinding>() {
+
+    private var job: Job? = null
 
     companion object {
         private const val FOUR_SECONDS = 4000L
@@ -61,16 +63,18 @@ class SplashFragment : BindingFragment<FragmentSplashBinding>() {
                 showLoopLogoAnimation()
             }
         })
+    }
 
-       lifecycleScope.launch {
-           //viewModel.clearTokens() //Добавил его тут для тестирования
-           delay(FOUR_SECONDS)
-           val freshToken = viewModel.checkAccessToken()
-           Log.d("СплэшФрагментЧекТокен", freshToken.toString())
+    override fun onResume() {
+        super.onResume()
+        viewModel.checkDarkMode()
+
+        job = lifecycleScope.launch {
+            delay(FOUR_SECONDS)
+            val freshToken = viewModel.checkAccessToken()
             if (freshToken!!) {
                 findNavController().navigate(R.id.action_splashFragment_to_expensesFragment)
             } else {
-
                 val resource = viewModel.refreshTokens()
                 if (resource is Resource.Success) {
                     findNavController().navigate(R.id.action_splashFragment_to_expensesFragment)
@@ -81,14 +85,15 @@ class SplashFragment : BindingFragment<FragmentSplashBinding>() {
         }
     }
 
-    override fun onResume() {
-        super.onResume()
-        viewModel.checkDarkMode()
-    }
-
     override fun onDestroyFragment() {
         super.onDestroyFragment()
         binding.lvLogoAnim.removeAllAnimatorListeners()
+    }
+
+    override fun onPause() {
+        super.onPause()
+        job?.cancel()
+        job = null
     }
 
     private fun showStartLogoAnimation(isDarkMode: Boolean) {

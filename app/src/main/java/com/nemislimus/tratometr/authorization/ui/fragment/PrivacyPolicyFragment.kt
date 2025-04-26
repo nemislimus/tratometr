@@ -1,7 +1,6 @@
 package com.nemislimus.tratometr.authorization.ui.fragment
 
 import android.os.Bundle
-import android.text.method.LinkMovementMethod
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -26,6 +25,9 @@ class PrivacyPolicyFragment : BindingFragment<FragmentPrivacyPolicyBinding>() {
             requireActivity().onBackPressedDispatcher.onBackPressed()
         }
 
-        binding.privacyTextView.text = HtmlCompat.fromHtml(getString(R.string.privacy_policy_full_text), HtmlCompat.FROM_HTML_MODE_LEGACY)
+        binding.privacyTextView.text = HtmlCompat.fromHtml(
+            getString(R.string.privacy_policy_full_text),
+            HtmlCompat.FROM_HTML_MODE_LEGACY
+        )
     }
 }

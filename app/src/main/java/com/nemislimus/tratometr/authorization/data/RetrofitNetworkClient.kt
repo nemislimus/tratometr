@@ -2,7 +2,6 @@ package com.nemislimus.tratometr.authorization.data
 
 import android.content.Context
 import android.net.ConnectivityManager
-import android.util.Log
 import com.nemislimus.tratometr.authorization.data.dto.AuthRequest
 import com.nemislimus.tratometr.authorization.data.dto.AuthResponse
 import com.nemislimus.tratometr.authorization.data.dto.CheckTokenRequest
@@ -117,7 +116,6 @@ class RetrofitNetworkClient @Inject constructor(private val context: Context) : 
             context.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
         val activeNetwork = connectivityManager.activeNetworkInfo
         val result = activeNetwork != null && activeNetwork.isConnected
-        Log.d("Интернет соединение", result.toString())
         return activeNetwork != null && activeNetwork.isConnected
     }
 }

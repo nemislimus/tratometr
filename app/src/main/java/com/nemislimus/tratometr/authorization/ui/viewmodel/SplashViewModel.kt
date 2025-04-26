@@ -1,6 +1,5 @@
 package com.nemislimus.tratometr.authorization.ui.viewmodel
 
-import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -16,7 +15,7 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import javax.inject.Inject
 
-class SplashViewModel (
+class SplashViewModel(
     private val authInteractor: AuthInteractor,
     private val tokensStorageInteractor: TokensStorageInteractor,
     private val getDarkModeValueUseCase: GetDarkModeValueUseCase,
@@ -27,32 +26,23 @@ class SplashViewModel (
 
     suspend fun checkAccessToken(): Boolean? = withContext(Dispatchers.IO) {
         val accessToken = tokensStorageInteractor.getTokens().accessToken
-        Log.d("Splash ВьюМодель5", accessToken.toString())
         authInteractor.check(accessToken).value == true
     }
 
-    suspend fun refreshTokens(): Resource<Tokens> = withContext(Dispatchers.IO){
+    suspend fun refreshTokens(): Resource<Tokens> = withContext(Dispatchers.IO) {
         val refreshToken = tokensStorageInteractor.getTokens().refreshToken ?: ""
-        Log.d("Splash ВьюМодель4", refreshToken.toString())
         val resource = authInteractor.refresh(refreshToken)
-        if (resource is Resource.Success){
+        if (resource is Resource.Success) {
             val freshTokens = resource.value!!
             putTokensToStorage(freshTokens)
-            Log.d("Splash ВьюМодель", "Успешно")
-            Log.d("Splash ВьюМодель1", freshTokens.refreshToken.toString())
             resource
         } else {
-            Log.d("Splash ВьюМодель2", "Ошибка")
             resource
         }
     }
 
-    private fun putTokensToStorage(tokens: Tokens){
+    private fun putTokensToStorage(tokens: Tokens) {
         tokensStorageInteractor.putTokens(tokens)
-    }
-
-    fun clearTokens(){//Временно тут для тестирования
-        tokensStorageInteractor.clearTokens()
     }
 
     fun checkDarkMode() {
