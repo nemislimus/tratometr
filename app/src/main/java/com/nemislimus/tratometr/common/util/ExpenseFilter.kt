@@ -5,7 +5,7 @@ object ExpenseFilter {
         private set
     var endDate: Long? = null
         private set
-    var presetButton: TimePresetManager? = null
+    var presetButton: TimePreset? = null
         private set
     var category: String? = null
         set(value) {
@@ -15,7 +15,7 @@ object ExpenseFilter {
     private val callbacks = mutableListOf<ExpenseFilterCallback>() // Список слушателей
 
     // Для введения периода (одновременного задания startDate и endDate)
-    fun setDateInterval(start: Long?, end: Long?, preset: TimePresetManager?) {
+    fun setDateInterval(start: Long?, end: Long?, preset: TimePreset?) {
         startDate = start
         endDate = end
         presetButton = preset

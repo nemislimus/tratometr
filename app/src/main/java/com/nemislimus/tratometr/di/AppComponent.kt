@@ -18,7 +18,7 @@ import dagger.Component
 import javax.inject.Singleton
 
 @Singleton
-@Component(modules = [DataModule::class, DomainModule::class, PresentationModule::class])
+@Component(modules = [DataModule::class, DomainModule::class])
 interface AppComponent {
     fun inject(fragment: SplashFragment)
     fun inject(fragment: AuthorizationFragment)

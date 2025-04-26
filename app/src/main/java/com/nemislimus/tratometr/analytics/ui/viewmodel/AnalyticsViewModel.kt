@@ -54,7 +54,7 @@ class AnalyticsViewModel(
         withOthers: Boolean = withOthersCategories
     ): List<CategoryFraction> {
 
-        val list: List<CategoryFraction>
+        val generatedFractionList: List<CategoryFraction>
 
         if (byDesc) {
             val sortedList = originRequestedFractions.sortedByDescending { it.categorySumAmount }
@@ -62,7 +62,7 @@ class AnalyticsViewModel(
             val othersFractions = sortedList.drop(NUMB_OF_COLORS - 1)
             val otherFractionInstance = createOtherFractionInstance(othersFractions)
 
-            list = if (withOthers) {
+            generatedFractionList = if (withOthers) {
                 if (othersFractions.isNotEmpty()) {
                     coloredList + otherFractionInstance + othersFractions
                 } else {
@@ -82,7 +82,7 @@ class AnalyticsViewModel(
             val othersFractions = sortedList.dropLast(NUMB_OF_COLORS - 1)
             val otherFractionInstance = createOtherFractionInstance(othersFractions)
 
-            list = if (withOthers) {
+            generatedFractionList = if (withOthers) {
                 if (othersFractions.isNotEmpty()) {
                     othersFractions + otherFractionInstance + coloredList
                 } else {
@@ -97,7 +97,7 @@ class AnalyticsViewModel(
             }
         }
 
-        return list
+        return generatedFractionList
     }
 
     private fun createOtherFractionInstance(otherFractions: List<CategoryFraction>): CategoryFraction {

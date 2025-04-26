@@ -28,7 +28,7 @@ import com.nemislimus.tratometr.common.util.DateRangeHelper
 import com.nemislimus.tratometr.common.util.ExpenseFilter
 import com.nemislimus.tratometr.common.util.ExpenseFilterCallback
 import com.nemislimus.tratometr.common.util.MoneyConverter
-import com.nemislimus.tratometr.common.util.TimePresetManager
+import com.nemislimus.tratometr.common.util.TimePreset
 import com.nemislimus.tratometr.databinding.FragmentAnalyticsBinding
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -168,8 +168,8 @@ class AnalyticsFragment : BindingFragment<FragmentAnalyticsBinding>(), ExpenseFi
         viewModel.getFractionsWithOthers()
     }
 
-    private fun setDatePresetChipsColors (presetViews: Array<View?>, presetIndex: Int?) {
-        presetIndex?.let {
+    private fun setDatePresetChipsColors (presetViews: Array<View?>, presetIndexFromFilter: Int?) {
+        presetIndexFromFilter?.let {
             val defaultTextColor = getThemeAttrColor(R.attr.appTextPrimary)
             val selectedIconColor = getThemeAttrColor(R.attr.appAccentColor)
             val selectedTextColor = ContextCompat.getColor(requireContext(), R.color.button_text)
@@ -177,7 +177,7 @@ class AnalyticsFragment : BindingFragment<FragmentAnalyticsBinding>(), ExpenseFi
             presetViews.forEachIndexed { index, view ->
                 view?.let {
                     if (view is TextView) {
-                        if (index == presetIndex) {
+                        if (index == presetIndexFromFilter) {
                             view.setTextColor(selectedTextColor)
                             view.setBackgroundResource(R.drawable.btn_blue_background_r6)
                         } else {
@@ -185,7 +185,7 @@ class AnalyticsFragment : BindingFragment<FragmentAnalyticsBinding>(), ExpenseFi
                             view.setBackgroundResource(R.drawable.btn_white_background_r6)
                         }
                     } else if(view is ImageView){
-                        if (index == presetIndex) {
+                        if (index == presetIndexFromFilter) {
                             view.setColorFilter(selectedIconColor)
                         } else {
                             view.clearColorFilter()
@@ -242,7 +242,7 @@ class AnalyticsFragment : BindingFragment<FragmentAnalyticsBinding>(), ExpenseFi
                 ExpenseFilter.setDateInterval(
                     selection.first,
                     selection.second + DAY_GAP,
-                    TimePresetManager.PERIOD
+                    TimePreset.PERIOD
                 )
             }
 
@@ -254,7 +254,7 @@ class AnalyticsFragment : BindingFragment<FragmentAnalyticsBinding>(), ExpenseFi
             ExpenseFilter.setDateInterval(
                 dayInterval.first,
                 dayInterval.second,
-                TimePresetManager.DAY
+                TimePreset.DAY
             )
         }
 
@@ -263,7 +263,7 @@ class AnalyticsFragment : BindingFragment<FragmentAnalyticsBinding>(), ExpenseFi
             ExpenseFilter.setDateInterval(
                 weekInterval.first,
                 weekInterval.second,
-                TimePresetManager.WEEK
+                TimePreset.WEEK
             )
         }
 
@@ -272,7 +272,7 @@ class AnalyticsFragment : BindingFragment<FragmentAnalyticsBinding>(), ExpenseFi
             ExpenseFilter.setDateInterval(
                 monthInterval.first,
                 monthInterval.second,
-                TimePresetManager.MONTH
+                TimePreset.MONTH
             )
         }
 
@@ -281,7 +281,7 @@ class AnalyticsFragment : BindingFragment<FragmentAnalyticsBinding>(), ExpenseFi
             ExpenseFilter.setDateInterval(
                 yearInterval.first,
                 yearInterval.second,
-                TimePresetManager.YEAR
+                TimePreset.YEAR
             )
         }
     }

@@ -25,7 +25,7 @@ import com.nemislimus.tratometr.common.util.DateRangeHelper
 import com.nemislimus.tratometr.common.util.ExpenseFilter
 import com.nemislimus.tratometr.common.util.ExpenseFilterCallback
 import com.nemislimus.tratometr.common.util.MoneyConverter
-import com.nemislimus.tratometr.common.util.TimePresetManager
+import com.nemislimus.tratometr.common.util.TimePreset
 import com.nemislimus.tratometr.databinding.FragmentExpensesBinding
 import com.nemislimus.tratometr.expenses.ui.fragment.adpter.ExpensesAdapter
 import com.nemislimus.tratometr.expenses.ui.fragment.adpter.ExpensesAdapterListener
@@ -126,29 +126,29 @@ class ExpensesFragment : BindingFragment<FragmentExpensesBinding>(), ExpenseFilt
                 .setTitleText(R.string.select_range)
                 .build()
             dateRangePicker.addOnPositiveButtonClickListener { selection ->
-                ExpenseFilter.setDateInterval(selection.first, selection.second + 24 * 60 * 60 *1000, TimePresetManager.PERIOD)
+                ExpenseFilter.setDateInterval(selection.first, selection.second + 24 * 60 * 60 *1000, TimePreset.PERIOD)
             }
             dateRangePicker.show(requireActivity().supportFragmentManager, "DATE_RANGE_PICKER")
         }
         binding.tvDay.setOnClickListener {
             requestFocusToCalendar()
             val range = DateRangeHelper.getCurrentDay()
-            ExpenseFilter.setDateInterval(range.first, range.second, TimePresetManager.DAY)
+            ExpenseFilter.setDateInterval(range.first, range.second, TimePreset.DAY)
         }
         binding.tvWeek.setOnClickListener {
             requestFocusToCalendar()
             val range = DateRangeHelper.getCurrentWeek()
-            ExpenseFilter.setDateInterval(range.first, range.second, TimePresetManager.WEEK)
+            ExpenseFilter.setDateInterval(range.first, range.second, TimePreset.WEEK)
         }
         binding.tvMonth.setOnClickListener {
             requestFocusToCalendar()
             val range = DateRangeHelper.getCurrentMonth()
-            ExpenseFilter.setDateInterval(range.first, range.second, TimePresetManager.MONTH)
+            ExpenseFilter.setDateInterval(range.first, range.second, TimePreset.MONTH)
         }
         binding.tvYear.setOnClickListener {
             requestFocusToCalendar()
             val range = DateRangeHelper.getCurrentYear()
-            ExpenseFilter.setDateInterval(range.first, range.second, TimePresetManager.YEAR)
+            ExpenseFilter.setDateInterval(range.first, range.second, TimePreset.YEAR)
         }
         binding.tvCategories.setOnClickListener {
             requestFocusToCalendar()
@@ -196,7 +196,7 @@ class ExpensesFragment : BindingFragment<FragmentExpensesBinding>(), ExpenseFilt
         )
     }
 
-    private fun accentOnButton(presetButton: TimePresetManager?) {
+    private fun accentOnButton(presetButton: TimePreset?) {
         // Возвращаем все кнопки в исходное состояние
         changeBtnFilterBackground(binding.ivCalendar, false)
         changeBtnFilterBackground(binding.tvDay, false)
@@ -206,11 +206,11 @@ class ExpensesFragment : BindingFragment<FragmentExpensesBinding>(), ExpenseFilt
         // Выделяем нужную кнопку фильтра
         if (presetButton != null) {
             when (presetButton) {
-                TimePresetManager.PERIOD -> changeBtnFilterBackground(binding.ivCalendar, true)
-                TimePresetManager.DAY -> changeBtnFilterBackground(binding.tvDay, true)
-                TimePresetManager.WEEK -> changeBtnFilterBackground(binding.tvWeek, true)
-                TimePresetManager.MONTH -> changeBtnFilterBackground(binding.tvMonth, true)
-                TimePresetManager.YEAR -> changeBtnFilterBackground(binding.tvYear, true)
+                TimePreset.PERIOD -> changeBtnFilterBackground(binding.ivCalendar, true)
+                TimePreset.DAY -> changeBtnFilterBackground(binding.tvDay, true)
+                TimePreset.WEEK -> changeBtnFilterBackground(binding.tvWeek, true)
+                TimePreset.MONTH -> changeBtnFilterBackground(binding.tvMonth, true)
+                TimePreset.YEAR -> changeBtnFilterBackground(binding.tvYear, true)
             }
         }
 
