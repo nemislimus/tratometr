@@ -312,7 +312,6 @@ class ExpensesFragment : BindingFragment<FragmentExpensesBinding>(), ExpenseFilt
                 this.scrollState = scrollState
                 binding.ivBtnScroll.setImageResource(R.drawable.ic_scroll_up)
                 binding.ivBtnScroll.isVisible = true
-
             }
             ScrollState.STOPPED -> {        // Прокрутка остановлена
                 this.scrollState = scrollState
@@ -320,9 +319,7 @@ class ExpensesFragment : BindingFragment<FragmentExpensesBinding>(), ExpenseFilt
         }
         scrollJob.cancel()
         scrollJob = viewLifecycleOwner.lifecycleScope.launch {
-            delay(100)
-            binding.ivBtnScroll.alpha = 0.7f
-            delay(900)
+            delay(1200)
             binding.ivBtnScroll.isVisible = false
         }
     }
