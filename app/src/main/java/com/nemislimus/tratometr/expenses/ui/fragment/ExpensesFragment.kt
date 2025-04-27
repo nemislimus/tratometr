@@ -98,22 +98,6 @@ class ExpensesFragment : BindingFragment<FragmentExpensesBinding>(), ExpenseFilt
         // ПРОКРУТКА
         recycler?.addOnScrollListener(ExpensesScrollListener(this))
 
-        binding.btnContainer.viewTreeObserver.addOnPreDrawListener(object : ViewTreeObserver.OnPreDrawListener {
-            private var isAnimating = false
-
-            override fun onPreDraw(): Boolean {
-                if (isAnimating) {  // Проверяем, была ли анимация завершена
-                    isAnimating = false
-                    binding.ivBtnScroll.alpha = 0.7f
-                } else {
-                    if (binding.ivBtnScroll.visibility == View.VISIBLE) {
-                        isAnimating = true
-                    }
-                }
-                return true
-            }
-        })
-
         binding.ivBtnScroll.setOnClickListener {
             when(scrollState) {
                 ScrollState.DOWN -> recycler?.smoothScrollToPosition(adapter.itemCount - 1)
@@ -313,7 +297,7 @@ class ExpensesFragment : BindingFragment<FragmentExpensesBinding>(), ExpenseFilt
 
     override fun onStop() {
         super.onStop()
-        // Удаляем текущий фрагмент как наблюдателя
+        // Удаляем текущий фрагмент как наблюдателя фильтра
         ExpenseFilter.removeExpenseFilterListener(this)
     }
 
@@ -324,7 +308,6 @@ class ExpensesFragment : BindingFragment<FragmentExpensesBinding>(), ExpenseFilt
                 this.scrollState = scrollState
                 binding.ivBtnScroll.setImageResource(R.drawable.ic_scroll_down)
                 binding.ivBtnScroll.isVisible = true
-
             }
             ScrollState.UP -> {             // Прокрутка вверх
                 this.scrollState = scrollState
@@ -338,7 +321,9 @@ class ExpensesFragment : BindingFragment<FragmentExpensesBinding>(), ExpenseFilt
         }
         scrollJob.cancel()
         scrollJob = viewLifecycleOwner.lifecycleScope.launch {
-            delay(1000)
+            delay(100)
+            binding.ivBtnScroll.alpha = 0.7f
+            delay(900)
             binding.ivBtnScroll.isVisible = false
         }
     }
