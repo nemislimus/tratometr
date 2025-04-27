@@ -1,12 +1,8 @@
 package com.nemislimus.tratometr.expenses.ui.fragment.recycler
 
 import android.graphics.Canvas
-import android.graphics.Rect
-import android.view.View
-import android.widget.ImageView
 import androidx.recyclerview.widget.DefaultItemAnimator
 import androidx.recyclerview.widget.ItemTouchHelper
-import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.nemislimus.tratometr.expenses.ui.fragment.ExpensesFragment
 import com.nemislimus.tratometr.expenses.ui.fragment.adpter.ExpensesAdapter

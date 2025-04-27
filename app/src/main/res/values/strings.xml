@@ -29,7 +29,6 @@
     <string name="export">Экспорт отчёта в csv</string>
     <string name="logout">Выйти из аккаунта</string>
     <string name="select_time">Выберите время</string>
-    <string name="app_name_big_first_char">Tratometr</string>
     <string name="notification_message">Пора внести траты за день!</string>
     <string name="create_category">Создать категорию</string>
     <string name="notification_permission_request">Чтобы получить доступ к напоминаниям нужно ваше разрешение!</string>
@@ -61,7 +60,6 @@
     <string name="repeat_password">Повторите пароль</string>
     <string name="agreement_first">Нажимая кнопку, вы соглашаетесь с</string>
     <string name="agreement_second">Политикой конфедициальности и обработки персноальных данных</string>
-    <string name="first_header">1. Общие положения</string>
     <string name="privacy_policy_full_text"><![CDATA[
 <h2>1. Общие положения</h2>
 <p>Настоящая Политика конфиденциальности и обработки персональных данных (далее — «Политика») регулирует порядок сбора, использования, хранения и защиты персональных данных пользователей мобильного приложения «Tratometr» (далее — «Приложение»).</p>

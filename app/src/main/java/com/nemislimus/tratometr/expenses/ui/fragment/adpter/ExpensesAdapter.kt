@@ -105,6 +105,5 @@ class ExpensesAdapter(private val listener: ExpensesAdapterListener): RecyclerVi
         }
     }
 
-
     override fun getItemCount(): Int = items.size
 }
