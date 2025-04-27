@@ -16,6 +16,7 @@
         android:layout_marginStart="16dp"
         app:drawableStartCompat="@drawable/ic_arrows_back"
         android:drawablePadding="8dp"
+        android:textColor="?attr/appTextPrimary"
         android:text="@string/add_expense"/>
 
     <FrameLayout

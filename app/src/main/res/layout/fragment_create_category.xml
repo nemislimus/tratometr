@@ -71,6 +71,7 @@
             android:layout_marginEnd="@dimen/size_8dp"
             android:textAlignment="textStart"
             android:maxLines="1"
+            android:textColor="?attr/appTextPrimary"
             android:text="@string/category_icon_selection"/>
 
         <androidx.recyclerview.widget.RecyclerView
