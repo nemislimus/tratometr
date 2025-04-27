@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="black">#FF000000</color>
 
     <color name="category_ic">#FFFFFF</color>
     <color name="button_text">#FFFFFF</color>
@@ -35,17 +34,4 @@
     <color name="chart_color_7">#FF5EAA</color>
     <color name="chart_color_8_others">#738ADB</color>
 
-
-    <!--test_colors-->
-    <color name="col_1">#000000</color>
-    <color name="col_2">#808080</color>
-    <color name="col_3">#FF00FF</color>
-    <color name="col_4">#800080</color>
-    <color name="col_5">#FF0000</color>
-    <color name="col_6">#FFFF00</color>
-    <color name="col_7">#00FF00</color>
-    <color name="col_8">#008000</color>
-    <color name="col_9">#00FFFF</color>
-    <color name="col_10">#0000FF</color>
-    <!--test_colors-->
 </resources>
