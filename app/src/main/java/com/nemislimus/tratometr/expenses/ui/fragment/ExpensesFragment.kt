@@ -7,6 +7,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.view.ViewTreeObserver
 import android.widget.TextView
 import androidx.core.content.ContextCompat
 import androidx.core.view.isVisible
@@ -35,6 +36,9 @@ import com.nemislimus.tratometr.expenses.ui.fragment.recycler.OnScrollStateChang
 import com.nemislimus.tratometr.expenses.ui.fragment.viewholder.ExpensesViewHolder
 import com.nemislimus.tratometr.expenses.ui.viewmodel.ExpenseHistoryViewModel
 import com.nemislimus.tratometr.expenses.ui.viewmodel.history_model.Historical
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -51,6 +55,8 @@ class ExpensesFragment : BindingFragment<FragmentExpensesBinding>(), ExpenseFilt
     private var recycler: RecyclerView? = null
     private var scrollState = ScrollState.STOPPED
     private var scrollJob = lifecycleScope.launch {}
+    private var calendarJob: Job? = null
+    private var isClickable = true
 
     companion object {
         const val SCROLL_POSITION = "scroll_position"
@@ -87,11 +93,26 @@ class ExpensesFragment : BindingFragment<FragmentExpensesBinding>(), ExpenseFilt
                     val scrollPosition = savedInstanceState.getInt(SCROLL_POSITION, 0)
                     recycler?.scrollToPosition(scrollPosition)
             }
-
         }
 
         // ПРОКРУТКА
         recycler?.addOnScrollListener(ExpensesScrollListener(this))
+
+        binding.btnContainer.viewTreeObserver.addOnPreDrawListener(object : ViewTreeObserver.OnPreDrawListener {
+            private var isAnimating = false
+
+            override fun onPreDraw(): Boolean {
+                if (isAnimating) {  // Проверяем, была ли анимация завершена
+                    isAnimating = false
+                    binding.ivBtnScroll.alpha = 0.7f
+                } else {
+                    if (binding.ivBtnScroll.visibility == View.VISIBLE) {
+                        isAnimating = true
+                    }
+                }
+                return true
+            }
+        })
 
         binding.ivBtnScroll.setOnClickListener {
             when(scrollState) {
@@ -121,14 +142,23 @@ class ExpensesFragment : BindingFragment<FragmentExpensesBinding>(), ExpenseFilt
         }
 
         binding.ivCalendar.setOnClickListener {
+            if (!isClickable) return@setOnClickListener
+            isClickable = false
+
             requestFocusToCalendar()
             val dateRangePicker = MaterialDatePicker.Builder.dateRangePicker()
                 .setTitleText(R.string.select_range)
                 .build()
             dateRangePicker.addOnPositiveButtonClickListener { selection ->
-                ExpenseFilter.setDateInterval(selection.first, selection.second + 24 * 60 * 60 *1000, TimePreset.PERIOD)
+                ExpenseFilter.setDateInterval(selection.first, selection.second + 24 * 60 * 60 * 1000, TimePreset.PERIOD)
             }
             dateRangePicker.show(requireActivity().supportFragmentManager, "DATE_RANGE_PICKER")
+
+            calendarJob?.cancel()
+            calendarJob = CoroutineScope(Dispatchers.Main).launch {
+                delay(1000)
+                isClickable = true
+            }
         }
         binding.tvDay.setOnClickListener {
             requestFocusToCalendar()
@@ -294,13 +324,13 @@ class ExpensesFragment : BindingFragment<FragmentExpensesBinding>(), ExpenseFilt
                 this.scrollState = scrollState
                 binding.ivBtnScroll.setImageResource(R.drawable.ic_scroll_down)
                 binding.ivBtnScroll.isVisible = true
-                binding.ivBtnScroll.alpha = 0.7f
+
             }
             ScrollState.UP -> {             // Прокрутка вверх
                 this.scrollState = scrollState
                 binding.ivBtnScroll.setImageResource(R.drawable.ic_scroll_up)
                 binding.ivBtnScroll.isVisible = true
-                binding.ivBtnScroll.alpha = 0.7f
+
             }
             ScrollState.STOPPED -> {        // Прокрутка остановлена
                 this.scrollState = scrollState
@@ -309,8 +339,15 @@ class ExpensesFragment : BindingFragment<FragmentExpensesBinding>(), ExpenseFilt
         scrollJob.cancel()
         scrollJob = viewLifecycleOwner.lifecycleScope.launch {
             delay(1000)
-            binding.ivBtnScroll?.isVisible = false
+            binding.ivBtnScroll.isVisible = false
         }
+    }
+
+    override fun updateTotalAmount(historicalList: List<Historical>) {
+        val sum = historicalList
+            .filterIsInstance<Historical.HistoryContent>() // Фильтруем только объекты HistoryContent
+            .sumOf { it.expense.amount } // Суммируем значения amount
+        binding.tvSum.text = MoneyConverter.convertBigDecimalToRublesString(requireContext(), sum)
     }
 
     override fun onSaveInstanceState(outState: Bundle) {

@@ -31,7 +31,8 @@
             android:layout_height="wrap_content"
             android:layout_marginHorizontal="@dimen/size_16dp"
             android:background="@drawable/card_background_selector"
-            android:dropDownHeight="320dp"
+            android:dropDownVerticalOffset="@dimen/size_12dp"
+            android:dropDownHeight="312dp"
             android:hint="@string/hint_text_category"
             android:inputType="textCapSentences"
             android:paddingVertical="12dp"
@@ -104,6 +105,7 @@
         android:inputType="numberDecimal"
         android:paddingHorizontal="@dimen/size_16dp"
         android:paddingVertical="12dp"
+        android:hint="@string/amount_hints"
         app:drawableEndCompat="@drawable/ic_currency_ruble" />
 
     <TextView

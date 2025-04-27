@@ -40,7 +40,7 @@ import javax.inject.Inject
 class CreateExpenseFragment : BindingFragment<FragmentCreateExpenseBinding>() {
 
     companion object {
-        private const val EXTRA_EXPENSE = "EXTRA_EXPENSE"       // Тег для РАСХОДА
+        private const val EXTRA_EXPENSE = "EXTRA_EXPENSE"
 
         fun createArgs(expense: Historical.HistoryContent? ): Bundle =
             bundleOf(EXTRA_EXPENSE to expense?.expense)
@@ -48,7 +48,7 @@ class CreateExpenseFragment : BindingFragment<FragmentCreateExpenseBinding>() {
 
     private var expense: Expense? = null
     private var iconResId = 0
-    private var isAddMode = true                        // Режим true - добавление, false - редактирование
+    private var isAddMode = true
     private lateinit var itemsOriginal: List<AutoCompleteItem>
     private lateinit var items: MutableList<AutoCompleteItem>
     private lateinit var adapter: AutoCompleteAdapter
@@ -94,8 +94,8 @@ class CreateExpenseFragment : BindingFragment<FragmentCreateExpenseBinding>() {
         }
 
 
-        scale = requireContext().resources.displayMetrics.density // Получаем плотность экрана
-        autoCompleteTextView.dropDownVerticalOffset = 25        // Отступ списка вниз от поля
+        scale = requireContext().resources.displayMetrics.density   // Получаем плотность экрана
+        //autoCompleteTextView.dropDownVerticalOffset = 25            // Отступ списка вниз от поля
         typedValue = TypedValue()
         items = mutableListOf()
         adapter = AutoCompleteAdapter(requireContext(), items)
@@ -118,7 +118,7 @@ class CreateExpenseFragment : BindingFragment<FragmentCreateExpenseBinding>() {
             autoCompleteTextView.setText("")
         }
 
-        autoCompleteTextView.threshold = 0  // Начинать показывать предложения после ввода 1 символа
+        autoCompleteTextView.threshold = 1  // Начинать показывать предложения после ввода 1 символа
         // Открыть список при клике или получении фокуса
         autoCompleteTextView.setOnClickListener { autoCompleteTextView.showDropDown() }
         autoCompleteTextView.setOnFocusChangeListener { _, hasFocus ->
@@ -156,11 +156,9 @@ class CreateExpenseFragment : BindingFragment<FragmentCreateExpenseBinding>() {
                 val currentText = s.toString()
                 // Проверка, надо ли сделать кнопку Сохранить активной
                 binding.btnAction!!.isEnabled = enableBtnAction()
-
-                val item = itemsOriginal.find { it.name == currentText }
-                showIcons(item?.iconResId)  // Если есть такая категория, вставляем ее иконку, нет - удаляем
+                val item = itemsOriginal.find { it.name == currentText } // Если есть такая категория,
+                showIcons(item?.iconResId)  // вставляем ее иконку, нет - удаляем
                 item?.let { errorState(false, autoCompleteTextView) }    // Убираем индикацию ошибки
-
             }
         })
 

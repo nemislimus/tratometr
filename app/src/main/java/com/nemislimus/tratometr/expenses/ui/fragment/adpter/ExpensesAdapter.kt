@@ -83,6 +83,7 @@ class ExpensesAdapter(private val listener: ExpensesAdapterListener): RecyclerVi
                 AnimationUtils.loadAnimation((listener as ExpensesFragment).requireContext(), R.anim.del_holder)
             ) // Анимация удаления
             listener.onDeleteExpense(item, position)
+            listener.updateTotalAmount(items)
         }
 
         holder.btnEdit.setOnClickListener {
