@@ -93,9 +93,7 @@ class CreateExpenseFragment : BindingFragment<FragmentCreateExpenseBinding>() {
             expense = getExpense()  // Получаем расход
         }
 
-
         scale = requireContext().resources.displayMetrics.density   // Получаем плотность экрана
-        //autoCompleteTextView.dropDownVerticalOffset = 25            // Отступ списка вниз от поля
         typedValue = TypedValue()
         items = mutableListOf()
         adapter = AutoCompleteAdapter(requireContext(), items)
