@@ -11,8 +11,8 @@ object FieldValidator {
     const val INVALID_EMAIL = "Некорректный e-mail"
     const val REQUIRED_FIELD = "Обязательное поле!"
     const val NOT_MATCH = "Пароли не совпадают"
-    const val SHORT_PASSWORD = "Пароль должен содержать не менее 6 символов"
-    const val MIN_PASSWORD_LENGTH = 6
+    const val SHORT_PASSWORD = "Пароль должен содержать не менее 7 символов"
+    const val MIN_PASSWORD_LENGTH = 7
 
     fun isValidEmail(email: String): Boolean {
         val emailRegexPattern = "^[A-Za-z0-9+_.-]+@[A-Za-z0-9.-]+\\.[A-Za-z]{2,}$"
