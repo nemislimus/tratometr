@@ -3,9 +3,11 @@ package com.nemislimus.tratometr.expenses.data.database
 import android.content.Context
 import android.database.sqlite.SQLiteDatabase
 import android.database.sqlite.SQLiteOpenHelper
+import com.nemislimus.tratometr.common.util.MainCategoryIcons
 
-class DBHelper (context: Context):
+class DBHelper (val context: Context):
     SQLiteOpenHelper(context, DB_NAME, null, DB_VERSION) {
+
 
     override fun onCreate(db: SQLiteDatabase) {
         // Создание таб. EXPENSES
@@ -26,16 +28,16 @@ class DBHelper (context: Context):
         )
         // Вставка предустановленных записей в таблицу CATEGORIES
         val insertCategories = arrayOf(
-            "INSERT INTO CATEGORIES (CATEGORY_NAME, ICON_RES_ID) VALUES ('Кафе', 'ic_main_cat_cafe');",
-            "INSERT INTO CATEGORIES (CATEGORY_NAME, ICON_RES_ID) VALUES ('Транспорт', 'ic_main_cat_transport');",
-            "INSERT INTO CATEGORIES (CATEGORY_NAME, ICON_RES_ID) VALUES ('Здоровье', 'ic_main_cat_health');",
-            "INSERT INTO CATEGORIES (CATEGORY_NAME, ICON_RES_ID) VALUES ('Подарки', 'ic_main_cat_gift');",
-            "INSERT INTO CATEGORIES (CATEGORY_NAME, ICON_RES_ID) VALUES ('Образование', 'ic_main_cat_education');",
-            "INSERT INTO CATEGORIES (CATEGORY_NAME, ICON_RES_ID) VALUES ('Дом', 'ic_main_cat_home');",
-            "INSERT INTO CATEGORIES (CATEGORY_NAME, ICON_RES_ID) VALUES ('Продукты', 'ic_main_cat_groceries');",
-            "INSERT INTO CATEGORIES (CATEGORY_NAME, ICON_RES_ID) VALUES ('Спорт', 'ic_main_cat_sports');",
-            "INSERT INTO CATEGORIES (CATEGORY_NAME, ICON_RES_ID) VALUES ('Досуг', 'ic_main_cat_hobby');",
-            "INSERT INTO CATEGORIES (CATEGORY_NAME, ICON_RES_ID) VALUES ('Семья', 'ic_main_cat_family');"
+            "INSERT INTO CATEGORIES (CATEGORY_NAME, ICON_RES_ID) VALUES ('Кафе', " + map(MainCategoryIcons.MAIN_CAFE.resId) + ");",
+            "INSERT INTO CATEGORIES (CATEGORY_NAME, ICON_RES_ID) VALUES ('Транспорт', " + map(MainCategoryIcons.MAIN_TRANSPORT.resId) + ");",
+            "INSERT INTO CATEGORIES (CATEGORY_NAME, ICON_RES_ID) VALUES ('Здоровье', " + map(MainCategoryIcons.MAIN_HEALT.resId) + ");",
+            "INSERT INTO CATEGORIES (CATEGORY_NAME, ICON_RES_ID) VALUES ('Подарки', " + map(MainCategoryIcons.MAIN_GIFT.resId) + ");",
+            "INSERT INTO CATEGORIES (CATEGORY_NAME, ICON_RES_ID) VALUES ('Образование', " + map(MainCategoryIcons.MAIN_EDUCATION.resId) + ");",
+            "INSERT INTO CATEGORIES (CATEGORY_NAME, ICON_RES_ID) VALUES ('Дом', " + map(MainCategoryIcons.MAIN_HOME.resId) + ");",
+            "INSERT INTO CATEGORIES (CATEGORY_NAME, ICON_RES_ID) VALUES ('Продукты', " + map(MainCategoryIcons.MAIN_GROCERIES.resId) + ");",
+            "INSERT INTO CATEGORIES (CATEGORY_NAME, ICON_RES_ID) VALUES ('Спорт', " + map(MainCategoryIcons.MAIN_SPORTS.resId) + ");",
+            "INSERT INTO CATEGORIES (CATEGORY_NAME, ICON_RES_ID) VALUES ('Досуг', " + map(MainCategoryIcons.MAIN_HOBBY.resId) + ");",
+            "INSERT INTO CATEGORIES (CATEGORY_NAME, ICON_RES_ID) VALUES ('Семья', " + map(MainCategoryIcons.MAIN_FAMILY.resId) + ");"
         )
         for (query in insertCategories) {
             db.execSQL(query)
@@ -44,6 +46,10 @@ class DBHelper (context: Context):
 
     // Обновление/миграция БД
     override fun onUpgrade(db: SQLiteDatabase, oldVersion: Int, newVersion: Int) { }
+
+    private fun map(iconResId: Int): String {
+        return context.resources.getResourceEntryName(iconResId)
+    }
 
     companion object {
         private const val DB_NAME = "DBExpenses"
