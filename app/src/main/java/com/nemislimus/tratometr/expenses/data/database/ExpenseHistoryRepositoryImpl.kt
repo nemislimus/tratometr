@@ -37,8 +37,8 @@ class ExpenseHistoryRepositoryImpl @Inject constructor(
     override fun deleteExpense(expenseId: Long) {
         CoroutineScope(Dispatchers.IO).launch {
             mutex.withLock {
-            expenseHistoryDao.deleteExpense(expenseId)
-                }
+                expenseHistoryDao.deleteExpense(expenseId)
+            }
         }
     }
 
