@@ -163,6 +163,10 @@ class ExpensesFragment : BindingFragment<FragmentExpensesBinding>(), ExpenseFilt
             val range = DateRangeHelper.getCurrentYear()
             ExpenseFilter.setDateInterval(range.first, range.second, TimePreset.YEAR)
         }
+        binding.ivFilter.setOnClickListener {
+            requestFocusToCalendar()
+            ExpenseFilter.resetFilterSettings()
+        }
         binding.tvCategories.setOnClickListener {
             requestFocusToCalendar()
             findNavController().navigate(
@@ -192,12 +196,20 @@ class ExpensesFragment : BindingFragment<FragmentExpensesBinding>(), ExpenseFilt
         accentOnButton(expenseFilter.presetButton)
 
         // Выделяем Категорию, если выбрана
-        val color = if(expenseFilter.category != null) {
+        var color = if(expenseFilter.category != null) {
             ContextCompat.getColor(requireContext(), R.color.accented)
         } else {
             binding.tvSum.currentTextColor
         }
         binding.tvCategories.setTextColor(color)
+
+        // Выделяем Фильр, если не пустой
+        color = if(expenseFilter.presetButton != null || expenseFilter.category != null) {
+            ContextCompat.getColor(requireContext(), R.color.accented)
+        } else {
+            binding.tvSum.currentTextColor
+        }
+        binding.ivFilter.imageTintList = ColorStateList.valueOf(color)
 
         // Запрос на получение списка найденых расходов
         binding.progressBar.isVisible = true

@@ -10,6 +10,8 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.sync.Mutex
+import kotlinx.coroutines.sync.withLock
 import javax.inject.Inject
 
 class ExpenseHistoryRepositoryImpl @Inject constructor(
@@ -17,11 +19,15 @@ class ExpenseHistoryRepositoryImpl @Inject constructor(
     private val dbConverter: DBConverter
 ): ExpenseHistoryRepository {
 
+    private val mutex = Mutex()
+
     // ################   ЗАПРОСЫ ДЛЯ ОКНА ИСТОРИЯ РАСХОДОВ   #########################################################################################
     // Выборка строк-расходов за период и по категории
     override fun getExpenseListFilter(startDate: Long?, endDate: Long?, category: String?): Flow<List<Expense>> = flow {
-        val expenses = expenseHistoryDao.getExpenseListFilter(startDate, endDate, category)
-        emit(convertFromExpenseEntity(expenses))
+        mutex.withLock {
+            val expenses = expenseHistoryDao.getExpenseListFilter(startDate, endDate, category)
+            emit(convertFromExpenseEntity(expenses))
+        }
     }
 
     private fun convertFromExpenseEntity(expenses: List<ExpenseEntity>): List<Expense> {
@@ -30,7 +36,9 @@ class ExpenseHistoryRepositoryImpl @Inject constructor(
     // Удаление строки-расхода по id
     override fun deleteExpense(expenseId: Long) {
         CoroutineScope(Dispatchers.IO).launch {
-            expenseHistoryDao.deleteExpense(expenseId)
+            mutex.withLock {
+                expenseHistoryDao.deleteExpense(expenseId)
+            }
         }
     }
 
