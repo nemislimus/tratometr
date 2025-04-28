@@ -82,7 +82,6 @@ class AnalyticsFragment : BindingFragment<FragmentAnalyticsBinding>(), ExpenseFi
 
     override fun onFilterChanged(expenseFilter: ExpenseFilter) {
         binding.tvDateRange.text = DateRangeHelper.convertDatesInRange(
-            requireContext(),
             expenseFilter.startDate,
             expenseFilter.endDate
         )
