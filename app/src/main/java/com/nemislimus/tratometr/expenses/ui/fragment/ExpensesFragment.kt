@@ -185,7 +185,6 @@ class ExpensesFragment : BindingFragment<FragmentExpensesBinding>(), ExpenseFilt
     override fun onFilterChanged(expenseFilter: ExpenseFilter) {
         // Заполняем поле период
         binding.tvRange.text = DateRangeHelper.convertDatesInRange(
-            requireContext(),
             expenseFilter.startDate,
             expenseFilter.endDate
         )

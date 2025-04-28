@@ -22,6 +22,14 @@ object ExpenseFilter {
         notifyCallbacks()
     }
 
+    fun resetFilterSettings () {
+        startDate = null
+        endDate = null
+        presetButton = null
+        category = null
+        notifyCallbacks()
+    }
+
     // Метод для добавления наблюдателя
     fun addExpenseFilterListener(callback: ExpenseFilterCallback) {
         if (!callbacks.contains(callback)) {

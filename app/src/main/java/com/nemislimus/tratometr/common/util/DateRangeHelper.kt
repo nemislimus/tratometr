@@ -1,7 +1,5 @@
 package com.nemislimus.tratometr.common.util
 
-import android.content.Context
-import com.nemislimus.tratometr.R
 import java.text.SimpleDateFormat
 import java.util.Calendar
 import java.util.Locale
@@ -11,10 +9,8 @@ import java.util.TimeZone
 // ВНИМАНИЕ! ВСЕ МЕТОДЫ СТАТИЧЕСКИЕ
 object DateRangeHelper {
     // Возвращает строку период типа "01.03 - 25.04.25" или "Период", если startDate и endDate == null
-    fun convertDatesInRange(context: Context, startDate: Long?, endDate: Long?): String {
-        if (startDate == null || endDate == null) {
-            return context.getString(R.string.range) // Возвращаем строку "Период"
-        }
+    fun convertDatesInRange(startDate: Long?, endDate: Long?): String {
+        if (startDate == null || endDate == null) return "" // Возвращаем пустую строку
         val currentLocale = Locale.getDefault()
         val dateFormat = SimpleDateFormat("dd.MM.yy", currentLocale)
         dateFormat.timeZone = TimeZone.getTimeZone("UTC")
