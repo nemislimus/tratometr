@@ -102,25 +102,21 @@ class CreateExpenseFragment : BindingFragment<FragmentCreateExpenseBinding>() {
         isAddMode = expense == null
         if (isAddMode) showAddMode() else showEditMode()
 
-        binding.tvTitle.setOnClickListener {
-            findNavController().popBackStack()
-        }
+        binding.tvTitle.setOnClickListener { findNavController().popBackStack() }
 
         binding.root.setOnClickListener {
             requestTouchFocus(binding.root)
-            val imm = requireActivity().getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
-            imm.hideSoftInputFromWindow(view.windowToken, 0)
+            hideKeyboard()
         }
 
-        binding.ivClear!!.setOnClickListener {
-            autoCompleteTextView.setText("")
-        }
+        binding.ivClear!!.setOnClickListener { autoCompleteTextView.setText("") }
 
         autoCompleteTextView.threshold = 1  // Начинать показывать предложения после ввода 1 символа
         // Открыть список при клике или получении фокуса
         autoCompleteTextView.setOnClickListener { autoCompleteTextView.showDropDown() }
         autoCompleteTextView.setOnFocusChangeListener { _, hasFocus ->
             if (hasFocus) autoCompleteTextView.showDropDown()
+            isSeparatorVisible(!hasFocus)
         }
         autoCompleteTextView.setOnItemClickListener { parent, _, position, _ ->
             val selectedItem = (parent.getItemAtPosition(position) as AutoCompleteItem)
@@ -174,17 +170,15 @@ class CreateExpenseFragment : BindingFragment<FragmentCreateExpenseBinding>() {
 
         binding.etAmount.addTextChangedListener(object : TextWatcher {
             override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
-
             override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
                 if (s != null) {
                     val parts = s.toString().split(".")
-                    if (parts.size == 2 && parts[1].length > 2) {                       // если введен третий симовол после точки
+                    if (parts.size == 2 && parts[1].length > 2) {                       // Если введен третий симовол после точки
                         binding.etAmount.setText(s.substring(0, s.length - 1))          // Отменяем ввод последнего символа
                         binding.etAmount.setSelection(binding.etAmount.text.length)     // Устанавливаем курсор в конец текста
                     }
                 }
             }
-
             override fun afterTextChanged(s: Editable?) {
                 // Проверка, надо ли сделать кнопку Сохранить активной
                 binding.btnAction!!.isEnabled = enableBtnAction()
@@ -197,8 +191,12 @@ class CreateExpenseFragment : BindingFragment<FragmentCreateExpenseBinding>() {
                 }
             }
         })
+        binding.etAmount.setOnFocusChangeListener { _, hasFocus -> isSeparatorVisible(!hasFocus) }
+
+        binding.etDescription.setOnFocusChangeListener { _, hasFocus -> isSeparatorVisible(!hasFocus) }
 
         binding.btnAction!!.setOnClickListener {
+            hideKeyboard()
             if (!errorInCaregoryOrAmount()) executeSave()
         }
     }
@@ -364,6 +362,19 @@ class CreateExpenseFragment : BindingFragment<FragmentCreateExpenseBinding>() {
             isFocusableInTouchMode = true
             requestFocus()
             isFocusableInTouchMode = false
+        }
+    }
+
+    private fun isSeparatorVisible (isVisible: Boolean) {
+        binding.separator?.isVisible = isVisible
+    }
+
+    private fun hideKeyboard () {
+        if (view != null) {
+            val imm =
+                requireActivity().getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+            imm.hideSoftInputFromWindow(view?.windowToken, 0)
+            isSeparatorVisible(true)
         }
     }
 }

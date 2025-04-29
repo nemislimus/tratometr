@@ -140,6 +140,7 @@
         android:textColor="?attr/appTextPrimary" />
 
     <View
+        android:id="@+id/separator"
         android:layout_width="1dp"
         android:layout_height="0dp"
         android:layout_weight="1"/>
@@ -151,7 +152,7 @@
         android:layout_height="wrap_content"
         android:background="@drawable/btn_background_selector"
         android:layout_marginHorizontal="@dimen/size_16dp"
-        android:layout_marginBottom="@dimen/size_12dp"
+        android:layout_marginVertical="@dimen/size_12dp"
         android:gravity="center"
         android:text="@string/btn_add"
         android:textColor="@color/button_text"
