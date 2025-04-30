@@ -9,6 +9,7 @@
     <attr name="appNotActiveColor" format="color"/>
     <attr name="appErrorColor" format="color"/>
     <attr name="appAccentColor" format="color"/>
+    <attr name="appAccentColorFade" format="color"/>
     <attr name="appCategoryIconBackground" format="color"/>
     <attr name="appButtonColor" format="color"/>
 
@@ -25,8 +26,11 @@
         <item name="appNotActiveColor">@color/not_active</item>
         <item name="appErrorColor">@color/error</item>
         <item name="appAccentColor">@color/accented</item>
+        <item name="appAccentColorFade">@color/accented_fade</item>
         <item name="appCategoryIconBackground">@color/category_ic_background</item>
         <item name="materialTimePickerTheme">@style/ThemeOverlay.Tratometr.AppTimePicker</item>
+        <item name="materialCalendarTheme">@style/ThemeOverlay.Tratometr.AppDatePicker</item>
+        <item name="materialCalendarFullscreenTheme">@style/ThemeOverlay.Tratometr.AppDatePicker.Fullscreen</item>
         <item name="appButtonColor">@color/cards</item>
 
         <item name="colorPrimary">@color/accented</item>
@@ -70,6 +74,10 @@
         <item name="android:textAllCaps">false</item>
         <item name="android:letterSpacing">0</item>
         <item name="android:includeFontPadding">false</item>
+    </style>
+
+    <style name="AppTextPrimary.AllCaps">
+        <item name="android:textAllCaps">true</item>
     </style>
 
     <style name="AppTextButton">
@@ -213,5 +221,49 @@
     </style>
 
     <!--    TextInputLayout_SECTION_end-->
+
+    <!--    DATE_PICKER_SECTION-->
+
+    <style name="ThemeOverlay.Tratometr.AppDatePicker" parent="@style/ThemeOverlay.Material3.MaterialCalendar">
+        <item name="materialCalendarHeaderTitle">@style/AppDatePicker.HeaderTitle</item>
+        <item name="materialCalendarHeaderSelection">@style/AppDatePicker.HeaderSelection</item>
+        <item name="materialCalendarDayOfWeekLabel">@style/AppDatePicker.DayOfWeekLabel</item>
+        <item name="colorSurfaceContainerHigh">?attr/appBackgroundColor</item>
+        <item name="colorOnSurfaceVariant">?attr/appTextPrimary</item>
+    </style>
+
+    <style name="AppDatePicker.HeaderTitle" parent="@style/Widget.Material3.MaterialCalendar.HeaderTitle">
+        <item name="android:textColor">?attr/appTextPrimary</item>
+        <item name="android:textAppearance">@style/AppTextSecondaryBold</item>
+    </style>
+
+    <style name="AppDatePicker.HeaderSelection" parent="@style/Widget.Material3.MaterialCalendar.HeaderSelection">
+        <item name="android:textColor">?attr/appTextPrimary</item>
+        <item name="android:textAppearance">@style/AppTextBigNumber</item>
+    </style>
+
+    <style name="AppDatePicker.DayOfWeekLabel" parent="@style/Widget.Material3.MaterialCalendar.DayOfWeekLabel">
+        <item name="android:textAppearance">@style/AppTextPrimary.AllCaps</item>
+        <item name="android:textColor">?attr/appTextPrimary</item>
+    </style>
+
+
+    <style name="ThemeOverlay.Tratometr.AppDatePicker.Fullscreen" parent="@style/ThemeOverlay.Tratometr.AppDatePicker">
+        <item name="android:windowIsFloating">false</item>
+        <item name="materialCalendarStyle">@style/AppDatePicker.CalendarStyle.Fullscreen</item>
+        <item name="materialCalendarHeaderLayout">@style/Widget.Material3.MaterialCalendar.HeaderLayout.Fullscreen</item>
+        <item name="materialCalendarHeaderSelection">@style/AppDatePicker.HeaderSelection.Fullscreen</item>
+    </style>
+
+    <style name="AppDatePicker.CalendarStyle.Fullscreen" parent="@style/Widget.Material3.MaterialCalendar.Fullscreen">
+        <item name="rangeFillColor">?attr/appAccentColorFade</item>
+    </style>
+
+    <style name="AppDatePicker.HeaderSelection.Fullscreen" parent="@style/AppDatePicker.HeaderSelection">
+        <item name="android:maxLines">1</item>
+        <item name="autoSizeMaxTextSize">20sp</item>
+    </style>
+
+    <!--    DATE_PICKER_SECTION_end-->
 
 </resources>

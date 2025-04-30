@@ -15,6 +15,7 @@
     <color name="not_active">#A1A1A6</color>
     <color name="error">#D92D20</color>
     <color name="accented">#4158DE</color>
+    <color name="accented_fade">#4D4158DE</color>
 
     <color name="dark_background">#121212</color>
     <color name="dark_text_primary">#F2F2F7</color>
@@ -24,6 +25,7 @@
     <color name="dark_not_active">#8E8E93</color>
     <color name="dark_error">#F97066</color>
     <color name="dark_accented">#4B61DF</color>
+    <color name="dark_accented_fade">#4D4B61DF</color>
 
     <color name="chart_color_1">#FF6B6B</color>
     <color name="chart_color_2">#FFB400</color>
