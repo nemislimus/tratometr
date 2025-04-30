@@ -13,8 +13,8 @@ class ExpenseHistoryInteractorImpl @Inject constructor(
 
     // ################   ЗАПРОСЫ ДЛЯ ОКНА ИСТОРИЯ РАСХОДОВ   #########################################################################################
     // Выборка строк-расходов за период и по категории
-    override fun getExpenseListFilter(startDate: Long?, endDate: Long?, category: String?): Flow<List<Expense>> {
-        return repository.getExpenseListFilter(startDate, endDate, category)
+    override fun getExpenseListFilter(startDate: Long?, endDate: Long?, categories: List<String>?): Flow<List<Expense>> {
+        return repository.getExpenseListFilter(startDate, endDate, categories)
     }
 
     // Удаление строки-расхода по id

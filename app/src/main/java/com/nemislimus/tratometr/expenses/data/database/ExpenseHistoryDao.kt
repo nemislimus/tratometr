@@ -8,22 +8,28 @@ import javax.inject.Inject
 class ExpenseHistoryDao @Inject constructor(
     private val databaseHelper: DBHelper
 ) {
-// ################   ЗАПРОСЫ ДЛЯ ОКНА ИСТОРИЯ РАСХОДОВ   #########################################################################################
+    // ################   ЗАПРОСЫ ДЛЯ ОКНА ИСТОРИЯ РАСХОДОВ   #########################################################################################
     // Выборка строк-расходов за период и по категории
     /*  Образец запроса
-        SELECT EXPENSES.[_id], EXPENSES.DATE, EXPENSES.AMOUNT, EXPENSES.NOTE, EXPENSES.CATEGORY, CATEGORIES.ICON_RES_ID
+        SELECT EXPENSES.[_id], EXPENSES.Date, EXPENSES.AMOUNT, EXPENSES.NOTE, EXPENSES.CATEGORY, CATEGORIES.ICON_RES_ID
         FROM EXPENSES LEFT JOIN CATEGORIES ON EXPENSES.CATEGORY = CATEGORIES.CATEGORY_NAME
-        WHERE (((EXPENSES.DATE)>=500 And (EXPENSES.DATE)<1555) AND ((EXPENSES.CATEGORY)="Еда"))
-        ORDER BY EXPENSES.DATE;
+        WHERE (1=1
+         AND EXPENSES.Date>=500
+         AND (EXPENSES.Date)<1555
+         ) AND (1=1
+         OR EXPENSES.CATEGORY="Кафе"
+         OR EXPENSES.CATEGORY="Продукты"
+         OR EXPENSES.CATEGORY="Досуг"
+        ) ORDER BY EXPENSES.Date DESC;
     */
-    fun getExpenseListFilter(startDate: Long?, endDate: Long?, category: String?): List<ExpenseEntity> {
+    fun getExpenseListFilter(startDate: Long?, endDate: Long?, categories: List<String>?): List<ExpenseEntity> {
         val db = databaseHelper.readableDatabase
         val expenses = mutableListOf<ExpenseEntity>()
         // Начинаем строить базовый запрос
         val queryBuilder =
-            StringBuilder("SELECT EXPENSES.[_id], EXPENSES.DATE, EXPENSES.AMOUNT, EXPENSES.CATEGORY, EXPENSES.NOTE, CATEGORIES.ICON_RES_ID ")
+            StringBuilder("SELECT EXPENSES.[_id], EXPENSES.Date, EXPENSES.AMOUNT, EXPENSES.NOTE, EXPENSES.CATEGORY, CATEGORIES.ICON_RES_ID ")
         queryBuilder.append("FROM EXPENSES LEFT JOIN CATEGORIES ON EXPENSES.CATEGORY = CATEGORIES.CATEGORY_NAME ")
-        queryBuilder.append("WHERE  1=1")
+        queryBuilder.append("WHERE (1=1")
         val args = mutableListOf<String>()
         // Добавляем условия для дат, если они заданы
         if (startDate != null) {
@@ -34,16 +40,18 @@ class ExpenseHistoryDao @Inject constructor(
             queryBuilder.append(" AND EXPENSES.DATE < ?")
             args.add(endDate.toString())
         }
-        // Добавляем условие для категории, если она задана
-        if (category != null) {
-            queryBuilder.append(" AND EXPENSES.CATEGORY = ?")
-            args.add(category)
+        queryBuilder.append(") AND (1=1")
+        // Добавляем условие для категорий
+        if (!categories.isNullOrEmpty()) {
+            categories.forEachIndexed { index, category ->
+                queryBuilder.append(" OR EXPENSES.CATEGORY = ?")
+                args.add(category)
+            }
         }
         // Добавляем сортировку
-        queryBuilder.append(" ORDER BY EXPENSES.Date DESC;")
+        queryBuilder.append(") ORDER BY EXPENSES.Date DESC")
         // Выполняем запрос
         val cursor = db.rawQuery(queryBuilder.toString(), args.toTypedArray())
-
         if (cursor.moveToFirst()) {
             do {
                 val id = cursor.getLong(0)

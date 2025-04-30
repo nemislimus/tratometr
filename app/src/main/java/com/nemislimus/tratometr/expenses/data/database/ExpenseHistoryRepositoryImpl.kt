@@ -23,9 +23,9 @@ class ExpenseHistoryRepositoryImpl @Inject constructor(
 
     // ################   ЗАПРОСЫ ДЛЯ ОКНА ИСТОРИЯ РАСХОДОВ   #########################################################################################
     // Выборка строк-расходов за период и по категории
-    override fun getExpenseListFilter(startDate: Long?, endDate: Long?, category: String?): Flow<List<Expense>> = flow {
+    override fun getExpenseListFilter(startDate: Long?, endDate: Long?, categories: List<String>?): Flow<List<Expense>> = flow {
         mutex.withLock {
-            val expenses = expenseHistoryDao.getExpenseListFilter(startDate, endDate, category)
+            val expenses = expenseHistoryDao.getExpenseListFilter(startDate, endDate, categories)
             emit(convertFromExpenseEntity(expenses))
         }
     }

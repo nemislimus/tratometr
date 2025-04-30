@@ -27,10 +27,10 @@ class ExpenseHistoryViewModel (
 
     fun getExpensesLiveData(): LiveData<HistoryState> = expensesLiveData
 
-    fun getExpenseListFilter(startDate: Long?, endDate: Long?, category: String?) {
+    fun getExpenseListFilter(startDate: Long?, endDate: Long?, categories: List<String>?) {
         viewModelScope.launch(Dispatchers.IO) {
             interactor
-                .getExpenseListFilter(startDate, endDate, category)
+                .getExpenseListFilter(startDate, endDate, categories)
                 .collect {
                     withContext(Dispatchers.Default) {
                         val sum = it.sumOf { exp -> exp.amount }

@@ -7,7 +7,7 @@ import kotlinx.coroutines.flow.Flow
 interface ExpenseHistoryRepository {
     // ################   ЗАПРОСЫ ДЛЯ ОКНА ИСТОРИЯ РАСХОДОВ   #########################################################################################
     // Выборка строк-расходов за период и по категории
-    fun getExpenseListFilter(startDate: Long?, endDate: Long?, category: String?): Flow<List<Expense>>
+    fun getExpenseListFilter(startDate: Long?, endDate: Long?, categories: List<String>?): Flow<List<Expense>>
     // Удаление строки-расхода по id
     fun deleteExpense(expenseId: Long)
 
