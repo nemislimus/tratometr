@@ -15,10 +15,11 @@ class SelectCategoryViewModel(
     private val interactor: ExpenseHistoryInteractor
 ) : ViewModel() {
 
-    var selectedCategoryName: String? = null
+//    var selectedCategoryName: String? = null
+    var selectedCategoriesList: List<String> = listOf()
 
     init {
-        selectedCategoryName = ExpenseFilter.category
+        ExpenseFilter.categories?.let { selectedCategoriesList = it } ?: listOf<String>()
     }
 
     private val state = MutableLiveData<CategoryListState>()
@@ -43,7 +44,7 @@ class SelectCategoryViewModel(
     }
 
     private fun setCategorySelectedStatus(name: String): Boolean {
-        return name == selectedCategoryName
+        return selectedCategoriesList?.contains(name) ?: false
     }
 
 

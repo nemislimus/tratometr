@@ -9,12 +9,12 @@ import com.nemislimus.tratometr.databinding.ItemCategoryListBinding
 import com.nemislimus.tratometr.expenses.ui.model.SelectCategoryItem
 
 class SelectCategoryAdapter(
-    private val onCategoryClick: (categoryName: String?) -> Unit,
+    private val onCategoryClick: (categoryName: String, isSelected: Boolean) -> Unit,
 ) : RecyclerView.Adapter<SelectCategoryAdapter.SelectCategoryViewHolder>() {
 
     private val categoriesList: MutableList<SelectCategoryItem> = mutableListOf()
     private val filteredCategoryList: MutableList<SelectCategoryItem> = mutableListOf()
-    private var selectedCategoryName: String? = null
+    private var selectedCategoryName: String = NO_EXIST_CATEGORY_NAME
 
     fun setCategories(items: List<SelectCategoryItem>) {
         categoriesList.clear()
@@ -33,10 +33,10 @@ class SelectCategoryAdapter(
         notifyDataSetChanged()
     }
 
-    private fun manageOnCategoryClick(isSelected: Boolean, name: String?) {
-        val categoryName = if (isSelected) name else null
-        onCategoryClick(categoryName)
-    }
+//    private fun manageOnCategoryClick(isSelected: Boolean, name: String) {
+//        val categoryName = if (isSelected) name else NO_EXIST_CATEGORY_NAME
+//        onCategoryClick(categoryName)
+//    }
 
     override fun getItemCount(): Int = filteredCategoryList.size
 
@@ -45,14 +45,15 @@ class SelectCategoryAdapter(
         return SelectCategoryViewHolder(
             ItemCategoryListBinding.inflate(layoutInflater, parent, false)) { position ->
             if (position != RecyclerView.NO_POSITION) {
-                selectedCategoryName = filteredCategoryList.getOrNull(position)?.name
+                selectedCategoryName = filteredCategoryList[position].name
                 categoriesList.forEach { item ->
                     if (item.name == selectedCategoryName) {
                         item.isSelected = !item.isSelected
-                        manageOnCategoryClick(item.isSelected, selectedCategoryName)
-                    } else {
-                        item.isSelected = false
+                        onCategoryClick(selectedCategoryName, item.isSelected)
                     }
+//                    else {
+//                        item.isSelected = false
+//                    }
                 }
             }
         }
@@ -80,5 +81,9 @@ class SelectCategoryAdapter(
                 notifyDataSetChanged()
             }
         }
+    }
+
+    companion object {
+        const val NO_EXIST_CATEGORY_NAME = "no_exist_cat"
     }
 }
