@@ -31,7 +31,7 @@ class SelectCategoryFragment : BindingFragment<FragmentSelectCategoryBinding>() 
     private val viewModel: SelectCategoryViewModel by viewModels { vmFactory }
     private var searchTextWatcher: TextWatcher? = null
 
-    private val adapter = SelectCategoryAdapter {  }
+    private val adapter = SelectCategoryAdapter { name, isSelected ->  setSelectedCategory(name, isSelected) }
 
     override fun onAttach(context: Context) {
         requireActivity().appComponent.inject(this)
@@ -80,7 +80,7 @@ class SelectCategoryFragment : BindingFragment<FragmentSelectCategoryBinding>() 
         }
 
         binding.btnCategoryApply.setOnClickListener {
-            ExpenseFilter.categories = viewModel.selectedCategoriesList
+            ExpenseFilter.categories = viewModel.selectedCategoriesList.ifEmpty { null }
             findNavController().navigateUp()
         }
 

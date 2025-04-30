@@ -15,7 +15,6 @@ class SelectCategoryViewModel(
     private val interactor: ExpenseHistoryInteractor
 ) : ViewModel() {
 
-//    var selectedCategoryName: String? = null
     var selectedCategoriesList: List<String> = listOf()
 
     init {
@@ -44,7 +43,7 @@ class SelectCategoryViewModel(
     }
 
     private fun setCategorySelectedStatus(name: String): Boolean {
-        return selectedCategoriesList?.contains(name) ?: false
+        return selectedCategoriesList.contains(name) ?: false
     }
 
 

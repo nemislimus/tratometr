@@ -14,7 +14,7 @@ class SelectCategoryAdapter(
 
     private val categoriesList: MutableList<SelectCategoryItem> = mutableListOf()
     private val filteredCategoryList: MutableList<SelectCategoryItem> = mutableListOf()
-    private var selectedCategoryName: String = NO_EXIST_CATEGORY_NAME
+    private var selectedCategoryName: String = ""
 
     fun setCategories(items: List<SelectCategoryItem>) {
         categoriesList.clear()
@@ -33,11 +33,6 @@ class SelectCategoryAdapter(
         notifyDataSetChanged()
     }
 
-//    private fun manageOnCategoryClick(isSelected: Boolean, name: String) {
-//        val categoryName = if (isSelected) name else NO_EXIST_CATEGORY_NAME
-//        onCategoryClick(categoryName)
-//    }
-
     override fun getItemCount(): Int = filteredCategoryList.size
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): SelectCategoryViewHolder {
@@ -51,9 +46,6 @@ class SelectCategoryAdapter(
                         item.isSelected = !item.isSelected
                         onCategoryClick(selectedCategoryName, item.isSelected)
                     }
-//                    else {
-//                        item.isSelected = false
-//                    }
                 }
             }
         }
@@ -81,9 +73,5 @@ class SelectCategoryAdapter(
                 notifyDataSetChanged()
             }
         }
-    }
-
-    companion object {
-        const val NO_EXIST_CATEGORY_NAME = "no_exist_cat"
     }
 }
