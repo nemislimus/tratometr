@@ -109,7 +109,7 @@ class CreateExpenseFragment : BindingFragment<FragmentCreateExpenseBinding>() {
             hideKeyboard()
         }
 
-        binding.ivClear!!.setOnClickListener { autoCompleteTextView.setText("") }
+        binding.ivClear.setOnClickListener { autoCompleteTextView.setText("") }
 
         autoCompleteTextView.threshold = 1  // Начинать показывать предложения после ввода 1 символа
         // Открыть список при клике или получении фокуса
@@ -149,7 +149,7 @@ class CreateExpenseFragment : BindingFragment<FragmentCreateExpenseBinding>() {
             override fun afterTextChanged(s: Editable?) {
                 val currentText = s.toString()
                 // Проверка, надо ли сделать кнопку Сохранить активной
-                binding.btnAction!!.isEnabled = enableBtnAction()
+                binding.btnAction.isEnabled = enableBtnAction()
                 val item = itemsOriginal.find { it.name == currentText } // Если есть такая категория,
                 showIcons(item?.iconResId)  // вставляем ее иконку, нет - удаляем
                 item?.let { errorState(false, autoCompleteTextView) }    // Убираем индикацию ошибки
@@ -181,7 +181,7 @@ class CreateExpenseFragment : BindingFragment<FragmentCreateExpenseBinding>() {
             }
             override fun afterTextChanged(s: Editable?) {
                 // Проверка, надо ли сделать кнопку Сохранить активной
-                binding.btnAction!!.isEnabled = enableBtnAction()
+                binding.btnAction.isEnabled = enableBtnAction()
                 // Если сумма введена правильно, убираем индикацию ошибки
                 if (binding.etAmount.text.isNotEmpty()) {
                     val amount = BigDecimal(binding.etAmount.text.toString()).setScale(2, RoundingMode.HALF_UP)
@@ -195,7 +195,7 @@ class CreateExpenseFragment : BindingFragment<FragmentCreateExpenseBinding>() {
 
         binding.etDescription.setOnFocusChangeListener { _, hasFocus -> isSeparatorVisible(!hasFocus) }
 
-        binding.btnAction!!.setOnClickListener {
+        binding.btnAction.setOnClickListener {
             hideKeyboard()
             if (!errorInCaregoryOrAmount()) executeSave()
         }
@@ -252,20 +252,20 @@ class CreateExpenseFragment : BindingFragment<FragmentCreateExpenseBinding>() {
     private fun showEditMode() {
         dateInMilisecond = expense!!.date
         binding.tvTitle.setText(R.string.edit_expense)
-        binding.btnAction?.setText(R.string.btn_save)
+        binding.btnAction.setText(R.string.btn_save)
         showIcons(expense!!.iconResId)
         autoCompleteTextView.setText(expense!!.category)
         binding.tvDate.text = DateFormat.format("dd.MM.yyyy", dateInMilisecond).toString()
         binding.etAmount.setText(expense!!.amount.toString())
         expense!!.description?.let { binding.etDescription.setText(expense!!.description) }
         // Проверка, надо ли сделать кнопку Сохранить активной
-        binding.btnAction!!.isEnabled = enableBtnAction()
+        binding.btnAction.isEnabled = enableBtnAction()
     }
 
     private fun showAddMode() {
         dateInMilisecond = today()
         binding.tvTitle.setText(R.string.add_expense)
-        binding.btnAction?.setText(R.string.btn_add)
+        binding.btnAction.setText(R.string.btn_add)
         binding.tvDate.text = DateFormat.format("dd.MM.yyyy", dateInMilisecond).toString()
     }
 
@@ -311,9 +311,9 @@ class CreateExpenseFragment : BindingFragment<FragmentCreateExpenseBinding>() {
             view.setBackgroundResource(R.drawable.card_background_selector)
         }
         if (view == binding.actvCategory) {
-            binding.categoryError!!.isVisible = isError
+            binding.categoryError.isVisible = isError
         } else {
-            binding.amountError!!.isVisible = isError
+            binding.amountError.isVisible = isError
         }
     }
 
@@ -366,7 +366,7 @@ class CreateExpenseFragment : BindingFragment<FragmentCreateExpenseBinding>() {
     }
 
     private fun isSeparatorVisible (isVisible: Boolean) {
-        binding.separator?.isVisible = isVisible
+        binding.separator.isVisible = isVisible
     }
 
     private fun hideKeyboard () {
