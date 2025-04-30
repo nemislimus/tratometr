@@ -15,8 +15,12 @@
         <item name="appNotActiveColor">@color/dark_not_active</item>
         <item name="appErrorColor">@color/dark_error</item>
         <item name="appAccentColor">@color/dark_accented</item>
+        <item name="appAccentColorFade">@color/dark_accented_fade</item>
         <item name="appCategoryIconBackground">@color/dark_category_ic_background</item>
         <item name="materialTimePickerTheme">@style/ThemeOverlay.Tratometr.AppTimePicker</item>
+        <item name="materialCalendarTheme">@style/ThemeOverlay.Tratometr.AppDatePicker</item>
+        <item name="materialCalendarFullscreenTheme">@style/ThemeOverlay.Tratometr.AppDatePicker.Fullscreen</item>
+        <item name="appButtonColor">@color/cards</item>
 
         <item name="colorPrimary">@color/accented</item>
         <item name="android:colorBackground">@color/dark_background</item>
