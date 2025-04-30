@@ -65,7 +65,6 @@ class AuthRepositoryImpl @Inject constructor(
 
     override suspend fun login(email: String, password: String): Resource<Tokens> {
         val response = client.doAuthRequest(AuthRequest.LoginRequest(email, password))
-        Log.d("АутРепозиторийЛогин", response.resultCode.toString())
 
         return when (response.resultCode) {
             NETWORK_ERROR_CODE -> {
@@ -112,6 +111,10 @@ class AuthRepositoryImpl @Inject constructor(
         val response = client.doCheckTokenRequest(CheckTokenRequest(token))
 
         return when (response.resultCode) {
+            NETWORK_ERROR_CODE -> {
+                Resource.Error<Boolean>(ERROR_NETWORK)
+            }
+
             SUCCESS_CODE -> with(response as CheckTokenResponse) {
                 Resource.Success<Boolean>(isValid)
             }
@@ -121,7 +124,6 @@ class AuthRepositoryImpl @Inject constructor(
             }
 
             else -> {
-                Log.d("АутРепозиторийЧек", response.resultCode.toString())
                 Resource.Error<Boolean>(ERROR_UNKNOWN, false)
             }
         }
@@ -131,6 +133,10 @@ class AuthRepositoryImpl @Inject constructor(
         val response = client.doRecoveryRequest(RecoveryRequest(email))
 
         return when (response.resultCode) {
+            NETWORK_ERROR_CODE -> {
+                Resource.Error<Boolean>(ERROR_NETWORK)
+            }
+
             SUCCESS_CODE -> {
                 Resource.Success<Boolean>(true)
             }
