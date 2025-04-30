@@ -2,12 +2,16 @@ package com.nemislimus.tratometr.authorization.ui.viewmodel
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.viewModelScope
 import com.nemislimus.tratometr.authorization.domain.AuthInteractor
 import com.nemislimus.tratometr.authorization.domain.TokensStorageInteractor
 import com.nemislimus.tratometr.authorization.domain.models.Resource
 import com.nemislimus.tratometr.authorization.domain.models.Tokens
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.withContext
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 class AuthorizationViewModel @Inject constructor(
@@ -16,10 +20,15 @@ class AuthorizationViewModel @Inject constructor(
 ) :
     ViewModel() {
 
-    suspend fun authorization(email: String, password: String): Resource<Tokens> = withContext(
-        Dispatchers.IO
-    ) {
-        authInteractor.login(email, password)
+    private val _authState = MutableStateFlow<Resource<Tokens>?>(null)
+    val authState: StateFlow<Resource<Tokens>?> = _authState.asStateFlow()
+
+    fun authorize(email: String, password: String) {
+        viewModelScope.launch(Dispatchers.IO) {
+            _authState.value = null
+            val result = authInteractor.login(email, password)
+            _authState.value = result
+        }
     }
 
     fun putTokensToStorage(tokens: Tokens) {
