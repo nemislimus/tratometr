@@ -1,6 +1,5 @@
 package com.nemislimus.tratometr.authorization.data
 
-import android.util.Log
 import com.nemislimus.tratometr.authorization.data.dto.AuthRequest
 import com.nemislimus.tratometr.authorization.data.dto.AuthResponse
 import com.nemislimus.tratometr.authorization.data.dto.CheckTokenRequest
