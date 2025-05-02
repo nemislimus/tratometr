@@ -192,19 +192,19 @@ class ExpensesFragment : BindingFragment<FragmentExpensesBinding>(), ExpenseFilt
         accentOnButton(expenseFilter.presetButton)
 
         // Выделяем Категорию, если выбрана
-        val color = if(expenseFilter.category != null) {
+        val color = if(expenseFilter.categories != null) {
             ContextCompat.getColor(requireContext(), R.color.accented)
         } else {
             binding.tvSum.currentTextColor
         }
         binding.tvCategories.setTextColor(color)
 
-        // Запрос на получение списка найденых расходов
+        // Запрос на получение списка расходов
         binding.progressBar.isVisible = true
         viewModel.getExpenseListFilter(
             expenseFilter.startDate,
             expenseFilter.endDate,
-            expenseFilter.category
+            expenseFilter.categories
         )
     }
 
