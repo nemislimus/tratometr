@@ -40,11 +40,12 @@ class ExpenseHistoryDao @Inject constructor(
             queryBuilder.append(" AND EXPENSES.DATE < ?")
             args.add(endDate.toString())
         }
-        queryBuilder.append(") AND (1=1")
         // Добавляем условие для категорий
         if (!categories.isNullOrEmpty()) {
+            queryBuilder.append(") AND (")
             categories.forEachIndexed { index, category ->
-                queryBuilder.append(" OR EXPENSES.CATEGORY = ?")
+                val str = if (index == 0) "EXPENSES.CATEGORY = ?" else " OR EXPENSES.CATEGORY = ?"
+                queryBuilder.append(str)
                 args.add(category)
             }
         }
@@ -57,8 +58,8 @@ class ExpenseHistoryDao @Inject constructor(
                 val id = cursor.getLong(0)
                 val date = cursor.getLong(1)
                 val amount = cursor.getLong(2)
-                val categoryName = cursor.getString(3)
-                val note = cursor.getString(4)
+                val note = cursor.getString(3)
+                val categoryName = cursor.getString(4)
                 val iconResString = cursor.getString(5)
                 expenses.add(ExpenseEntity(id, date, amount, categoryName, iconResString, note))
             } while (cursor.moveToNext())
