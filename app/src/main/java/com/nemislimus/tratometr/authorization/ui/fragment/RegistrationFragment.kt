@@ -5,8 +5,10 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
+import androidx.lifecycle.repeatOnLifecycle
 import androidx.navigation.fragment.findNavController
 import com.nemislimus.tratometr.R
 import com.nemislimus.tratometr.authorization.domain.models.Resource
@@ -94,21 +96,7 @@ class RegistrationFragment : BindingFragment<FragmentRegistrationBinding>() {
             val email = binding.emailText.text.toString()
             val password = binding.passwordText.text.toString()
 
-            lifecycleScope.launch {
-                val response = viewModel.registration(email, password)
-
-                when (response) {
-                    is Resource.Success -> {
-                        viewModel.putTokensToStorage(response.value!!)
-                        findNavController().navigate(R.id.action_registrationFragment_to_expensesFragment)
-                    }
-
-                    is Resource.Error -> {
-                        binding.errorText.text = response.message
-                        binding.errorText.visibility = View.VISIBLE
-                    }
-                }
-            }
+            viewModel.registration(email, password)
         }
 
         binding.privacy.setOnClickListener {
@@ -118,6 +106,40 @@ class RegistrationFragment : BindingFragment<FragmentRegistrationBinding>() {
         binding.backButton.setOnClickListener {
             requireActivity().onBackPressedDispatcher.onBackPressed()
         }
+
+        observeRegState()
+    }
+
+    private fun observeRegState() {
+        lifecycleScope.launch {
+            repeatOnLifecycle(Lifecycle.State.STARTED) {
+                viewModel.regState.collect { result ->
+                    when (result) {
+                        is Resource.Success -> {
+                            result.value?.let {
+                                viewModel.putTokensToStorage(it)
+                                findNavController().navigate(R.id.action_registrationFragment_to_expensesFragment)
+                            }
+                        }
+
+                        is Resource.Error -> {
+                            result.message?.let {
+                                showError(it)
+                            }
+                        }
+
+                        null -> {
+
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    private fun showError(message: String) {
+        binding.errorText.text = message
+        binding.errorText.visibility = View.VISIBLE
     }
 
     private fun updateRegistrationButtonState() {

@@ -8,9 +8,8 @@ import com.nemislimus.tratometr.authorization.domain.TokensStorageInteractor
 import com.nemislimus.tratometr.authorization.domain.models.Resource
 import com.nemislimus.tratometr.authorization.domain.models.Tokens
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.MutableSharedFlow
+import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -20,14 +19,13 @@ class AuthorizationViewModel @Inject constructor(
 ) :
     ViewModel() {
 
-    private val _authState = MutableStateFlow<Resource<Tokens>?>(null)
-    val authState: StateFlow<Resource<Tokens>?> = _authState.asStateFlow()
+    private val _authState = MutableSharedFlow<Resource<Tokens>>(replay = 0)
+    val authState = _authState.asSharedFlow()
 
     fun authorize(email: String, password: String) {
         viewModelScope.launch(Dispatchers.IO) {
-            _authState.value = null
             val result = authInteractor.login(email, password)
-            _authState.value = result
+            _authState.emit(result)
         }
     }
 

@@ -97,10 +97,6 @@ class AuthorizationFragment : BindingFragment<FragmentAuthorizationBinding>() {
                                 showError(it)
                             }
                         }
-
-                        null -> {
-
-                        }
                     }
                 }
             }
