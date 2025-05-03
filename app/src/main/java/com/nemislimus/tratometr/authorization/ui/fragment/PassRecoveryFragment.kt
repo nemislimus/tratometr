@@ -6,8 +6,10 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
+import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
+import androidx.lifecycle.repeatOnLifecycle
 import androidx.navigation.fragment.findNavController
 import com.nemislimus.tratometr.R
 import com.nemislimus.tratometr.authorization.domain.models.Resource
@@ -51,24 +53,34 @@ class PassRecoveryFragment : BindingFragment<FragmentPassrecoveryBinding>() {
 
         binding.recoverButton.setOnClickListener {
             val email = binding.emailText.text.toString()
-            lifecycleScope.launch {
-                val response = viewModel.recoverPass(email)
-
-                when (response) {
-                    is Resource.Success -> {
-                        showToast(getString(R.string.success))
-                        findNavController().navigate(R.id.action_passRecoveryFragment_to_newPassFragment)
-                    }
-
-                    is Resource.Error -> {
-                        showToast(response.message.toString())
-                    }
-                }
-            }
+            viewModel.recoverPass(email)
         }
 
         binding.backButton.setOnClickListener {
             requireActivity().onBackPressedDispatcher.onBackPressed()
+        }
+
+        observeEvents()
+    }
+
+    private fun observeEvents() {
+        lifecycleScope.launch {
+            repeatOnLifecycle(Lifecycle.State.STARTED) {
+                viewModel.recoveryResult.collect { result ->
+                    when (result) {
+                        is Resource.Success -> {
+                            showToast(getString(R.string.success))
+                            findNavController().navigate(R.id.action_passRecoveryFragment_to_newPassFragment)
+                        }
+
+                        is Resource.Error -> {
+                            result.message?.let {
+                                showToast(it)
+                            }
+                        }
+                    }
+                }
+            }
         }
     }
 

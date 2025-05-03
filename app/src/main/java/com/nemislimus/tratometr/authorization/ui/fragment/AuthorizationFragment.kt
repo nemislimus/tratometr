@@ -6,8 +6,10 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.core.content.ContextCompat
+import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
+import androidx.lifecycle.repeatOnLifecycle
 import androidx.navigation.fragment.findNavController
 import com.nemislimus.tratometr.R
 import com.nemislimus.tratometr.authorization.domain.models.Resource
@@ -67,30 +69,48 @@ class AuthorizationFragment : BindingFragment<FragmentAuthorizationBinding>() {
             val email = binding.emailText.text.toString()
             val password = binding.passwordText.text.toString()
 
-            lifecycleScope.launch {
-                val response = viewModel.authorization(email, password)
-                when (response) {
-                    is Resource.Success -> {
-                        viewModel.putTokensToStorage(response.value!!)
-                        findNavController().navigate(R.id.action_authorizationFragment_to_expensesFragment)
-                    }
+            viewModel.authorize(email, password)
 
-                    is Resource.Error -> {
-                        binding.emailText.setTextColor(
-                            ContextCompat.getColor(
-                                requireContext(),
-                                R.color.error
-                            )
-                        )
-                        binding.emailField.error = response.message
-                    }
-                }
-            }
         }
 
         binding.forgotPassword.setOnClickListener {
             findNavController().navigate(R.id.action_authorizationFragment_to_passRecoveryFragment)
         }
+
+        observeAuthState()
+    }
+
+    private fun observeAuthState() {
+        lifecycleScope.launch {
+            repeatOnLifecycle(Lifecycle.State.STARTED) {
+                viewModel.authState.collect { result ->
+                    when (result) {
+                        is Resource.Success -> {
+                            result.value?.let {
+                                viewModel.putTokensToStorage(result.value)
+                                findNavController().navigate(R.id.action_authorizationFragment_to_expensesFragment)
+                            }
+                        }
+
+                        is Resource.Error -> {
+                            result.message?.let {
+                                showError(it)
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    private fun showError(message: String) {
+        binding.emailText.setTextColor(
+            ContextCompat.getColor(
+                requireContext(),
+                R.color.error
+            )
+        )
+        binding.emailField.error = message
     }
 
     private fun updateLoginButtonState() {
