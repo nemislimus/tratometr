@@ -127,10 +127,6 @@ class RegistrationFragment : BindingFragment<FragmentRegistrationBinding>() {
                                 showError(it)
                             }
                         }
-
-                        null -> {
-
-                        }
                     }
                 }
             }

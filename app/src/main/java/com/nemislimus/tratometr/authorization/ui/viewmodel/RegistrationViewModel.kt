@@ -9,10 +9,7 @@ import com.nemislimus.tratometr.authorization.domain.models.Resource
 import com.nemislimus.tratometr.authorization.domain.models.Tokens
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableSharedFlow
-import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asSharedFlow
-import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -21,7 +18,7 @@ class RegistrationViewModel @Inject constructor(
     val tokensStorageInteractor: TokensStorageInteractor
 ) : ViewModel() {
 
-    private val _regState = MutableSharedFlow<Resource<Tokens>?>(replay = 0)
+    private val _regState = MutableSharedFlow<Resource<Tokens>>(replay = 0)
     val regState = _regState.asSharedFlow()
 
     fun registration(email: String, password: String) {
