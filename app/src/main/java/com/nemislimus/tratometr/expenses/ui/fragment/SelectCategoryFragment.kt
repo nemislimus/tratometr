@@ -11,7 +11,6 @@ import androidx.core.view.isVisible
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
-import com.nemislimus.tratometr.R
 import com.nemislimus.tratometr.common.appComponent
 import com.nemislimus.tratometr.common.util.BindingFragment
 import com.nemislimus.tratometr.common.util.ExpenseFilter
@@ -53,7 +52,6 @@ class SelectCategoryFragment : BindingFragment<FragmentSelectCategoryBinding>() 
         viewModel.observeState().observe(viewLifecycleOwner) { state ->
             stateProcessing(state)
         }
-
     }
 
     override fun onResume() {
@@ -73,10 +71,10 @@ class SelectCategoryFragment : BindingFragment<FragmentSelectCategoryBinding>() 
 
         binding.tbSelectCategory.setOnClickListener { findNavController().navigateUp() }
 
-        binding.btnNewCategory.setOnClickListener {
-            findNavController().navigate(
-                R.id.action_selectCategoryFragment_to_createCategoryFragment
-            )
+        binding.btnAllCategories.setOnClickListener {
+            adapter.deselectAllCategories()
+            viewModel.selectedCategoriesList = listOf()
+            setAllCategoriesBtnChecked()
         }
 
         binding.btnCategoryApply.setOnClickListener {
@@ -100,12 +98,13 @@ class SelectCategoryFragment : BindingFragment<FragmentSelectCategoryBinding>() 
 
     private fun stateProcessing(state: CategoryListState) {
         when(state) {
-            is CategoryListState.Content -> showContent(state.categoriesItems)
+            is CategoryListState.Content -> showContent(state.categoriesItems, state.allCategoriesSelected)
             CategoryListState.Empty -> showPlaceholder()
         }
     }
 
-    private fun showContent(playlists: List<SelectCategoryItem>) {
+    private fun showContent(playlists: List<SelectCategoryItem>, allCategoriesMode: Boolean) {
+        setAllCategoriesBtnChecked(allCategoriesMode)
         adapter.setCategories(playlists)
         showPlaceholder(false)
     }
@@ -115,7 +114,12 @@ class SelectCategoryFragment : BindingFragment<FragmentSelectCategoryBinding>() 
         binding.grPlaceholderCategoryList.isVisible = placeholderVisible
     }
 
+    private fun setAllCategoriesBtnChecked(isChecked: Boolean = true) {
+        binding.ivAllCategoriesCheckbox.isVisible = isChecked
+    }
+
     private fun setSelectedCategory(name: String, isSelected: Boolean) {
+        setAllCategoriesBtnChecked(false)
         if (isSelected) {
             viewModel.selectedCategoriesList += name
         } else {

@@ -28,7 +28,12 @@ class SelectCategoryViewModel(
         val categories = interactor.getAllCategoriesListWithIcons()
         when {
             categories.isEmpty() -> state.postValue(CategoryListState.Empty)
-            else -> state.postValue(CategoryListState.Content(mapCatsToItems(categories)))
+            else -> state.postValue(
+                CategoryListState.Content(
+                    mapCatsToItems(categories),
+                    checkAllCategoriesMode(),
+                )
+            )
         }
     }
 
@@ -42,8 +47,12 @@ class SelectCategoryViewModel(
         }
     }
 
+    private fun checkAllCategoriesMode(): Boolean {
+        return selectedCategoriesList.isEmpty()
+    }
+
     private fun setCategorySelectedStatus(name: String): Boolean {
-        return selectedCategoriesList.contains(name) ?: false
+        return selectedCategoriesList.contains(name)
     }
 
 
