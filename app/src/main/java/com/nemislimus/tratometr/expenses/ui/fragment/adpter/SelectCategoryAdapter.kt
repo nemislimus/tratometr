@@ -33,6 +33,13 @@ class SelectCategoryAdapter(
         notifyDataSetChanged()
     }
 
+    fun deselectAllCategories() {
+        categoriesList.forEach { category ->
+            category.isSelected = false
+        }
+        notifyDataSetChanged()
+    }
+
     override fun getItemCount(): Int = filteredCategoryList.size
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): SelectCategoryViewHolder {
