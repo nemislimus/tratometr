@@ -7,7 +7,7 @@ object ExpenseFilter {
         private set
     var presetButton: TimePreset? = null
         private set
-    var category: String? = null
+    var categories: List<String>? = null
         set(value) {
             field = value
             notifyCallbacks() // Уведомляем слушателей об изменении
@@ -26,7 +26,7 @@ object ExpenseFilter {
         startDate = null
         endDate = null
         presetButton = null
-        category = null
+        categories = null
         notifyCallbacks()
     }
 

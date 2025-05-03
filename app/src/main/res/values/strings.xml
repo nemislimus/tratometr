@@ -5,7 +5,7 @@
     <string name="edit_expense">Редактировать расход</string>
     <string name="hint_text_category">Выбрать категорию</string>
     <string name="amount_hints">Сумма расхода</string>
-    <string name="description">Примечание</string>
+    <string name="description">Добавьте детали о расходе\n(необязательно)</string>
     <string name="btn_add">Добавить</string>
     <string name="btn_save">Сохранить</string>
     <string name="add_category">добавить категорию</string>
