@@ -15,7 +15,7 @@ object FieldValidator {
     const val MIN_PASSWORD_LENGTH = 7
 
     fun isValidEmail(email: String): Boolean {
-        val emailRegexPattern = "^[A-Za-z0-9+_.-]+@[A-Za-z0-9.-]+\\.[A-Za-z]{2,}$"
+        val emailRegexPattern = "^[A-Za-z0-9_.-]+@[A-Za-z0-9.-]+\\.[A-Za-z]{2,}$"
         return Regex(emailRegexPattern).matches(email)
     }
 
