@@ -56,7 +56,7 @@ class AutoCompleteAdapter(
             override fun performFiltering(constraint: CharSequence?): FilterResults {
                 val results = FilterResults()
                 val filterPattern = constraint?.toString()?.lowercase()?.trim() ?: ""
-
+                if (originalItems[0].isAdd) originalItems[0].name = constraint.toString()
                 results.values = if (filterPattern.isEmpty()) {
                     originalItems
                 } else {
@@ -64,7 +64,6 @@ class AutoCompleteAdapter(
                         it.name.lowercase().contains(filterPattern)
                     }
                 }
-
                 return results
             }
 

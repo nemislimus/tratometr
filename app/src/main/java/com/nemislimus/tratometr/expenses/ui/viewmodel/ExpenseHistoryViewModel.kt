@@ -43,7 +43,7 @@ class ExpenseHistoryViewModel (
 
     private fun convertExpenseToExpenseWithStringDate(expense: Expense): ExpenseWithStringDate {
         val currentLocale = Locale.getDefault()
-        val dateFormat = SimpleDateFormat("dd.MM.yy", currentLocale)
+        val dateFormat = SimpleDateFormat("d MMMM yyyy", currentLocale)
         dateFormat.timeZone = TimeZone.getTimeZone("UTC")
         return ExpenseWithStringDate(
             expense.id,
