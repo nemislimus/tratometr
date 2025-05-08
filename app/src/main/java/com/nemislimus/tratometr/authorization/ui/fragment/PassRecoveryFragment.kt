@@ -6,10 +6,8 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
-import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
-import androidx.lifecycle.repeatOnLifecycle
 import androidx.navigation.fragment.findNavController
 import com.nemislimus.tratometr.R
 import com.nemislimus.tratometr.authorization.domain.models.Resource
@@ -19,6 +17,7 @@ import com.nemislimus.tratometr.common.util.BindingFragment
 import com.nemislimus.tratometr.common.util.FieldValidator
 import com.nemislimus.tratometr.common.util.TratometrTextWatcher
 import com.nemislimus.tratometr.databinding.FragmentPassrecoveryBinding
+import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -27,6 +26,8 @@ class PassRecoveryFragment : BindingFragment<FragmentPassrecoveryBinding>() {
     @Inject
     lateinit var vmFactory: PassRecoveryViewModel.Factory
     lateinit var viewModel: PassRecoveryViewModel
+
+    private var flowCollectJob: Job? = null
 
     override fun createBinding(
         inflater: LayoutInflater,
@@ -59,24 +60,31 @@ class PassRecoveryFragment : BindingFragment<FragmentPassrecoveryBinding>() {
         binding.backButton.setOnClickListener {
             requireActivity().onBackPressedDispatcher.onBackPressed()
         }
+    }
 
+    override fun onResume() {
+        super.onResume()
         observeEvents()
     }
 
-    private fun observeEvents() {
-        lifecycleScope.launch {
-            repeatOnLifecycle(Lifecycle.State.STARTED) {
-                viewModel.recoveryResult.collect { result ->
-                    when (result) {
-                        is Resource.Success -> {
-                            showToast(getString(R.string.success))
-                            findNavController().navigate(R.id.action_passRecoveryFragment_to_newPassFragment)
-                        }
+    override fun onPause() {
+        super.onPause()
+        flowCollectJob?.cancel()
+        flowCollectJob = null
+    }
 
-                        is Resource.Error -> {
-                            result.message?.let {
-                                showToast(it)
-                            }
+    private fun observeEvents() {
+        flowCollectJob = lifecycleScope.launch {
+            viewModel.recoveryResult.collect { result ->
+                when (result) {
+                    is Resource.Success -> {
+                        showToast(getString(R.string.success))
+                        findNavController().navigate(R.id.action_passRecoveryFragment_to_newPassFragment)
+                    }
+
+                    is Resource.Error -> {
+                        result.message?.let {
+                            showToast(it)
                         }
                     }
                 }
