@@ -29,7 +29,7 @@ class ExpensesRecyclerView(
             ItemTouchHelper.LEFT or ItemTouchHelper.RIGHT
         ) {
             val density = expensesFragment.requireContext().resources.displayMetrics.density
-            val maxShift = -96 * density                            // Величина максимального смещения при свайпе
+            val maxShift = -112 * density                            // Величина максимального смещения при свайпе
             var isShift = false
             lateinit var c: Canvas
             override fun onMove(

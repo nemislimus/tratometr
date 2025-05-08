@@ -18,9 +18,9 @@
         android:layout_width="wrap_content"
         android:layout_height="match_parent"
         android:layout_gravity="end|center_vertical"
-        android:padding="@dimen/size_12dp"
-        android:src="@drawable/ic_delete"
         android:background="@drawable/btn_del_background"
+        android:padding="16dp"
+        android:src="@drawable/ic_delete"
         tools:ignore="contentDescription" />
 
     <ImageView
@@ -28,8 +28,8 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="end|center_vertical"
-        android:layout_marginEnd="@dimen/size_48dp"
-        android:padding="@dimen/size_12dp"
+        android:layout_marginEnd="56dp"
+        android:padding="16dp"
         android:src="@drawable/ic_edit"
         app:tint="@color/button_text"
         tools:ignore="contentDescription"/>
