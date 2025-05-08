@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/fl_background"
     android:layout_width="match_parent"
@@ -20,7 +21,7 @@
         android:padding="@dimen/size_12dp"
         android:src="@drawable/ic_delete"
         android:background="@drawable/btn_del_background"
-        tools:ignore="contentDescription"/>
+        tools:ignore="contentDescription" />
 
     <ImageView
         android:id="@+id/iv_edit"
@@ -30,6 +31,7 @@
         android:layout_marginEnd="@dimen/size_48dp"
         android:padding="@dimen/size_12dp"
         android:src="@drawable/ic_edit"
+        app:tint="@color/button_text"
         tools:ignore="contentDescription"/>
 
 </FrameLayout>

@@ -75,7 +75,7 @@ class CreateExpenseFragment : BindingFragment<FragmentCreateExpenseBinding>() {
         return FragmentCreateExpenseBinding.inflate(inflater,container,false)
     }
 
-
+    @SuppressLint("ClickableViewAccessibility")
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
@@ -109,15 +109,25 @@ class CreateExpenseFragment : BindingFragment<FragmentCreateExpenseBinding>() {
             hideKeyboard()
         }
 
-        binding.ivClear.setOnClickListener { autoCompleteTextView.setText("") }
+        binding.ivClear.setOnTouchListener { _, _ ->
+            autoCompleteTextView.setText("")
+            false
+        }
 
         autoCompleteTextView.threshold = 1  // Начинать показывать предложения после ввода 1 символа
         // Открыть список при клике или получении фокуса
         autoCompleteTextView.setOnClickListener { autoCompleteTextView.showDropDown() }
         autoCompleteTextView.setOnFocusChangeListener { _, hasFocus ->
-            if (hasFocus) autoCompleteTextView.showDropDown()
+            val isCategory = itemsOriginal.any { it.name == autoCompleteTextView.text.toString() }
+            if (hasFocus) {
+                binding.ivClear.isVisible = true
+                autoCompleteTextView.showDropDown()
+            } else {
+                binding.ivClear.isVisible = isCategory
+            }
             isSeparatorVisible(!hasFocus)
         }
+
         autoCompleteTextView.setOnItemClickListener { parent, _, position, _ ->
             val selectedItem = (parent.getItemAtPosition(position) as AutoCompleteItem)
             if (!selectedItem.isAdd) {
@@ -136,13 +146,9 @@ class CreateExpenseFragment : BindingFragment<FragmentCreateExpenseBinding>() {
                 // Редактируем список адаптера
                 if (items.size > 0) {
                     if (itemsOriginal.any { it.name == currentStr }) {
-                        if (items[0].isAdd) {
-                            items[0].name = ""
-                            autoCompleteTextView.dismissDropDown() // Скрываем список
-                        }
-                    } else {
-                        if (items[0].isAdd) items[0].name = currentStr
+                        autoCompleteTextView.dismissDropDown() // Скрываем список
                     }
+                    if (items[0].isAdd) items[0].name = currentStr
                     adapter.notifyDataSetChanged()
                 }
             }
@@ -241,10 +247,12 @@ class CreateExpenseFragment : BindingFragment<FragmentCreateExpenseBinding>() {
         )
         ivIcon.isVisible = iconResId != null
         if (iconResId != null) {
-            ivIcon.setImageDrawable(
-                AppCompatResources.getDrawable(requireContext(), iconResId)
-            )
+            ivIcon.setImageDrawable(AppCompatResources.getDrawable(requireContext(), iconResId))
+            binding.ivClear.setImageResource(R.drawable.ic_edit)
+            binding.ivClear.isVisible = true
             this.iconResId = iconResId
+        } else {
+            binding.ivClear.setImageResource(R.drawable.ic_close)
         }
     }
 
