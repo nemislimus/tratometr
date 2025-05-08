@@ -144,13 +144,8 @@ class CreateExpenseFragment : BindingFragment<FragmentCreateExpenseBinding>() {
             override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
                 val currentStr = s.toString()
                 // Редактируем список адаптера
-                if (items.size > 0) {
-                    if (itemsOriginal.any { it.name == currentStr }) {
-                        autoCompleteTextView.dismissDropDown() // Скрываем список
-                    }
-                    if (items[0].isAdd) items[0].name = currentStr
-                    adapter.notifyDataSetChanged()
-                }
+                val isCategory = itemsOriginal.any { it.name == currentStr }
+                if (items.size > 0 && isCategory) autoCompleteTextView.dismissDropDown() // Скрываем список
             }
             override fun afterTextChanged(s: Editable?) {
                 val currentText = s.toString()
