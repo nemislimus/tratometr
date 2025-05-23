@@ -132,6 +132,7 @@ class CreateExpenseFragment : BindingFragment<FragmentCreateExpenseBinding>() {
             val selectedItem = (parent.getItemAtPosition(position) as AutoCompleteItem)
             if (!selectedItem.isAdd) {
                 autoCompleteTextView.setText(selectedItem.name)
+                autoCompleteTextView.clearFocus()
             } else {
                 autoCompleteTextView.setText(currentText)
                 openCategoryWindow(autoCompleteTextView.text.toString())

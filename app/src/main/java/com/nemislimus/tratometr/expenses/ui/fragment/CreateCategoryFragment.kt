@@ -68,7 +68,7 @@ class CreateCategoryFragment : BindingFragment<FragmentCreateCategoryBinding>() 
             ) {
                 setFragmentResult(
                     RESULT_KEY,
-                    bundleOf(STRING_KEY to binding.etTitleOfCategory.text.toString())
+                    bundleOf(STRING_KEY to binding.etTitleOfCategory.text.toString().trim())
                 )
                 findNavController().popBackStack()
             }
